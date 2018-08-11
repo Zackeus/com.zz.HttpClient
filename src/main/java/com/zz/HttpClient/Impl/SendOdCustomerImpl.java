@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.zz.HttpClient.Bean.Customer;
-import com.zz.HttpClient.Bean.CustomerRepeat;
-import com.zz.HttpClient.Bean.ReplaySet;
 import com.zz.HttpClient.Dao.SendOdCustomerDao;
 import com.zz.HttpClient.Service.SendOdCustomerService;
 import com.zz.HttpClient.Util.ListUtil;
 import com.zz.HttpClient.Util.ObjectUtils;
+import com.zz.HttpClient.Bean.Customer;
+import com.zz.HttpClient.Bean.CustomerRepeat;
+import com.zz.HttpClient.Bean.ReplaySet;
 
 @Service("sendOdCustomerService")
 @Transactional(readOnly = true)

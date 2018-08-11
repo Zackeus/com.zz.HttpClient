@@ -35,6 +35,24 @@ public class GlobalConfig {
 	private static PropertiesLoader loader = new PropertiesLoader("properties/jdbc.properties");
 	
 	/**
+	 * 显示/隐藏
+	 */
+	public static final String SHOW = "1";
+	public static final String HIDE = "0";
+
+	/**
+	 * 是/否
+	 */
+	public static final String YES = "1";
+	public static final String NO = "0";
+	
+	/**
+	 * 对/错
+	 */
+	public static final String TRUE = "true";
+	public static final String FALSE = "false";
+	
+	/**
 	 * 
 	 * @Title:getInstance
 	 * @Description: TODO(获取当前对象实例)

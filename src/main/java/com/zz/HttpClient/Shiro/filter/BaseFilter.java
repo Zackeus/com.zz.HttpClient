@@ -6,7 +6,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.web.servlet.AdviceFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,6 +13,7 @@ import com.zz.HttpClient.Bean.Msg.WeiXinMsg;
 import com.zz.HttpClient.Config.GlobalConfig;
 import com.zz.HttpClient.Config.MsgConfig;
 import com.zz.HttpClient.Util.SendMsgUtil;
+import com.zz.HttpClient.Util.WebUtils;
 
 /**
  * 
@@ -27,10 +27,6 @@ public abstract class BaseFilter extends AdviceFilter {
 
 	@Autowired
 	protected MsgConfig msgConfig;
-	
-	protected static final String AJAX_HEADER = "X-Requested-With";
-	
-	protected static final String AJAX_REQUEST = "XMLHttpRequest";
 	
 	protected static final String ENCODING = "UTF-8";
 	
@@ -73,8 +69,7 @@ public abstract class BaseFilter extends AdviceFilter {
 	protected void handleHttpRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			String msg, boolean judge) throws IOException {
 		if (judge) {
-			String requestedWith = httpServletRequest.getHeader(AJAX_HEADER);
-			if (StringUtils.isEmpty(requestedWith) || !StringUtils.equals(requestedWith, AJAX_REQUEST)) {
+			if (!WebUtils.isAjaxRequest(httpServletRequest)) {
 				/*普通HTTP请求，进行重定向*/
 //				httpServletResponse.sendRedirect("/login/local");
 				return;

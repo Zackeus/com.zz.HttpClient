@@ -3,10 +3,10 @@ package com.zz.HttpClient.Util.HttpClient;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.zz.HttpClient.Bean.CollectionCallData;
-import com.zz.HttpClient.Bean.CollectionResult;
 import com.zz.HttpClient.Bean.CTC.DetaileReport;
 import com.zz.HttpClient.Bean.CTC.Report;
+import com.zz.HttpClient.Bean.CollectionCallData;
+import com.zz.HttpClient.Bean.CollectionResult;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

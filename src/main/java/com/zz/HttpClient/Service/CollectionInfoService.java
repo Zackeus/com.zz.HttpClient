@@ -2,8 +2,8 @@ package com.zz.HttpClient.Service;
 
 import java.util.List;
 
-import com.zz.HttpClient.Bean.CollectionResult;
 import com.zz.HttpClient.Bean.CTC.DetaileReport;
+import com.zz.HttpClient.Bean.CollectionResult;
 
 public interface CollectionInfoService {
 	

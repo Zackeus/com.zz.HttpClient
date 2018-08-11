@@ -4,12 +4,14 @@ import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
@@ -19,6 +21,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.zz.HttpClient.Util.DateUtils;
 import com.zz.HttpClient.Util.JsonMapper;
+import com.zz.HttpClient.Util.WebUtils;
+
+import net.sf.json.JSONObject;
 
 /**
  * 
@@ -118,14 +123,25 @@ public abstract class BaseController {
 	
 	/**
 	 * 
-	 * @Title：authenticationException
+	 * @Title：authorizationException
 	 * @Description: TODO(授权登录异常)
 	 * @see：
+	 * @param request
+	 * @param response
 	 * @return
 	 */
-	@ExceptionHandler({AuthenticationException.class})
-    public String authenticationException() {  
-        return "error/403";
+    @ExceptionHandler({ UnauthorizedException.class, AuthorizationException.class })
+    public String authorizationException(HttpServletRequest request, HttpServletResponse response) {
+        if (WebUtils.isAjaxRequest(request)) {
+            // 输出JSON
+        	JSONObject jsonObject = new JSONObject();
+            jsonObject.put("retcode", "-100");
+            jsonObject.put("error_msg", "当前账号无权限进行此操作！！！");
+            renderString(response, jsonObject.toString(), CONTENT_TYPE);
+            return null;
+        } else {
+            return "sys/403";
+        }
     }
 	
 	/**

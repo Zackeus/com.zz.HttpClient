@@ -8,14 +8,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.zz.HttpClient.Bean.CollectionCallData;
-import com.zz.HttpClient.Bean.CollectionResult;
 import com.zz.HttpClient.Bean.CTC.DetaileReport;
 import com.zz.HttpClient.Dao.BusinessSMSDao;
 import com.zz.HttpClient.Dao.CollectionInfoDao;
 import com.zz.HttpClient.Service.CollectionInfoService;
 import com.zz.HttpClient.Util.ListUtil;
 import com.zz.HttpClient.Util.ObjectUtils;
+import com.zz.HttpClient.Bean.CollectionCallData;
+import com.zz.HttpClient.Bean.CollectionResult;
 
 /**
  * 

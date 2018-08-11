@@ -34,8 +34,8 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.zz.HttpClient.Bean.Interface.ExcelField;
 import com.zz.HttpClient.Bean.Customer;
-import com.zz.HttpClient.Bean.ExcelField;
 
 /**
  * 

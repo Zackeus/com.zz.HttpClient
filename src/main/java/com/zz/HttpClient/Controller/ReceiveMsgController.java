@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zz.HttpClient.Bean.CTC.Report;
+import com.zz.HttpClient.Bean.CTC.DetaileReport;
+import com.zz.HttpClient.Service.CollectionInfoService;
 import com.zz.HttpClient.Bean.CollectionCallData;
 import com.zz.HttpClient.Bean.CollectionResult;
 import com.zz.HttpClient.Bean.Result;
 import com.zz.HttpClient.Bean.ReturnInfo;
-import com.zz.HttpClient.Bean.CTC.Report;
-import com.zz.HttpClient.Bean.CTC.DetaileReport;
-import com.zz.HttpClient.Service.CollectionInfoService;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -84,7 +84,7 @@ public class ReceiveMsgController extends BaseController {
 	 * @return
 	 * @throws IOException 
 	 */
-	@RequestMapping(value = "/daHanMsg", produces = "charset=UTF-8")
+	@RequestMapping(value = "/daHanMsg")
 	public void daHanMsg(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		JSONObject parms = JSONObject.fromObject(new String(request.getParameter("report").getBytes(ISO_ENCODING), UTF_ENCODING));
 		JSONObject jsonObject = new JSONObject();

@@ -10,10 +10,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.zz.HttpClient.Bean.CollectionTel;
-import com.zz.HttpClient.Bean.Guarantee;
-import com.zz.HttpClient.Bean.ReplaySet;
-import com.zz.HttpClient.Bean.TaskConfig;
 import com.zz.HttpClient.Bean.HttpClient.HttpClientResult;
 import com.zz.HttpClient.Bean.Msg.WeiXinMsg;
 import com.zz.HttpClient.Config.GlobalConfig;
@@ -25,6 +21,10 @@ import com.zz.HttpClient.Util.JuHeHttpUtil;
 import com.zz.HttpClient.Util.ListUtil;
 import com.zz.HttpClient.Util.ObjectUtils;
 import com.zz.HttpClient.Util.SendMsgUtil;
+import com.zz.HttpClient.Bean.CollectionTel;
+import com.zz.HttpClient.Bean.Guarantee;
+import com.zz.HttpClient.Bean.ReplaySet;
+import com.zz.HttpClient.Bean.TaskConfig;
 
 import net.sf.json.JSONObject;
 

@@ -8,10 +8,10 @@ import javax.servlet.ServletResponse;
 
 import org.apache.shiro.web.util.WebUtils;
 
-import com.zz.HttpClient.Bean.Result;
-import com.zz.HttpClient.Bean.ReturnInfo;
 import com.zz.HttpClient.Util.Logs;
 import com.zz.HttpClient.Util.NetworkUtil;
+import com.zz.HttpClient.Bean.Result;
+import com.zz.HttpClient.Bean.ReturnInfo;
 
 import net.sf.json.JSONObject;
 

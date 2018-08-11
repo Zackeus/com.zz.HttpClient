@@ -40,4 +40,28 @@
 	    timeToLiveSeconds="120"   
 	    diskExpiryThreadIntervalSeconds="120"  
 	    memoryStoreEvictionPolicy="LRU"/>
+	    
+	<!-- 认证缓存 -->
+	<cache name="authenticationCache"
+		maxElementsInMemory="1000"
+		maxElementsOnDisk="10000000"
+		eternal="false"
+		overflowToDisk="false"
+		diskPersistent="false"
+		timeToIdleSeconds="120"
+		timeToLiveSeconds="240"
+		diskExpiryThreadIntervalSeconds="120"
+		memoryStoreEvictionPolicy="LRU"/>
+	
+	<!-- 授权缓存 -->
+	<cache name="authorizationCache"
+		maxElementsInMemory="1000"
+		maxElementsOnDisk="10000000"
+		eternal="false"
+		overflowToDisk="false"
+		diskPersistent="false"
+		timeToIdleSeconds="120"
+		timeToLiveSeconds="240"
+		diskExpiryThreadIntervalSeconds="120"
+		memoryStoreEvictionPolicy="LRU"/>
 </ehcache>  

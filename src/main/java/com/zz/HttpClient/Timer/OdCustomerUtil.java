@@ -12,11 +12,6 @@ import javax.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
-import com.zz.HttpClient.Bean.CollectionTel;
-import com.zz.HttpClient.Bean.Customer;
-import com.zz.HttpClient.Bean.CustomerRepeat;
-import com.zz.HttpClient.Bean.ReplaySet;
-import com.zz.HttpClient.Bean.TaskConfig;
 import com.zz.HttpClient.Bean.HttpClient.HttpClientResult;
 import com.zz.HttpClient.Bean.Msg.WeiXinMsg;
 import com.zz.HttpClient.Config.GlobalConfig;
@@ -28,6 +23,11 @@ import com.zz.HttpClient.Util.JuHeHttpUtil;
 import com.zz.HttpClient.Util.ListUtil;
 import com.zz.HttpClient.Util.ObjectUtils;
 import com.zz.HttpClient.Util.SendMsgUtil;
+import com.zz.HttpClient.Bean.CollectionTel;
+import com.zz.HttpClient.Bean.Customer;
+import com.zz.HttpClient.Bean.CustomerRepeat;
+import com.zz.HttpClient.Bean.ReplaySet;
+import com.zz.HttpClient.Bean.TaskConfig;
 
 import net.sf.json.JSONObject;
 

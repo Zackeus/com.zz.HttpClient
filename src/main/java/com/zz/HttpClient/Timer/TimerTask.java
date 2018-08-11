@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.zz.HttpClient.Bean.Task;
-import com.zz.HttpClient.Bean.Msg.WeiXinMsg;
 import com.zz.HttpClient.Config.GlobalConfig;
 import com.zz.HttpClient.Config.JuHeConfig;
 import com.zz.HttpClient.Config.MsgConfig;
@@ -15,6 +13,8 @@ import com.zz.HttpClient.Util.JuHeHttpUtil;
 import com.zz.HttpClient.Util.Logs;
 import com.zz.HttpClient.Util.ObjectUtils;
 import com.zz.HttpClient.Util.SendMsgUtil;
+import com.zz.HttpClient.Bean.Task;
+import com.zz.HttpClient.Bean.Msg.WeiXinMsg;
 
 /**
  * 
