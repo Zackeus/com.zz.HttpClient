@@ -6,7 +6,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -36,13 +35,11 @@ public class CustomRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
     	Logs.info("*************** 登陆认证 ******************");
     	//令牌——基于用户名和密码的令牌,把AuthenticationToken转换成UsernamePasswordToken
-    	UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+//    	UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
     	
     	User user = new User();
-    	user.setLoginName(token.getUsername());
-    	Logs.info("加密密码：" + String.valueOf(token.getPassword()));
-    	user.setPassword(SystemService.entryptPassword(Encodes.escapeHtml(String.valueOf(token.getPassword()))));
-    	Logs.info("加密后密码：" + user.getPassword());
+    	user.setLoginName("zhangzhou");
+    	user.setPassword(SystemService.entryptPassword(Encodes.escapeHtml("a1!")));
     	
     	// 密码认证 见initCredentialsMatcher() 方法
     	byte[] salt = Encodes.decodeHex(user.getPassword().substring(0,16));

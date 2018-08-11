@@ -23,14 +23,6 @@
         <property name="loginUrl" value="/sys/login"/>
         <!-- 登录成功默认跳转页面，不配置则跳转至”/”。如果登陆前点击的一个需要登录的页面，则在登录自动跳转到那个需要登录的页面。不跳转到此 -->
         <property name="successUrl" value="/sys/loginSuccess"/>
-        <!-- 自定义filter -->
-        <property name="filters">
-            <map>
-                <entry key="juheFilter" value-ref="juheFilter"/>
-                <entry key="daHanFilter" value-ref="daHanFilter"/>
-                <entry key="authc" value-ref="formAuthenticationFilter"/>
-            </map>
-        </property>
         <!-- Shiro连接约束配置,即过滤链的定义 -->
         <property name="filterChainDefinitions">
             <value>
@@ -42,14 +34,23 @@
                 /** = user
             </value>
         </property>
+        <!-- 自定义filter -->
+        <property name="filters">
+            <map>
+                <entry key="juheFilter" value-ref="juheFilter"/>
+                <entry key="daHanFilter" value-ref="daHanFilter"/>
+                <entry key="authc" value-ref="formAuthenticationFilter"/>
+            </map>
+        </property>
     </bean>
     <!-- 定义扩展的filter实例 -->
 	<bean id="juheFilter" class="com.zz.HttpClient.Shiro.filter.JuHeFilter" />
 	<bean id="daHanFilter" class="com.zz.HttpClient.Shiro.filter.DaHanFilter" />
 	<bean id="formAuthenticationFilter" class="com.zz.HttpClient.Shiro.filter.LoginAuthenticationFilter">
-<!--         <property name="usernameParam" value="userName"/> -->
-<!--         <property name="passwordParam" value="passWord"/> -->
-<!--         <property name="rememberMeParam" value="rememberMe"/> -->
+		<!-- 自定义登录表单参数 -->
+        <property name="usernameParam" value="userName"/>
+        <property name="passwordParam" value="passWord"/>
+        <property name="rememberMeParam" value="rememberMe"/>
 	</bean>
     
     <!-- 安全管理器  ref对象-->

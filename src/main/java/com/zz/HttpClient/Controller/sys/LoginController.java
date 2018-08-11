@@ -87,7 +87,7 @@ public class LoginController extends BaseController {
 		Logs.info("exception: " + exception);
 		Logs.info("message: " + message);
 		
-		return "login/login";
+		return "sys/login";
 	}
 	
 	/**

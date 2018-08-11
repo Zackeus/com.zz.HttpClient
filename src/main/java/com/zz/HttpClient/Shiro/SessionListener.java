@@ -4,10 +4,12 @@ import org.apache.shiro.session.Session;
 import com.zz.HttpClient.Util.Logs;
 
 /**
- * Shiro session监听
  * 
+ * @Title:SessionListener
+ * @Description:TODO(Shiro session监听)
+ * @Company: 
  * @author zhou.zhang
- *
+ * @date 2018年8月11日 下午4:47:26
  */
 public class SessionListener implements org.apache.shiro.session.SessionListener {
 

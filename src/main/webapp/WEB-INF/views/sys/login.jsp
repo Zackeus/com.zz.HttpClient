@@ -8,8 +8,8 @@
 </head>
 <body>
 	<form action="${ctx}/sys/login" method="post">
-		<input id="username" name="username" type="text">
-		<input id="password" name="password" type="password">
+		<input id="userName" name="userName" type="text">
+		<input id="passWord" name="passWord" type="password">
 		<button type="submit">提交</button>
 	</form>
 </body>

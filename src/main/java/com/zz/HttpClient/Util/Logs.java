@@ -1,12 +1,15 @@
 package com.zz.HttpClient.Util;
 
 /**
- * 日志输出代理类。
+ * 
+ * @Title:Logs
+ * @Description:TODO(日志输出代理类)
  * 主要完成业务代码和日志工具间的解耦，使切换日志工具更加方便。
  * 如：将Log4j改为common-logging或自己的独立实现，则只需调整该类即可。
  * 简化了调用方式：如使用log4j，通常用法是先生成一个实例，再调用输出方法。 现在，只需直接使用 Logs.debug();等静态方法即可
+ * @Company: 
  * @author zhou.zhang
- *
+ * @date 2018年8月11日 下午4:45:16
  */
 public class Logs {
 	/**
@@ -46,18 +49,14 @@ public class Logs {
 	}
 
 	/**
-	 * 根据日志级别，输出日志。
-	 * <p>
-	 * 如果要改变日志输出工具，
-	 * <p>
-	 * 如：由原来的log4j改为System.out.println()或logging，则只需改动此类即可。
 	 * 
+	 * @Title：log
+	 * @Description: TODO(根据日志级别，输出日志)
+	 * @see：由原来的log4j改为System.out.println()或logging，则只需改动此类即可
 	 * @param level 日志级别
 	 * @param message 日志消息
-	 * @param ste
-	 *            堆栈信息。
-	 *            <p>
-	 *            如果不需要输出源代码信息，则只需将静态成员属性 showLocSrc设为false即可。
+	 * @param ste 堆栈信息
+	 * 如果不需要输出源代码信息，则只需将静态成员属性 showLocSrc设为false即可
 	 */
 	private static void log(int level, Object message, StackTraceElement[] ste) {
 		if (ste != null) {
@@ -84,15 +83,15 @@ public class Logs {
 	}
 
 	/**
-	 * 根据堆栈信息得到源代码行信息
-	 * <p>
+	 * 
+	 * @Title：getStackMsg
+	 * @Description: TODO(根据堆栈信息得到源代码行信息)
+	 * @see：
+	 * com.MyClass 类里的 fun()方法调用了Logs.debug("test");
+	 * 则堆栈信息为: com.MyClass.fun(MyClass.java 代码行号)
 	 * 原理：本工具类的堆栈下一行即为源代码的最原始堆栈。
 	 * @param ste 堆栈信息
 	 * @return 调用输出日志的代码所在的类.方法.代码行的相关信息
-	 *         <p>
-	 *         如：com.MyClass 类里的 fun()方法调用了Logs.debug("test");
-	 *         <p>
-	 *         则堆栈信息为: com.MyClass.fun(MyClass.java 代码行号)
 	 */
 	private static String getStackMsg(StackTraceElement[] ste) {
 		if (ste == null)
@@ -113,7 +112,10 @@ public class Logs {
 	}
 
 	/**
-	 * 输出info信息
+	 * 
+	 * @Title：info
+	 * @Description: TODO(输出info信息)
+	 * @see：
 	 * @param message
 	 */
 	public static void info(Object message) {
@@ -128,7 +130,10 @@ public class Logs {
 	}
 
 	/**
-	 * 输出debug信息
+	 * 
+	 * @Title：debug
+	 * @Description: TODO(输出debug信息)
+	 * @see：
 	 * @param message
 	 */
 	public static void debug(Object message) {
@@ -143,7 +148,10 @@ public class Logs {
 	}
 
 	/**
-	 * 输出warn信息
+	 * 
+	 * @Title：warn
+	 * @Description: TODO(输出warn信息)
+	 * @see：
 	 * @param message
 	 */
 	public static void warn(Object message) {
@@ -158,7 +166,10 @@ public class Logs {
 	}
 
 	/**
-	 * 输出error信息
+	 * 
+	 * @Title：error
+	 * @Description: TODO(输出error信息)
+	 * @see：
 	 * @param message
 	 */
 	public static void error(Object message) {
@@ -173,7 +184,10 @@ public class Logs {
 	}
 	
 	/**
-	 * 测试
+	 * 
+	 * @Title：main
+	 * @Description: TODO(测试)
+	 * @see：
 	 * @param args
 	 */
 	public static void main(String args[]) {
