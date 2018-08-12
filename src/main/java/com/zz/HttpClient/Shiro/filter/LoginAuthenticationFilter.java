@@ -2,15 +2,19 @@ package com.zz.HttpClient.Shiro.filter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
 
+import com.zz.HttpClient.Bean.Sys.UsernamePasswordToken;
 import com.zz.HttpClient.Util.Logs;
 import com.zz.HttpClient.Util.StringUtils;
+import com.zz.HttpClient.Util.UserUtils;
 import com.zz.HttpClient.Util.WebUtils;
 
 /**
@@ -24,9 +28,26 @@ import com.zz.HttpClient.Util.WebUtils;
 @Service
 public class LoginAuthenticationFilter extends org.apache.shiro.web.filter.authc.FormAuthenticationFilter {
 	
+	public static final String DEFAULT_CAPTCHA_PARAM = "validateCode";
+	public static final String DEFAULT_MOBILE_PARAM = "mobileLogin";
 	public static final String DEFAULT_MESSAGE_PARAM = "message";
 	
+	private String captchaParam = DEFAULT_CAPTCHA_PARAM;
+	private String mobileLoginParam = DEFAULT_MOBILE_PARAM;
 	private String messageParam = DEFAULT_MESSAGE_PARAM;
+	
+	protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) {
+		String username = getUsername(request);
+		String password = getPassword(request);
+		if (password==null){
+			password = "";
+		}
+		boolean rememberMe = isRememberMe(request);
+		String host = StringUtils.getRemoteAddr((HttpServletRequest)request);
+		String captcha = getCaptcha(request);
+		boolean mobile = isMobileLogin(request);
+		return new UsernamePasswordToken(username, password.toCharArray(), rememberMe, host, captcha, mobile);
+	}
 	
 	/**
 	 * 获取登录用户名
@@ -63,16 +84,61 @@ public class LoginAuthenticationFilter extends org.apache.shiro.web.filter.authc
 		if (StringUtils.isBlank(isRememberMe)){
 			isRememberMe = StringUtils.toString(request.getAttribute(getRememberMeParam()), StringUtils.EMPTY);
 		}
+		Logs.info("记住我：" + StringUtils.toBoolean(isRememberMe));
 		return StringUtils.toBoolean(isRememberMe);
 	}
+	
+	public String getCaptchaParam() {
+		return captchaParam;
+	}
+	
+	protected String getCaptcha(ServletRequest request) {
+		return WebUtils.getCleanParam(request, getCaptchaParam());
+	}
+	
+	public String getMobileLoginParam() {
+		return mobileLoginParam;
+	}
+	
+	protected boolean isMobileLogin(ServletRequest request) {
+        return WebUtils.isTrue(request, getMobileLoginParam());
+    }
 	
 	public String getMessageParam() {
 		return messageParam;
 	}
 	
+	/**
+	 * 决定是否让用户登录
+	 */
+	@Override
+	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+		Subject subject = getSubject(request, response);
+		
+		// 如果 isAuthenticated 为 false 证明不是登录过的，同时 isRememberd 为true 证明是没登陆直接通过记住我功能进来的
+        if(!subject.isAuthenticated() && subject.isRemembered()) {
+        	Logs.info("是没登陆直接通过记住我功能进来的:" + UserUtils.getSession().getId());
+        	
+        	//获取session看看是不是空的
+//        	Session session = subject.getSession(true);
+        	//随便拿session的一个属性来看session当前是否是空的，我用userId，你们的项目可以自行发挥
+//        	if(session.getAttribute("userId") == null) {
+        		//如果是空的才初始化，否则每次都要初始化，项目得慢死 这边根据前面的前提假设，拿到的是username
+//        		String username = subject.getPrincipal().toString();
+//        		//在这个方法里面做初始化用户上下文的事情，比如通过查询数据库来设置session值，你们自己发挥
+//        		globalUserService.initUserContext(username, subject);
+//        	}
+        }
+        
+        //这个方法本来只返回 subject.isAuthenticated() 现在我们加上 subject.isRemembered() 让它同时也兼容remember这种情况
+        return subject.isAuthenticated() || subject.isRemembered();
+	}
+	
+	/**
+	 * 登录认证
+	 */
 	@Override
 	protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
-		Logs.info("登录认证");
 		return super.executeLogin(request, response);
 	}
 

@@ -103,6 +103,8 @@ public class LoginController extends BaseController {
 	@RequestMapping(value = "/loginSuccess")
 	public String loginSuccess(HttpServletRequest request, HttpServletResponse response) {
 		Logs.info("登录成功");
+		Logs.info("信息：" + UserUtils.getSession().getAttributeKeys());
+		Logs.info("id:" + UserUtils.getSession().getId());
 		return "sys/sysIndex";
 	}
 

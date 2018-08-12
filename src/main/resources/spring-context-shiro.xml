@@ -27,6 +27,7 @@
         <property name="filterChainDefinitions">
             <value>
                 <!-- 对静态资源设置匿名访问 -->
+                /static/** = anon
                 /test/** = anon
                 /receive/juheMsg = juheFilter
                 /receive/daHanMsg = daHanFilter
@@ -58,11 +59,13 @@
         <property name="realm" ref="custom_Realm"/>
         <!-- 配置sessionListener -->  
         <property name="sessionManager" ref="sessionManager" />
+        <!-- 配置记住我管理器 -->  
+        <property name="rememberMeManager" ref="rememberMeManager" />
         <!-- 配置缓存管理器 -->
         <property name="cacheManager" ref="shiroCacheManager"/>
     </bean>
     
-    <!-- 自定义session监听器 -->  
+	<!-- 会话管理器 -->  
     <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
     	<property name="sessionDAO" ref="sessionDAO"/>
         <property name="sessionListeners" ref="sessionListener" />
@@ -72,12 +75,45 @@
         <property name="deleteInvalidSessions" value="true"/>
         <!-- 设置session的失效扫描间隔，单位为毫秒 -->
         <property name="sessionValidationInterval" value="3600000"/>
+        <!-- 会话Cookie模板  -->
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
         <!-- 定时清理失效会话, 清理用户直接关闭浏览器造成的孤立会话   -->
         <property name="sessionValidationSchedulerEnabled" value="true"/>
     </bean>
-    
-    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.MemorySessionDAO"/>
+	
+	<!-- 会话Cookie模板，使用sid存储sessionid -->  
+	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">  
+	    <constructor-arg value="sid"/>  
+	    <property name="httpOnly" value="true"/>  
+	    <property name="maxAge" value="180000"/>  
+	</bean>
+	<!-- 会话DAO -->
+    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+		<property name="activeSessionsCacheName" value="activeSessionsCache"/>
+    	<property name="sessionIdGenerator" ref="sessionIdGenerator"/>
+    	<property name="cacheManager" ref="shiroCacheManager" />
+    </bean>
+    <!-- 会话ID生成器 -->
+    <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
     <bean id="sessionListener" class="com.zz.HttpClient.Shiro.SessionListener"/>
+    
+    <!-- 记住我管理器， authc 的 filter 不能使用 rememberMe 功能 -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+    	<!-- cipherKey 是加密rememberMe Cookie的密钥;默认AES算法-->
+    	<property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>
+    	<!-- 记住我功能的 cookie -->
+		<property name="cookie" ref="rememberMeCookie"/>  
+    </bean>
+    <!-- 记住我 cookie -->
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+    	<!-- cookie 的名称 -->
+    	<constructor-arg value="rememberMe"/>
+    	<property name="path" value="/"/>
+    	<property name="httpOnly" value="true"/>
+    	<!-- 30天 (单位：秒)--> 
+    	<property name="maxAge" value="2592000"/>
+	</bean>
+    
     <!-- 自定义域realm -->
     <bean id="custom_Realm" class="com.zz.HttpClient.Shiro.CustomRealm">
     	<!-- 将上面声明的密码匹配器注入到自定义 Realm 的属性中去 -->

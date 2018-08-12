@@ -64,4 +64,14 @@
 		timeToLiveSeconds="240"
 		diskExpiryThreadIntervalSeconds="120"
 		memoryStoreEvictionPolicy="LRU"/>
+		
+	<!-- 系统活动会话缓存 -->
+    <cache name="activeSessionsCache" 
+    	maxElementsInMemory="1000"
+        maxElementsOnDisk="10000000"
+    	eternal="true" 
+    	overflowToDisk="true"
+        diskPersistent="true" 
+        diskExpiryThreadIntervalSeconds="600" 
+        memoryStoreEvictionPolicy="LRU"/>
 </ehcache>  
