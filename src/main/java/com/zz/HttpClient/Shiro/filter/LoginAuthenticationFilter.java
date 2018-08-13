@@ -119,11 +119,13 @@ public class LoginAuthenticationFilter extends org.apache.shiro.web.filter.authc
         if(!subject.isAuthenticated() && subject.isRemembered()) {
         	Logs.info("是没登陆直接通过记住我功能进来的:" + UserUtils.getSession().getId());
         	
-        	//获取session看看是不是空的
+        	/*这里也可以写登陆验证逻辑 解决再记住我期间 用户的账号、密码发生变更*/
+//        	//获取session看看是不是空的
 //        	Session session = subject.getSession(true);
-        	//随便拿session的一个属性来看session当前是否是空的，我用userId，你们的项目可以自行发挥
+//        	//随便拿session的一个属性来看session当前是否是空的，我用userId，你们的项目可以自行发挥
 //        	if(session.getAttribute("userId") == null) {
-        		//如果是空的才初始化，否则每次都要初始化，项目得慢死 这边根据前面的前提假设，拿到的是username
+//        		
+//        		//如果是空的才初始化，否则每次都要初始化，项目得慢死 这边根据前面的前提假设，拿到的是username
 //        		String username = subject.getPrincipal().toString();
 //        		//在这个方法里面做初始化用户上下文的事情，比如通过查询数据库来设置session值，你们自己发挥
 //        		globalUserService.initUserContext(username, subject);
