@@ -12,9 +12,11 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.zz.HttpClient.Bean.Sys.Principal;
 import com.zz.HttpClient.Bean.Sys.User;
+import com.zz.HttpClient.Bean.Sys.UsernamePasswordToken;
 import com.zz.HttpClient.Service.SystemService;
 import com.zz.HttpClient.Util.Encodes;
 import com.zz.HttpClient.Util.Logs;
@@ -29,23 +31,30 @@ import com.zz.HttpClient.Util.Logs;
  */
 public class CustomRealm extends AuthorizingRealm {
 	
+	@Autowired
+	SystemService systemService;
+	
 	 /** 
      * 登陆认证
      */
-    @Override  
+	@Override  
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
     	Logs.info("*************** 登陆认证 ******************");
     	//令牌——基于用户名和密码的令牌,把AuthenticationToken转换成UsernamePasswordToken
-//    	UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+    	UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
     	
-    	User user = new User();
-    	user.setLoginName("zhangzhou");
-    	user.setPassword(SystemService.entryptPassword(Encodes.escapeHtml("a1!")));
+    	User user = systemService.getUserByLoginName(token.getUsername());
     	
-    	// 密码认证 见initCredentialsMatcher() 方法
-    	byte[] salt = Encodes.decodeHex(user.getPassword().substring(0,16));
-    	return new SimpleAuthenticationInfo(new Principal(user, false), 
-    			user.getPassword().substring(16), ByteSource.Util.bytes(salt), getName());
+    	if (user != null) {
+    	 	Logs.info("账号：" + user.getLoginName());
+        	Logs.info("密码：" + user.getPassword());
+        	
+        	// 密码认证 见initCredentialsMatcher() 方法
+        	byte[] salt = Encodes.decodeHex(user.getPassword().substring(0,16));
+        	return new SimpleAuthenticationInfo(new Principal(user, false), 
+        			user.getPassword().substring(16), ByteSource.Util.bytes(salt), getName());
+    	} 
+    	return null;
     } 
     
 	/**

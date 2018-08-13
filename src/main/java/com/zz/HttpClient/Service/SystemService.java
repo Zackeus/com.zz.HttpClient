@@ -3,9 +3,11 @@ package com.zz.HttpClient.Service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.zz.HttpClient.Bean.Sys.User;
 import com.zz.HttpClient.Service.Basic.BaseService;
 import com.zz.HttpClient.Util.Digests;
 import com.zz.HttpClient.Util.Encodes;
+import com.zz.HttpClient.Util.UserUtils;
 
 /**
  * 
@@ -22,6 +24,18 @@ public class SystemService extends BaseService {
 	public static final String HASH_ALGORITHM = "SHA-1";
 	public static final int HASH_INTERATIONS = 1024;
 	public static final int SALT_SIZE = 8;
+	
+	/**
+	 * 
+	 * @Title：getUserByLoginName
+	 * @Description: TODO(根据登录名获取用户)
+	 * @see：
+	 * @param loginName
+	 * @return
+	 */
+	public User getUserByLoginName(String loginName) {
+		return UserUtils.getByLoginName(loginName);
+	}
 	
 	/**
 	 * 

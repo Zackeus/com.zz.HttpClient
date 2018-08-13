@@ -1,12 +1,20 @@
 package com.zz.HttpClient.Util;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.zz.HttpClient.Bean.Sys.Principal;
+import com.zz.HttpClient.Bean.Sys.Role;
+import com.zz.HttpClient.Bean.Sys.User;
+import com.zz.HttpClient.Dao.RoleDao;
+import com.zz.HttpClient.Dao.UserDao;
 
 /**
  * 
@@ -16,6 +24,7 @@ import com.zz.HttpClient.Bean.Sys.Principal;
  * @author zhou.zhang
  * @date 2018年8月10日 上午11:50:03
  */
+@Component
 public class UserUtils {
 
 	public static final String USER_CACHE = "userCache";
@@ -29,6 +38,36 @@ public class UserUtils {
 	public static final String CACHE_AREA_LIST = "areaList";
 	public static final String CACHE_OFFICE_LIST = "officeList";
 	public static final String CACHE_OFFICE_ALL_LIST = "officeAllList";
+	
+	@Autowired
+	private UserDao userDao;
+	
+	@Autowired
+	private RoleDao roleDao;
+	
+	public static UserUtils userUtils;
+	
+	@PostConstruct
+	public void init() {
+		userUtils = this;
+	}
+	
+	/**
+	 * 
+	 * @Title：getByLoginName
+	 * @Description: TODO(根据登录名获取用户)
+	 * @see：
+	 * @param loginName
+	 * @return
+	 */
+	public static User getByLoginName(String loginName){
+		User user = userUtils.userDao.getByLoginName(new User(null, loginName));
+		if (user == null){
+			return null;
+		}
+		user.setRoleList(userUtils.roleDao.findList(new Role(user)));
+		return user;
+	}
 	
 	/**
 	 * 
@@ -63,6 +102,13 @@ public class UserUtils {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @Title：getSession
+	 * @Description: TODO(获取session)
+	 * @see：
+	 * @return
+	 */
 	public static Session getSession(){
 		try{
 			Subject subject = SecurityUtils.getSubject();
@@ -78,9 +124,13 @@ public class UserUtils {
 		}
 		return null;
 	}
+
 	
-	// ============== User Cache ==============
-	
+	/** 
+	 * 用 session 代替缓存，从读取速度上来说 session 远比缓存快，
+	 * 但 session 是一次性的。退出后 session 失效；
+	 * 而缓存只要项目不重启就存在；
+	 * */
 	public static Object getCache(String key) {
 		return getCache(key, null);
 	}

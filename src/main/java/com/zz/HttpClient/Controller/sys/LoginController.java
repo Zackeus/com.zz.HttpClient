@@ -18,6 +18,8 @@ import com.zz.HttpClient.Util.Logs;
 import com.zz.HttpClient.Util.StringUtils;
 import com.zz.HttpClient.Util.UserUtils;
 
+import net.sf.json.JSONObject;
+
 /**
  * 
  * @Title:LoginController
@@ -46,7 +48,8 @@ public class LoginController extends BaseController {
 		Principal principal = UserUtils.getPrincipal();
 		
 		// 如果已经登录，则跳转到管理首页
-		if(principal != null && !principal.isMobileLogin()){
+		if(principal != null && !principal.isMobileLogin()) {
+			Logs.info("get 已经登录，则跳转到管理首页");
 			return "redirect:" + "/sys/loginSuccess";
 		} 
 		
@@ -69,25 +72,23 @@ public class LoginController extends BaseController {
 		
 		// 如果已经登录，则跳转到管理首页
 		if(principal != null) {
+			Logs.info("post 已经登录，则跳转到管理首页");
 			return "redirect:" + "/sys/loginSuccess";
 		}
 
-		String username = WebUtils.getCleanParam(request, LoginAuthenticationFilter.DEFAULT_USERNAME_PARAM);
 		boolean rememberMe = WebUtils.isTrue(request, LoginAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM);
-		String exception = (String)request.getAttribute(LoginAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
 		String message = (String)request.getAttribute(LoginAuthenticationFilter.DEFAULT_MESSAGE_PARAM);
 		
 		if (StringUtils.isBlank(message) || StringUtils.equals(message, "null")){
 			message = "用户或密码错误, 请重试.";
 		}
-
 		
-		Logs.info("username: " + username);
-		Logs.info("rememberMe: " + rememberMe);
-		Logs.info("exception: " + exception);
-		Logs.info("message: " + message);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("code", -1);
+		jsonObject.put(LoginAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM, rememberMe);
+		jsonObject.put(LoginAuthenticationFilter.DEFAULT_MESSAGE_PARAM, message);
 		
-		return "sys/login";
+		return renderInfo(request, response, model, "sys/login", jsonObject);
 	}
 	
 	/**
@@ -101,11 +102,11 @@ public class LoginController extends BaseController {
 	 */
 	@RequiresPermissions("user")
 	@RequestMapping(value = "/loginSuccess")
-	public String loginSuccess(HttpServletRequest request, HttpServletResponse response) {
-		Logs.info("登录成功");
-		Logs.info("信息：" + UserUtils.getSession().getAttributeKeys());
-		Logs.info("id:" + UserUtils.getSession().getId());
-		return "sys/sysIndex";
+	public String loginSuccess(HttpServletRequest request, HttpServletResponse response, Model model) {
+		/*如果已登录，再次访问主页，则退出原账号*/
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("code", 0);
+		return renderInfo(request, response, model, "sys/sysIndex", jsonObject);
 	}
 
 }

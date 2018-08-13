@@ -3,6 +3,7 @@ package com.zz.HttpClient.Controller;
 import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -108,6 +109,31 @@ public abstract class BaseController {
 		} catch (IOException e) {
 			return null;
 		}
+	}
+	
+	/**
+	 * 
+	 * @Title：renderInfo
+	 * @Description: TODO(处理返回信息；Ajax返回json；普通请求将信息加入Model中并返回)
+	 * @see：
+	 * @param response
+	 * @param url
+	 * @param code
+	 * @param message
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected String renderInfo(HttpServletRequest request, HttpServletResponse response, Model model, String url, JSONObject jsonObject) {
+		if (WebUtils.isAjaxRequest(request)) {
+			return renderString(response, jsonObject);
+		}
+		
+		Iterator<String> it = jsonObject.keys(); 
+		while(it.hasNext()) {
+			String key = it.next(); 
+			model.addAttribute(key, jsonObject.getString(key));
+		}
+		return url;
 	}
 
 	/**
