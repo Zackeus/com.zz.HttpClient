@@ -19,6 +19,18 @@ public class Principal implements Serializable {
 	private String name; 			// 姓名
 	private boolean mobileLogin; 	// 是否手机登录
 	
+	public Principal() {
+		super();
+	}
+	
+	public Principal(String id, String loginName, String name, boolean mobileLogin) {
+		super();
+		this.id = id;
+		this.loginName = loginName;
+		this.name = name;
+		this.mobileLogin = mobileLogin;
+	}
+
 	public Principal(User user, boolean mobileLogin) {
 		this.id = user.getId();
 		this.loginName = user.getLoginName();

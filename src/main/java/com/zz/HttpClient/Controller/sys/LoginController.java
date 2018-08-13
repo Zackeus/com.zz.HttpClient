@@ -24,19 +24,18 @@ import net.sf.json.JSONObject;
  * 
  * @Title:LoginController
  * @Description:TODO(登录Controller)
- * @Company: 
+ * @Company:
  * @author zhou.zhang
  * @date 2018年8月10日 上午11:38:26
  */
 @Controller
 @RequestMapping("/sys")
 public class LoginController extends BaseController {
-	
+
 	/**
 	 * 
 	 * @Title：login
-	 * @Description: TODO(登录管理)
-	 * @see：
+	 * @Description: TODO(登录管理) @see：
 	 * @param session
 	 * @param request
 	 * @param response
@@ -44,23 +43,22 @@ public class LoginController extends BaseController {
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-		
+
 		Principal principal = UserUtils.getPrincipal();
-		
+
 		// 如果已经登录，则跳转到管理首页
-		if(principal != null && !principal.isMobileLogin()) {
+		if (principal != null && !principal.isMobileLogin()) {
 			Logs.info("get 已经登录，则跳转到管理首页");
 			return "redirect:" + "/sys/loginSuccess";
-		} 
-		
+		}
+
 		return "sys/login";
 	}
-	
+
 	/**
 	 * 
 	 * @Title：loginFail
-	 * @Description: TODO(登录失败，真正登录的POST请求由Filter完成)
-	 * @see：
+	 * @Description: TODO(登录失败，真正登录的POST请求由Filter完成) @see：
 	 * @param request
 	 * @param response
 	 * @param model
@@ -69,33 +67,32 @@ public class LoginController extends BaseController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String loginFail(HttpServletRequest request, HttpServletResponse response, Model model) {
 		Principal principal = UserUtils.getPrincipal();
-		
+
 		// 如果已经登录，则跳转到管理首页
-		if(principal != null) {
+		if (principal != null) {
 			Logs.info("post 已经登录，则跳转到管理首页");
 			return "redirect:" + "/sys/loginSuccess";
 		}
 
 		boolean rememberMe = WebUtils.isTrue(request, LoginAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM);
-		String message = (String)request.getAttribute(LoginAuthenticationFilter.DEFAULT_MESSAGE_PARAM);
-		
-		if (StringUtils.isBlank(message) || StringUtils.equals(message, "null")){
+		String message = (String) request.getAttribute(LoginAuthenticationFilter.DEFAULT_MESSAGE_PARAM);
+
+		if (StringUtils.isBlank(message) || StringUtils.equals(message, "null")) {
 			message = "用户或密码错误, 请重试.";
 		}
-		
+
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("code", -1);
 		jsonObject.put(LoginAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM, rememberMe);
 		jsonObject.put(LoginAuthenticationFilter.DEFAULT_MESSAGE_PARAM, message);
-		
+
 		return renderInfo(request, response, model, "sys/login", jsonObject);
 	}
-	
+
 	/**
 	 * 
 	 * @Title：index
-	 * @Description: TODO(登录成功，进入管理首页)
-	 * @see：
+	 * @Description: TODO(登录成功，进入管理首页) @see：
 	 * @param request
 	 * @param response
 	 * @return
@@ -103,10 +100,9 @@ public class LoginController extends BaseController {
 	@RequiresPermissions("user")
 	@RequestMapping(value = "/loginSuccess")
 	public String loginSuccess(HttpServletRequest request, HttpServletResponse response, Model model) {
-		/*如果已登录，再次访问主页，则退出原账号*/
+		/* 如果已登录，再次访问主页，则退出原账号 */
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("code", 0);
 		return renderInfo(request, response, model, "sys/sysIndex", jsonObject);
 	}
-
 }
