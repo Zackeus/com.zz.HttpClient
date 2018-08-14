@@ -15,6 +15,7 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.zz.HttpClient.Bean.Sys.Principal;
+import com.zz.HttpClient.Bean.Sys.Role;
 import com.zz.HttpClient.Bean.Sys.User;
 import com.zz.HttpClient.Bean.Sys.UsernamePasswordToken;
 import com.zz.HttpClient.Service.SystemService;
@@ -46,9 +47,6 @@ public class CustomRealm extends AuthorizingRealm {
     	User user = systemService.getUserByLoginName(token.getUsername());
     	
     	if (user != null) {
-    	 	Logs.info("账号：" + user.getLoginName());
-        	Logs.info("密码：" + user.getPassword());
-        	
         	// 密码认证 见initCredentialsMatcher() 方法
         	byte[] salt = Encodes.decodeHex(user.getPassword().substring(0,16));
         	return new SimpleAuthenticationInfo(new Principal(user, false), 
@@ -61,23 +59,7 @@ public class CustomRealm extends AuthorizingRealm {
 	 * 获取权限授权信息，如果缓存中存在，则直接从缓存中获取，否则就重新获取， 登录成功后调用
 	 */
 	protected AuthorizationInfo getAuthorizationInfo(PrincipalCollection principals) {
-		Logs.info("从缓存获取授权");
-		if (principals == null) {
-            return null;
-        }
-		
-        AuthorizationInfo info = null;
-
-//        info = (AuthorizationInfo)UserUtils.getCache(UserUtils.CACHE_AUTH_INFO);
-
-        if (info == null) {
-            info = doGetAuthorizationInfo(principals);
-//            if (info != null) {
-//            	UserUtils.putCache(UserUtils.CACHE_AUTH_INFO, info);
-//            }
-        }
-
-        return info;
+		return super.getAuthorizationInfo(principals);
 	}
     
     /**
@@ -86,10 +68,31 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
     	Logs.info("获取授权----------------");
-    	SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-    	// 提交角色权限
-    	info.addStringPermission("user");
-    	return info;
+    	
+    	Principal principal = (Principal) getAvailablePrincipal(principals);
+    	User user = systemService.getUserByLoginName(principal.getLoginName());
+		if (user != null) {
+			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+//			List<Menu> list = UserUtils.getMenuList(user);
+//			for (Menu menu : list) {
+//				if (StringUtils.isNotBlank(menu.getPermission())) {
+//					// 添加基于Permission的权限信息
+//					for (String permission : StringUtils.split(menu.getPermission(),",")) {
+//						Logs.info("菜单权限：" + permission);
+//						info.addStringPermission(permission);
+//					}
+//				}
+//			}
+			// 添加用户权限
+			info.addStringPermission("user");
+			// 添加用户角色信息
+			for (Role role : user.getRoleList()) {
+				info.addRole(role.getEnname());
+			}
+			return info;
+		} else {
+			return null;
+		}
     }
     
     /**

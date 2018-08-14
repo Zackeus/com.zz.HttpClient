@@ -26,7 +26,7 @@ import com.zz.HttpClient.Bean.Msg.WeiXinMsg;
  */
 @Component
 public class TimerTask {
-
+//
 //	// 借款人发送标签
 //	private static String sendCustomerBatch;
 //
@@ -81,6 +81,7 @@ public class TimerTask {
 //					GlobalConfig.receiverName, "【裕隆汽车金融】 创建智能催收-借款人任务异常：" + e.getMessage(), GlobalConfig.receiverCompany,
 //					GlobalConfig.receiverRole, null, GlobalConfig.repeatTimes, GlobalConfig.repeatInterval, null, null,
 //					null, null, msgConfig.getCollectDpId(), msgConfig.getCollectAgentId());
+//			e.printStackTrace();
 //			try {
 //				SendMsgUtil.sendWX(msgConfig.getWxUrl(), weiXinErrorMsg);
 //			} catch (Exception e1) {

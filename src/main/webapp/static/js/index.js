@@ -1,6 +1,6 @@
 var $,tab,dataStr,layer;
 layui.config({
-	base : "js/"
+	base : ctxStatic + "/js/"
 }).extend({
 	"bodyTab" : "bodyTab"
 })
@@ -10,34 +10,23 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
 		$ = layui.$;
     	layer = parent.layer === undefined ? layui.layer : top.layer;
 		tab = layui.bodyTab({
-			openTabNum : "50",  //最大可打开窗口数量
-			url : "json/navs.json" //获取菜单json地址
+			openTabNum : "50",  			//最大可打开窗口数量
+			url : ctx + "/sys/menu/list" 	//获取菜单json地址
 		});
 
 	//通过顶部菜单获取左侧二三级菜单   注：此处只做演示之用，实际开发中通过接口传参的方式获取导航数据
 	function getData(json){
-		$.getJSON(tab.tabConfig.url,function(data){
-			if(json == "contentManagement"){
-				dataStr = data.contentManagement;
-				//重新渲染左侧菜单
-				tab.render();
-			}else if(json == "memberCenter"){
-				dataStr = data.memberCenter;
-				//重新渲染左侧菜单
-				tab.render();
-			}else if(json == "systemeSttings"){
-				dataStr = data.systemeSttings;
-				//重新渲染左侧菜单
-				tab.render();
-			}else if(json == "seraphApi"){
-                dataStr = data.seraphApi;
-                //重新渲染左侧菜单
-                tab.render();
-            }
+		$.getJSON(tab.tabConfig.url + "?parentId=" + json,function(data) {
+			dataStr = data;
+			// 重新渲染左侧菜单
+			tab.render();
 		})
 	}
-	//页面加载时判断左侧菜单是否显示
-	//通过顶部菜单获取左侧菜单
+	
+	// 初始化左侧菜单
+	getData("7d005805fbd74f04bad01a93ecbef192");
+	
+	//页面加载时判断左侧菜单是否显示  通过顶部菜单获取左侧菜单
 	$(".topLevelMenus li,.mobileTopLevelMenus dd").click(function(){
 		if($(this).parents(".mobileTopLevelMenus").length != "0"){
 			$(".topLevelMenus li").eq($(this).index()).addClass("layui-this").siblings().removeClass("layui-this");
@@ -57,13 +46,20 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
 			layer.msg("此栏目状态下左侧菜单不可展开");  //主要为了避免左侧显示的内容与顶部菜单不匹配
 			return false;
 		}
+		
+		// 隐藏按钮图标变化
+		if($(this).is('.layui-icon-shrink-right')) {
+		    $(this).addClass('layui-icon-spread-left');
+		    $(this).removeClass('layui-icon-shrink-right');
+		} else {
+		    $(this).addClass('layui-icon-shrink-right');
+		    $(this).removeClass('layui-icon-spread-left');
+		}
+		
 		$(".layui-layout-admin").toggleClass("showMenu");
 		//渲染顶部窗口
 		tab.tabMove();
 	})
-
-	//通过顶部菜单获取左侧二三级菜单   注：此处只做演示之用，实际开发中通过接口传参的方式获取导航数据
-	getData("contentManagement");
 
 	//手机设备的简单适配
     $('.site-tree-mobile').on('click', function(){
@@ -84,7 +80,7 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
 	})
 
 	//清除缓存
-	$(".clearCache").click(function(){
+	$(".clearCache").click(function() {
 		window.sessionStorage.clear();
         window.localStorage.clear();
         var index = layer.msg('清除缓存中，请稍候',{icon: 16,time:false,shade:0.8});
@@ -141,23 +137,9 @@ function addTab(_this){
 	tab.tabAdd(_this);
 }
 
-//捐赠弹窗
-function donation(){
-	layer.tab({
-		area : ['260px', '367px'],
-		tab : [{
-			title : "微信",
-			content : "<div style='padding:30px;overflow:hidden;background:#d2d0d0;'><img src='images/wechat.jpg'></div>"
-		},{
-			title : "支付宝",
-			content : "<div style='padding:30px;overflow:hidden;background:#d2d0d0;'><img src='images/alipay.jpg'></div>"
-		}]
-	})
-}
-
 //图片管理弹窗
 function showImg(){
-    $.getJSON('json/images.json', function(json){
+    $.getJSON(ctxStatic + '/json/images.json', function(json){
         var res = json;
         layer.photos({
             photos: res,

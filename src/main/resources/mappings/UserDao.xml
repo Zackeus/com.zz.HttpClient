@@ -59,6 +59,15 @@
 		LEFT JOIN [10.5.60.80].[jeesite-yfc].[dbo].[sys_user] ou2 ON ou2.id = o.deputy_person
     </sql>
 
+	<!-- 根据编号获得用户 -->
+	<select id="get" resultType="User">
+		SELECT
+		<include refid="userColumns"/>
+		FROM [10.5.60.80].[jeesite-yfc].[dbo].[sys_user] a
+		<include refid="userJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
 	<!-- 根据登录名查询用户 -->
 	<select id="getByLoginName" resultType="User" parameterType="User">
 		SELECT

@@ -212,15 +212,15 @@ public class Role extends DataEntity<Role> {
 	/**
 	 * 获取权限字符串列表
 	 */
-	public List<String> getPermissions() {
-		List<String> permissions = Lists.newArrayList();
-		for (Menu menu : menuList) {
-			if (menu.getPermission()!=null && !"".equals(menu.getPermission())){
-				permissions.add(menu.getPermission());
-			}
-		}
-		return permissions;
-	}
+//	public List<String> getPermissions() {
+//		List<String> permissions = Lists.newArrayList();
+//		for (Menu menu : menuList) {
+//			if (menu.getPermission()!=null && !"".equals(menu.getPermission())){
+//				permissions.add(menu.getPermission());
+//			}
+//		}
+//		return permissions;
+//	}
 
 	public User getUser() {
 		return user;

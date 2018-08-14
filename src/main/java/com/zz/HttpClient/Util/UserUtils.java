@@ -1,18 +1,26 @@
 package com.zz.HttpClient.Util;
 
+import java.util.Collection;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.zz.HttpClient.Bean.Sys.Menu;
 import com.zz.HttpClient.Bean.Sys.Principal;
 import com.zz.HttpClient.Bean.Sys.Role;
 import com.zz.HttpClient.Bean.Sys.User;
+import com.zz.HttpClient.Dao.MenuDao;
 import com.zz.HttpClient.Dao.RoleDao;
 import com.zz.HttpClient.Dao.UserDao;
 
@@ -40,16 +48,36 @@ public class UserUtils {
 	public static final String CACHE_OFFICE_ALL_LIST = "officeAllList";
 	
 	@Autowired
+	private SessionDAO sessionDAO;
+	
+	@Autowired
 	private UserDao userDao;
 	
 	@Autowired
 	private RoleDao roleDao;
+	
+	@Autowired
+	private MenuDao menuDao;
 	
 	public static UserUtils userUtils;
 	
 	@PostConstruct
 	public void init() {
 		userUtils = this;
+	}
+	
+	/**
+	 * 根据ID获取用户
+	 * @param id
+	 * @return 取不到返回null
+	 */
+	public static User get(String id){
+		User user = userUtils.userDao.get(id);
+		if (user == null){
+			return null;
+		}
+		user.setRoleList(userUtils.roleDao.findList(new Role(user)));
+		return user;
 	}
 	
 	/**
@@ -67,6 +95,26 @@ public class UserUtils {
 		}
 		user.setRoleList(userUtils.roleDao.findList(new Role(user)));
 		return user;
+	}
+	
+	/**
+	 * 
+	 * @Title：getUser
+	 * @Description: TODO(获取当前用户)
+	 * @see：
+	 * @return
+	 */
+	public static User getUser(){
+		Principal principal = getPrincipal();
+		if (principal!=null){
+			User user = get(principal.getId());
+			if (user != null){
+				return user;
+			}
+			return new User();
+		}
+		// 如果没有登录，则返回实例化空的User对象。
+		return new User();
 	}
 	
 	/**
@@ -90,7 +138,7 @@ public class UserUtils {
 	public static Principal getPrincipal(){
 		try{
 			Subject subject = SecurityUtils.getSubject();
-			Principal principal = (Principal)subject.getPrincipal();
+			Principal principal = (Principal) subject.getPrincipal();
 			if (principal != null){
 				return principal;
 			}
@@ -124,8 +172,62 @@ public class UserUtils {
 		}
 		return null;
 	}
-
 	
+	/**
+	 * 
+	 * @Title：kickOutUser
+	 * @Description: TODO((踢除指定用户)
+	 * @see：
+	 * @param id 用户编号
+	 */
+	public static void kickOutUser(String id) {
+	   	// 踢出此账号在线用户
+    	Collection<Session> sessions = userUtils.sessionDAO.getActiveSessions();
+    	for(Session session : sessions) {
+    		Object obj = session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+            if (!ObjectUtils.isEmpty(obj)) {
+                Principal principal = (Principal) ((SimplePrincipalCollection) obj).getPrimaryPrincipal();
+                if (id.equalsIgnoreCase(principal.getId())
+                		&& !UserUtils.getSession().getId().equals(session.getId())) {
+                	Logs.info("踢出用户：" + session.getId());
+                	userUtils.sessionDAO.delete(session);
+				}
+    		}
+    	}
+	}
+	
+	/**
+	 * 
+	 * @Title：getMenuList
+	 * @Description: TODO(获取用户授权菜单)
+	 * @see：
+	 * @return
+	 */
+	public static List<Menu> getMenuList(String parentId, User user) {
+		List<Menu> menuList = userUtils.menuDao.getMenuList(parentId);
+//		List<Menu> menuList = new ArrayList<Menu>();
+//		if (user.isAdmin()){
+//			menuList = userUtils.menuDao.findAllList(new Menu());
+//		}else{
+//			Menu m = new Menu();
+//			m.setUserId(user.getId());
+//			menuList = userUtils.menuDao.findByUserId(m);
+//		}
+		return menuList;
+	}
+	
+	/**
+	 * 
+	 * @Title：getMenuList
+	 * @Description: TODO(获取用户授权树形菜单)
+	 * @see：
+	 * @return
+	 */
+	public static List<Menu> getTreeMenus(User user) {
+		List<Menu> menuList = userUtils.menuDao.getTreeMenus();
+		return menuList;
+	}
+
 	/** 
 	 * 用 session 代替缓存，从读取速度上来说 session 远比缓存快，
 	 * 但 session 是一次性的。退出后 session 失效；

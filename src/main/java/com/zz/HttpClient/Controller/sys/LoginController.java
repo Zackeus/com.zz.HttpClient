@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.zz.HttpClient.Bean.Sys.Principal;
+import com.zz.HttpClient.Bean.Sys.User;
 import com.zz.HttpClient.Controller.BaseController;
 import com.zz.HttpClient.Shiro.filter.LoginAuthenticationFilter;
 import com.zz.HttpClient.Util.Logs;
@@ -31,11 +32,12 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping("/sys")
 public class LoginController extends BaseController {
-
+	
 	/**
 	 * 
 	 * @Title：login
-	 * @Description: TODO(登录管理) @see：
+	 * @Description: TODO(登录管理) 
+	 * @see：
 	 * @param session
 	 * @param request
 	 * @param response
@@ -58,7 +60,8 @@ public class LoginController extends BaseController {
 	/**
 	 * 
 	 * @Title：loginFail
-	 * @Description: TODO(登录失败，真正登录的POST请求由Filter完成) @see：
+	 * @Description: TODO(登录失败，真正登录的POST请求由Filter完成) 
+	 * @see：
 	 * @param request
 	 * @param response
 	 * @param model
@@ -92,7 +95,8 @@ public class LoginController extends BaseController {
 	/**
 	 * 
 	 * @Title：index
-	 * @Description: TODO(登录成功，进入管理首页) @see：
+	 * @Description: TODO(登录成功，进入管理首页) 
+	 * @see：
 	 * @param request
 	 * @param response
 	 * @return
@@ -100,9 +104,11 @@ public class LoginController extends BaseController {
 	@RequiresPermissions("user")
 	@RequestMapping(value = "/loginSuccess")
 	public String loginSuccess(HttpServletRequest request, HttpServletResponse response, Model model) {
-		/* 如果已登录，再次访问主页，则退出原账号 */
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("code", 0);
+		// 获取用户菜单树列表
+		model.addAttribute("menuList", UserUtils.getTreeMenus(new User(UserUtils.getPrincipal().getId())));
 		return renderInfo(request, response, model, "sys/sysIndex", jsonObject);
 	}
+	
 }

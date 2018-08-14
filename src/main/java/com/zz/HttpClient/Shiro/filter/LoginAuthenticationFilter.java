@@ -1,7 +1,5 @@
 package com.zz.HttpClient.Shiro.filter;
 
-import java.util.Collection;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -10,18 +8,11 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.session.mgt.eis.SessionDAO;
-import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.subject.support.DefaultSubjectContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.zz.HttpClient.Bean.Sys.Principal;
 import com.zz.HttpClient.Bean.Sys.UsernamePasswordToken;
 import com.zz.HttpClient.Util.Logs;
-import com.zz.HttpClient.Util.ObjectUtils;
 import com.zz.HttpClient.Util.StringUtils;
 import com.zz.HttpClient.Util.UserUtils;
 import com.zz.HttpClient.Util.WebUtils;
@@ -45,9 +36,6 @@ public class LoginAuthenticationFilter extends org.apache.shiro.web.filter.authc
 	private String mobileLoginParam = DEFAULT_MOBILE_PARAM;
 	private String messageParam = DEFAULT_MESSAGE_PARAM;
 	
-	@Autowired
-	private SessionDAO sessionDAO;
-	
 	protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) {
 		String username = getUsername(request);
 		String password = getPassword(request);
@@ -70,7 +58,6 @@ public class LoginAuthenticationFilter extends org.apache.shiro.web.filter.authc
 		if (StringUtils.isBlank(username)){
 			username = StringUtils.toString(request.getAttribute(getUsernameParam()), StringUtils.EMPTY);
 		}
-		Logs.info("用户名：" + username);
 		return username;
 	}
 	
@@ -83,7 +70,6 @@ public class LoginAuthenticationFilter extends org.apache.shiro.web.filter.authc
 		if (StringUtils.isBlank(password)){
 			password = StringUtils.toString(request.getAttribute(getPasswordParam()), StringUtils.EMPTY);
 		}
-		Logs.info("密码：" + password);
 		return password;
 	}
 	
@@ -96,7 +82,6 @@ public class LoginAuthenticationFilter extends org.apache.shiro.web.filter.authc
 		if (StringUtils.isBlank(isRememberMe)){
 			isRememberMe = StringUtils.toString(request.getAttribute(getRememberMeParam()), StringUtils.EMPTY);
 		}
-		Logs.info("记住我：" + StringUtils.toBoolean(isRememberMe));
 		return StringUtils.toBoolean(isRememberMe);
 	}
 	
@@ -164,7 +149,7 @@ public class LoginAuthenticationFilter extends org.apache.shiro.web.filter.authc
 	protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request,
 			ServletResponse response) throws Exception {
 		// 踢出同一用户
-		kickOutUser();
+		UserUtils.kickOutUser(UserUtils.getPrincipal().getId());
 		return super.onLoginSuccess(token, subject, request, response);
 	}
 	
@@ -198,28 +183,6 @@ public class LoginAuthenticationFilter extends org.apache.shiro.web.filter.authc
 	@Override
 	protected void issueSuccessRedirect(ServletRequest request, ServletResponse response) throws Exception {
 		WebUtils.issueRedirect(request, response, getSuccessUrl(), null, true);
-	}
-	
-	/**
-	 * 
-	 * @Title：kickOutUser
-	 * @Description: TODO(踢除用户)
-	 * @see：
-	 */
-	private void kickOutUser() {
-	   	// 踢出此账号在线用户
-    	Collection<Session> sessions = sessionDAO.getActiveSessions();
-    	for(Session session : sessions) {
-    		Object obj = session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
-            if (!ObjectUtils.isEmpty(obj)) {
-                Principal principal = (Principal) ((SimplePrincipalCollection) obj).getPrimaryPrincipal();
-                if (UserUtils.getPrincipal().getLoginName().equalsIgnoreCase(principal.getLoginName())
-                		&& !UserUtils.getSession().getId().equals(session.getId())) {
-                	Logs.info("踢出用户：" + session.getId());
-                	sessionDAO.delete(session);
-				}
-    		}
-    	}
 	}
 	
 }

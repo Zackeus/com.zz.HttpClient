@@ -34,6 +34,8 @@
 			]
 		}
 	],
+	
+	
 	"memberCenter": [
 		{
 			"title": "用户中心",
@@ -48,6 +50,8 @@
 			"spread": false
 		}
 	],
+	
+	
 	"systemeSttings": [
 		{
 			"title": "系统基本参数",
@@ -71,6 +75,8 @@
 			"spread": false
 		}
 	],
+	
+	
 	"seraphApi": [
 		{
 			"title": "三级联动模块",

@@ -6,7 +6,10 @@ import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zz.HttpClient.Bean.Sys.User;
 import com.zz.HttpClient.Util.IdGen;
+import com.zz.HttpClient.Util.StringUtils;
+import com.zz.HttpClient.Util.UserUtils;
 
 /**
  * 
@@ -21,8 +24,8 @@ public abstract class DataEntity<T> extends BaseEntity<T> {
 	private static final long serialVersionUID = 1L;
 	
 	protected String remarks;	// 备注
-//	protected User createBy;	// 创建者
-//	protected User updateBy;	// 更新者
+	protected User createBy;	// 创建者
+	protected User updateBy;	// 更新者
 	protected Date createDate;	// 创建日期
 	protected Date updateDate;	// 更新日期
 	protected String delFlag; 	// 删除标记（0：正常；1：删除；2：审核）
@@ -45,11 +48,11 @@ public abstract class DataEntity<T> extends BaseEntity<T> {
 		if (!this.isNewRecord){
 			setId(IdGen.uuid());
 		}
-//		User user = UserUtils.getUser();
-//		if (StringUtils.isNotBlank(user.getId())){
-//			this.updateBy = user;
-//			this.createBy = user;
-//		}
+		User user = UserUtils.getUser();
+		if (StringUtils.isNotBlank(user.getId())){
+			this.updateBy = user;
+			this.createBy = user;
+		}
 		this.updateDate = new Date();
 		this.createDate = this.updateDate;
 	}
@@ -60,10 +63,10 @@ public abstract class DataEntity<T> extends BaseEntity<T> {
 	 */
 	@Override
 	public void preUpdate(){
-//		User user = UserUtils.getUser();
-//		if (StringUtils.isNotBlank(user.getId())){
-//			this.updateBy = user;
-//		}
+		User user = UserUtils.getUser();
+		if (StringUtils.isNotBlank(user.getId())){
+			this.updateBy = user;
+		}
 		this.updateDate = new Date();
 	}
 	
@@ -76,14 +79,14 @@ public abstract class DataEntity<T> extends BaseEntity<T> {
 		this.remarks = remarks;
 	}
 	
-//	@JsonIgnore
-//	public User getCreateBy() {
-//		return createBy;
-//	}
-//
-//	public void setCreateBy(User createBy) {
-//		this.createBy = createBy;
-//	}
+	@JsonIgnore
+	public User getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(User createBy) {
+		this.createBy = createBy;
+	}
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getCreateDate() {
@@ -94,14 +97,14 @@ public abstract class DataEntity<T> extends BaseEntity<T> {
 		this.createDate = createDate;
 	}
 
-//	@JsonIgnore
-//	public User getUpdateBy() {
-//		return updateBy;
-//	}
-//
-//	public void setUpdateBy(User updateBy) {
-//		this.updateBy = updateBy;
-//	}
+	@JsonIgnore
+	public User getUpdateBy() {
+		return updateBy;
+	}
+
+	public void setUpdateBy(User updateBy) {
+		this.updateBy = updateBy;
+	}
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getUpdateDate() {

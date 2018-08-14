@@ -12,9 +12,9 @@ layui.define(["element","jquery"],function(exports){
 		layId,
 		Tab = function(){
 			this.tabConfig = {
-				openTabNum : undefined,  //最大可打开窗口数量
-				tabFilter : "bodyTab",  //添加窗口的filter
-				url : undefined  //获取菜单json地址
+				openTabNum : undefined, 		//最大可打开窗口数量
+				tabFilter : "bodyTab",  		//添加窗口的filter
+				url : ctx + "/sys/menu/list"	//获取菜单json地址
 			}
 		};
     //生成左侧菜单
