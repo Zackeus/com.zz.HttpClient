@@ -27,13 +27,23 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 	private MenuDao menuDao;
 	
 	@Cacheable(value = {"sysMenuCache"})
-	public List<Menu> getTreeMenus() {
-		return menuDao.getTreeMenus();
+	public List<Menu> getAllTreeMenus(Menu menu) {
+		return menuDao.getAllTreeMenus(menu);
 	}
 	
-	@Cacheable(value = {"sysMenuCache"})
-	public List<Menu> getMenuList(String parentId) {
-		return menuDao.getMenuList(parentId);
+	@Cacheable(value = {"sysMenuCache"}, key="#menu.userId")
+	public List<Menu> getTreeMenus(Menu menu) {
+		return menuDao.getTreeMenus(menu);
+	}
+	
+	@Cacheable(value = {"sysMenuCache"}, key="#menu.parentId")
+	public List<Menu> findAllList(Menu menu) {
+		return menuDao.findAllList(menu);
+	}
+	
+	@Cacheable(value = {"sysMenuCache"}, key="#menu.userId + #menu.parentId")
+	public List<Menu> getMenuList(Menu menu) {
+		return menuDao.getMenuList(menu);
 	}
 	
 	@CacheEvict(value = {"sysMenuCache"},allEntries = true)

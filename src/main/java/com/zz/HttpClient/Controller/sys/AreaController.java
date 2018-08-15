@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.zz.HttpClient.Bean.Sys.User;
 import com.zz.HttpClient.Controller.BaseController;
 import com.zz.HttpClient.Util.UserUtils;
 
@@ -38,7 +37,7 @@ public class AreaController extends BaseController {
 	@RequestMapping(value = "/index")
 	public String sysIndex(HttpServletRequest request, HttpServletResponse response, Model model) {
 		// 获取用户菜单树列表
-		model.addAttribute("treeMenus", UserUtils.getTreeMenus(new User(UserUtils.getPrincipal().getId())));
+		model.addAttribute("treeMenus", UserUtils.getTreeMenusByUser(UserUtils.getPrincipal()));
 		return "sys/sysIndex";
 	}
 	

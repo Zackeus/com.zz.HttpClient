@@ -24,6 +24,8 @@ public class Menu extends DataEntity<Menu> {
 	private boolean spread; 		// 是否展开
 	private String sysId; 			// 系统ID
 	private List<Menu> children; 	// 子菜单
+	
+	private String userId;
 
 	public Menu() {
 		super();
@@ -31,6 +33,19 @@ public class Menu extends DataEntity<Menu> {
 
 	public Menu(String id) {
 		super(id);
+	}
+	
+	public Menu(User user) {
+		this.userId = user.getId();
+	}
+	
+	public Menu(Principal principal) {
+		this.userId = principal.getId();
+	}
+	
+	public Menu(Principal principal, String parentId) {
+		this.parentId = parentId;
+		this.userId = principal.getId();
 	}
 	
 	public Menu(String parentId, String title, String icon, Integer sort, String href, boolean spread, String sysId,
@@ -109,5 +124,13 @@ public class Menu extends DataEntity<Menu> {
 	public void setChildren(List<Menu> children) {
 		this.children = children;
 	}
-	
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
 }

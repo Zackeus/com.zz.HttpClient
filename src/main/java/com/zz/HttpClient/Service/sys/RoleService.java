@@ -27,6 +27,11 @@ public class RoleService extends CrudService<RoleDao, Role> {
 	RoleDao roleDao;
 	
 	@Cacheable(value = {"authorizationCache"})
+	public List<Role> findAllList(Role role) {
+		return roleDao.findAllList(role);
+	}
+	
+	@Cacheable(value = {"authorizationCache"})
 	public List<Role> getRoleByUser(Role role) {
 		return roleDao.getRoleByUser(role);
 	}

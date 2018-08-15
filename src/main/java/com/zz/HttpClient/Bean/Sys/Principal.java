@@ -53,10 +53,13 @@ public class Principal implements Serializable {
 	public boolean isMobileLogin() {
 		return mobileLogin;
 	}
-
-	@Override
-	public String toString() {
-		return id;
+	
+	public boolean isAdmin(){
+		return isAdmin(this.id);
+	}
+	
+	public static boolean isAdmin(String id){
+		return id != null && "1".equals(id);
 	}
 
 }

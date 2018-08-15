@@ -3,13 +3,12 @@ package com.zz.HttpClient.Controller.sys;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.zz.HttpClient.Controller.BaseController;
-import com.zz.HttpClient.Service.sys.MenuService;
+import com.zz.HttpClient.Util.UserUtils;
 
 /**
  * 
@@ -23,9 +22,6 @@ import com.zz.HttpClient.Service.sys.MenuService;
 @RequestMapping("/sys/menu")
 public class MenuController extends BaseController {
 
-	@Autowired
-	MenuService menuService;
-
 	/**
 	 * 
 	 * @Title：getMenuList
@@ -38,7 +34,7 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = "/list")
 	public void getMenuList(@RequestParam(name = "parentId") String parentId, HttpServletRequest request,
 			HttpServletResponse response) {
-		renderString(response, menuService.getMenuList(parentId));
+		renderString(response, UserUtils.getMenuListByUser(parentId));
 	}
 
 }

@@ -13,6 +13,14 @@
       	R.[REMARKS]
     </sql>
     
+    <select id="findAllList" resultType="Role">
+    	SELECT
+		<include refid="roleColumns"/>
+		FROM [Message].[dbo].[SYS_ROLE] R
+		${sqlMap.dsf}
+		ORDER BY R.name
+    </select>
+    
     <!-- 根据用户ID或登录名查询用户角色 -->
 	<select id="getRoleByUser" resultType="Role">
 		SELECT

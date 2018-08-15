@@ -104,13 +104,47 @@ public class UserUtils {
 	 * @return
 	 */
 	public static List<Role> getRoleByUser(User user) {
+		if (user.isAdmin()){
+			return userUtils.roleService.findAllList(new Role());
+		}
 		return userUtils.roleService.getRoleByUser(new Role(user));
 	}
 	
 	public static List<Role> getRoleByUser(Principal principal) {
+		if (principal.isAdmin()) {
+			return userUtils.roleService.findAllList(new Role());
+		}
 		return userUtils.roleService.getRoleByUser(new Role(principal));
 	}
 	
+	/**
+	 * 
+	 * @Title：getMenuList
+	 * @Description: TODO(获取用户授权树形菜单)
+	 * @see：
+	 * @return
+	 */
+	public static List<Menu> getTreeMenusByUser(Principal principal) {
+		if (principal.isAdmin()) {
+			return userUtils.menuService.getAllTreeMenus(new Menu());
+		}
+		return userUtils.menuService.getTreeMenus(new Menu(principal));
+	}
+	
+	/**
+	 * 
+	 * @Title：getMenuList
+	 * @Description: TODO(获取用户授权左侧菜单)
+	 * @see：
+	 * @return
+	 */
+	public static List<Menu> getMenuListByUser(String parentId) {
+		Principal principal = getPrincipal();
+		if (principal.isAdmin()) {
+			return userUtils.menuService.findAllList(new Menu(principal, parentId));
+		}
+		return userUtils.menuService.getMenuList(new Menu(principal, parentId));
+	}
 	
 	/**
 	 * 
@@ -211,38 +245,6 @@ public class UserUtils {
     	}
 	}
 	
-	/**
-	 * 
-	 * @Title：getMenuList
-	 * @Description: TODO(获取用户授权菜单)
-	 * @see：
-	 * @return
-	 */
-	public static List<Menu> getMenuList(String parentId, User user) {
-		List<Menu> menuList = userUtils.menuService.getMenuList(parentId);
-//		List<Menu> menuList = new ArrayList<Menu>();
-//		if (user.isAdmin()){
-//			menuList = userUtils.menuDao.findAllList(new Menu());
-//		}else{
-//			Menu m = new Menu();
-//			m.setUserId(user.getId());
-//			menuList = userUtils.menuDao.findByUserId(m);
-//		}
-		return menuList;
-	}
-	
-	/**
-	 * 
-	 * @Title：getMenuList
-	 * @Description: TODO(获取用户授权树形菜单)
-	 * @see：
-	 * @return
-	 */
-	public static List<Menu> getTreeMenus(User user) {
-		List<Menu> menuList = userUtils.menuService.getTreeMenus();
-		return menuList;
-	}
-
 	/** 
 	 * 用 session 代替缓存，从读取速度上来说 session 远比缓存快，
 	 * 但 session 是一次性的。退出后 session 失效；
