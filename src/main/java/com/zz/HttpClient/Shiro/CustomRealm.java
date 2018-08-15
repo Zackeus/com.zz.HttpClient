@@ -21,6 +21,7 @@ import com.zz.HttpClient.Bean.Sys.UsernamePasswordToken;
 import com.zz.HttpClient.Service.SystemService;
 import com.zz.HttpClient.Util.Encodes;
 import com.zz.HttpClient.Util.Logs;
+import com.zz.HttpClient.Util.UserUtils;
 
 /**
  * 
@@ -69,9 +70,8 @@ public class CustomRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
     	Logs.info("获取授权----------------");
     	
-    	Principal principal = (Principal) getAvailablePrincipal(principals);
-    	User user = systemService.getUserByLoginName(principal.getLoginName());
-		if (user != null) {
+    	Principal principal = UserUtils.getPrincipal();
+		if (principal != null) {
 			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 //			List<Menu> list = UserUtils.getMenuList(user);
 //			for (Menu menu : list) {
@@ -86,8 +86,8 @@ public class CustomRealm extends AuthorizingRealm {
 			// 添加用户权限
 			info.addStringPermission("user");
 			// 添加用户角色信息
-			for (Role role : user.getRoleList()) {
-				info.addRole(role.getEnname());
+			for (Role role : UserUtils.getRoleByUser(principal)) {
+				info.addRole(role.getEnName());
 			}
 			return info;
 		} else {

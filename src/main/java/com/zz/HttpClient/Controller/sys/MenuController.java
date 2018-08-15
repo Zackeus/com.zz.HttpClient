@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.zz.HttpClient.Controller.BaseController;
-import com.zz.HttpClient.Dao.MenuDao;
+import com.zz.HttpClient.Service.sys.MenuService;
 
 /**
  * 
@@ -24,7 +24,7 @@ import com.zz.HttpClient.Dao.MenuDao;
 public class MenuController extends BaseController {
 
 	@Autowired
-	MenuDao menuDao;
+	MenuService menuService;
 
 	/**
 	 * 
@@ -38,7 +38,7 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = "/list")
 	public void getMenuList(@RequestParam(name = "parentId") String parentId, HttpServletRequest request,
 			HttpServletResponse response) {
-		renderString(response, menuDao.getMenuList(parentId));
+		renderString(response, menuService.getMenuList(parentId));
 	}
 
 }

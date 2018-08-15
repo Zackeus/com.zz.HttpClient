@@ -1,9 +1,8 @@
-package com.zz.HttpClient.Dao;
+package com.zz.HttpClient.Dao.sys;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-import org.springframework.cache.annotation.Cacheable;
 
 import com.zz.HttpClient.Bean.Sys.Menu;
 import com.zz.HttpClient.Dao.Basic.CrudDao;
@@ -18,10 +17,8 @@ import com.zz.HttpClient.Dao.Basic.CrudDao;
  */
 public interface MenuDao extends CrudDao<Menu> {
 	
-	@Cacheable(value = {"sysMenuCache"})
 	public List<Menu> getTreeMenus();
 	
-	@Cacheable(value = {"sysMenuCache"})
 	public List<Menu> getMenuList(@Param("parentId") String parentId);
 
 }

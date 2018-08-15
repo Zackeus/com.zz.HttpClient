@@ -38,7 +38,7 @@ public class AreaController extends BaseController {
 	@RequestMapping(value = "/index")
 	public String sysIndex(HttpServletRequest request, HttpServletResponse response, Model model) {
 		// 获取用户菜单树列表
-		model.addAttribute("menuList", UserUtils.getTreeMenus(new User(UserUtils.getPrincipal().getId())));
+		model.addAttribute("treeMenus", UserUtils.getTreeMenus(new User(UserUtils.getPrincipal().getId())));
 		return "sys/sysIndex";
 	}
 	

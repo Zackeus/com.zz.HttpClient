@@ -20,9 +20,9 @@ import com.zz.HttpClient.Bean.Sys.Menu;
 import com.zz.HttpClient.Bean.Sys.Principal;
 import com.zz.HttpClient.Bean.Sys.Role;
 import com.zz.HttpClient.Bean.Sys.User;
-import com.zz.HttpClient.Dao.MenuDao;
-import com.zz.HttpClient.Dao.RoleDao;
 import com.zz.HttpClient.Dao.UserDao;
+import com.zz.HttpClient.Service.sys.MenuService;
+import com.zz.HttpClient.Service.sys.RoleService;
 
 /**
  * 
@@ -54,10 +54,10 @@ public class UserUtils {
 	private UserDao userDao;
 	
 	@Autowired
-	private RoleDao roleDao;
+	private RoleService roleService;
 	
 	@Autowired
-	private MenuDao menuDao;
+	private MenuService menuService;
 	
 	public static UserUtils userUtils;
 	
@@ -76,7 +76,6 @@ public class UserUtils {
 		if (user == null){
 			return null;
 		}
-		user.setRoleList(userUtils.roleDao.findList(new Role(user)));
 		return user;
 	}
 	
@@ -93,9 +92,25 @@ public class UserUtils {
 		if (user == null){
 			return null;
 		}
-		user.setRoleList(userUtils.roleDao.findList(new Role(user)));
 		return user;
 	}
+	
+	/**
+	 * 
+	 * @Title：getRoleByUser
+	 * @Description: TODO(根据用户查询角色)
+	 * @see：
+	 * @param user
+	 * @return
+	 */
+	public static List<Role> getRoleByUser(User user) {
+		return userUtils.roleService.getRoleByUser(new Role(user));
+	}
+	
+	public static List<Role> getRoleByUser(Principal principal) {
+		return userUtils.roleService.getRoleByUser(new Role(principal));
+	}
+	
 	
 	/**
 	 * 
@@ -204,7 +219,7 @@ public class UserUtils {
 	 * @return
 	 */
 	public static List<Menu> getMenuList(String parentId, User user) {
-		List<Menu> menuList = userUtils.menuDao.getMenuList(parentId);
+		List<Menu> menuList = userUtils.menuService.getMenuList(parentId);
 //		List<Menu> menuList = new ArrayList<Menu>();
 //		if (user.isAdmin()){
 //			menuList = userUtils.menuDao.findAllList(new Menu());
@@ -224,7 +239,7 @@ public class UserUtils {
 	 * @return
 	 */
 	public static List<Menu> getTreeMenus(User user) {
-		List<Menu> menuList = userUtils.menuDao.getTreeMenus();
+		List<Menu> menuList = userUtils.menuService.getTreeMenus();
 		return menuList;
 	}
 
@@ -248,6 +263,10 @@ public class UserUtils {
 
 	public static void removeCache(String key) {
 		getSession().removeAttribute(key);
+	}
+	
+	public static void clearCache() {
+		userUtils.roleService.clearCache();
 	}
 	
 }

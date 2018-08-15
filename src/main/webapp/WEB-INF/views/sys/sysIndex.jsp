@@ -15,11 +15,14 @@
 				<a href="#" class="logo">layuiCMS 2.0</a>
 				<!-- 显示/隐藏菜单 -->
 				<a href="javascript:;" class="seraph hideMenu layui-icon layui-icon-shrink-right"></a>
-				<!-- 顶级菜单 -->
+				<!-- 顶部菜单 -->
 				<ul class="layui-nav topLevelMenus" pc>
-					<c:forEach items="${menuList}" var="menu">
-						<li class="layui-nav-item" data-menu="${menu.id}">
-							<a href="javascript:;"><i class="layui-icon" data-icon="${menu.icon}">${menu.icon}</i><cite>${menu.title}</cite></a>
+					<c:forEach items="${treeMenus}" var="treeMenu">
+						<li class="layui-nav-item" data-menu="${treeMenu.id}">
+							<a href="javascript:;">
+								<i class="layui-icon" data-icon="${treeMenu.icon}">${treeMenu.icon}</i>
+								<cite>${treeMenu.title}</cite>
+							</a>
 						</li>
 					</c:forEach>
 				</ul>
