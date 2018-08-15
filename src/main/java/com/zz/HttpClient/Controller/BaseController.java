@@ -22,7 +22,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.zz.HttpClient.Util.DateUtils;
 import com.zz.HttpClient.Util.JsonMapper;
-import com.zz.HttpClient.Util.Logs;
 import com.zz.HttpClient.Util.WebUtils;
 
 import net.sf.json.JSONObject;
@@ -182,7 +181,6 @@ public abstract class BaseController {
 	 */
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
-		Logs.info("初始化数据绑定,将所有传递进来的String进行HTML编码，防止XSS攻击");
 		// String类型转换，将所有传递进来的String进行HTML编码，防止XSS攻击
 		binder.registerCustomEditor(String.class, new PropertyEditorSupport() {
 			@Override

@@ -24,7 +24,7 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
 	}
 	
 	// 初始化左侧菜单
-	getData("7d005805fbd74f04bad01a93ecbef192");
+	getData($(".topLevelMenus li").first().data("menu"));
 	
 	//页面加载时判断左侧菜单是否显示  通过顶部菜单获取左侧菜单
 	$(".topLevelMenus li,.mobileTopLevelMenus dd").click(function(){

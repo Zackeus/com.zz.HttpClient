@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.zz.HttpClient.Bean.Sys.Principal;
-import com.zz.HttpClient.Bean.Sys.User;
 import com.zz.HttpClient.Controller.BaseController;
 import com.zz.HttpClient.Shiro.filter.LoginAuthenticationFilter;
 import com.zz.HttpClient.Util.Logs;
@@ -51,7 +50,7 @@ public class LoginController extends BaseController {
 		// 如果已经登录，则跳转到管理首页
 		if (principal != null && !principal.isMobileLogin()) {
 			Logs.info("get 已经登录，则跳转到管理首页");
-			return "redirect:" + "/sys/loginSuccess";
+			return "redirect:" + "/sys/area/index";
 		}
 
 		return "sys/login";
@@ -68,13 +67,16 @@ public class LoginController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String loginFail(HttpServletRequest request, HttpServletResponse response, Model model) {
+	public void loginFail(HttpServletRequest request, HttpServletResponse response, Model model) {
 		Principal principal = UserUtils.getPrincipal();
+		JSONObject jsonObject = new JSONObject();
 
 		// 如果已经登录，则跳转到管理首页
 		if (principal != null) {
 			Logs.info("post 已经登录，则跳转到管理首页");
-			return "redirect:" + "/sys/loginSuccess";
+			jsonObject.put("code", 0);
+			renderString(response, jsonObject);
+			return;
 		}
 
 		boolean rememberMe = WebUtils.isTrue(request, LoginAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM);
@@ -84,12 +86,12 @@ public class LoginController extends BaseController {
 			message = "用户或密码错误, 请重试.";
 		}
 
-		JSONObject jsonObject = new JSONObject();
+		
 		jsonObject.put("code", -1);
 		jsonObject.put(LoginAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM, rememberMe);
 		jsonObject.put(LoginAuthenticationFilter.DEFAULT_MESSAGE_PARAM, message);
 
-		return renderInfo(request, response, model, "sys/login", jsonObject);
+		renderString(response, jsonObject);
 	}
 
 	/**
@@ -103,12 +105,10 @@ public class LoginController extends BaseController {
 	 */
 	@RequiresPermissions("user")
 	@RequestMapping(value = "/loginSuccess")
-	public String loginSuccess(HttpServletRequest request, HttpServletResponse response, Model model) {
+	public void loginSuccess(HttpServletRequest request, HttpServletResponse response, Model model) {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("code", 0);
-		// 获取用户菜单树列表
-		model.addAttribute("menuList", UserUtils.getTreeMenus(new User(UserUtils.getPrincipal().getId())));
-		return renderInfo(request, response, model, "sys/sysIndex", jsonObject);
+		renderString(response, jsonObject);
 	}
 	
 }

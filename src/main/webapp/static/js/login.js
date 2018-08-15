@@ -22,7 +22,7 @@ layui.use(['form','layer','jquery'],function(){
 			},
 			success : function(result) {
 				if (result.code == "0") {
-					location.href = ctx + '/sys/login';
+					location.href = ctx + '/sys/area/index';
 				} else {
 					layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
 					btnSubmit.text("登录").attr("disabled",false).removeClass("layui-disabled");

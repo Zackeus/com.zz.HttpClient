@@ -8,7 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.zz.HttpClient.Bean.Sys.User;
 import com.zz.HttpClient.Controller.BaseController;
+import com.zz.HttpClient.Util.UserUtils;
 
 /**
  * 
@@ -21,6 +23,24 @@ import com.zz.HttpClient.Controller.BaseController;
 @Controller
 @RequestMapping("/sys/area")
 public class AreaController extends BaseController {
+	
+	/**
+	 * 
+	 * @Title：sysIndex
+	 * @Description: TODO(管理主页面)
+	 * @see：
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequiresPermissions("user")
+	@RequestMapping(value = "/index")
+	public String sysIndex(HttpServletRequest request, HttpServletResponse response, Model model) {
+		// 获取用户菜单树列表
+		model.addAttribute("menuList", UserUtils.getTreeMenus(new User(UserUtils.getPrincipal().getId())));
+		return "sys/sysIndex";
+	}
 	
 	/**
 	 * 
