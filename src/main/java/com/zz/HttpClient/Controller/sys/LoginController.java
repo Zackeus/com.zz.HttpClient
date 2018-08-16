@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.zz.HttpClient.Bean.Sys.Principal;
-import com.zz.HttpClient.Controller.BaseController;
+import com.zz.HttpClient.Controller.basic.BaseController;
 import com.zz.HttpClient.Shiro.filter.LoginAuthenticationFilter;
 import com.zz.HttpClient.Util.Logs;
 import com.zz.HttpClient.Util.StringUtils;

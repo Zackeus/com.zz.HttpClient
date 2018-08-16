@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.zz.HttpClient.Controller.BaseController;
+import com.zz.HttpClient.Controller.basic.BaseController;
 
 /**
  * 
@@ -18,8 +18,8 @@ import com.zz.HttpClient.Controller.BaseController;
  * @date 2018年8月15日 下午6:29:09
  */
 @Controller
-@RequestMapping("/timer")
-public class TimerController extends BaseController {
+@RequestMapping("/timer/manage")
+public class TimerManageController extends BaseController {
 	
 	/**
 	 * 

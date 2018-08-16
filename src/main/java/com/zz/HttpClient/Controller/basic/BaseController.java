@@ -1,4 +1,4 @@
-package com.zz.HttpClient.Controller;
+package com.zz.HttpClient.Controller.basic;
 
 import java.beans.PropertyEditorSupport;
 import java.io.IOException;

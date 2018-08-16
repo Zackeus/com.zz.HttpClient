@@ -7,6 +7,11 @@
 	<meta name="decorator" content="default"/>
 </head>
 <body class="childrenBody">
+	<blockquote class="layui-elem-quote">
+		<a class="layui-btn layui-btn-sm" href="${ctx}/testTimer/updateCron?cron=*/5 * * * * ?">启动</a>
+		<a class="layui-btn layui-btn-sm" href="${ctx}/testTimer/stopCron">关闭</a>
+	</blockquote>
+
 	<form class="layui-form" onkeydown="if(event.keyCode==13) return false;">
 		<table id="userGrade" lay-filter="userGrade"></table>
 		

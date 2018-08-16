@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zz.HttpClient.Bean.CTC.Report;
+import com.zz.HttpClient.Controller.basic.BaseController;
 import com.zz.HttpClient.Bean.CTC.DetaileReport;
 import com.zz.HttpClient.Service.CollectionInfoService;
 import com.zz.HttpClient.Bean.CollectionCallData;

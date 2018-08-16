@@ -1,129 +1,91 @@
 package com.zz.HttpClient.Controller.timer;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zz.HttpClient.Controller.basic.BaseTimerController;
 import com.zz.HttpClient.Util.Logs;
 
 @Controller
 @RequestMapping("/testTimer")
-public class TestTimerController {
+public class TestTimerController extends BaseTimerController {
 	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-	@Autowired
-	private ThreadPoolTaskScheduler threadPoolTaskScheduler;
+	// 定时任务Id
+	private static final String ID = "8b7e8a33ccb946738f4252528ea6961e";
 	
-    @Bean
-    public ThreadPoolTaskScheduler threadPoolTaskScheduler(){
-        return new ThreadPoolTaskScheduler();
-    }
-
 	private ScheduledFuture<?> future;
 
 	private String cron = "";
-	
+
 	@PostConstruct
+	@Override
 	public void init() {
-		Logs.info("定时任务初始化");
-		startCron("*/3 * * * * ?");
+		if (timerService.get(ID).isStatus()) {
+			updateCron("*/3 * * * * ?");
+		}
 	}
 
-	/**
-	 * 
-	 * @Title：setCron
-	 * @Description: TODO(更新定时策略)
-	 * @see：
-	 * @param cron
-	 */
-	@RequestMapping(value = "/setCron")
-	public void setCron(@RequestParam(value = "cron") String cron) {
-		this.cron = cron;
-	}
-
-	/**
-	 * 
-	 * @Title：getCron
-	 * @Description: TODO(获取当前定时策略)
-	 * @see：
-	 * @return
-	 */
 	@RequestMapping(value = "/getCron")
 	@ResponseBody
+	@Override
 	public String getCron() {
 		return cron;
 	}
-	
-	/**
-	 * 
-	 * @Title：isFuture
-	 * @Description: TODO(当前状态)
-	 * @see：
-	 */
-	@RequestMapping(value = "/isFuture")
-	public void isFuture() {
-		if (future != null) {
-			Logs.info("正在启动");
-		}
-		Logs.info("关闭状态");
+
+	@RequestMapping(value = "/updateCron")
+	@Override
+	public void updateCron(@RequestParam(value = "cron") String cron) {
+		this.cron = cron;
+		startCron();
 	}
 
-	/**
-	 * 
-	 * @Title:startCron
-	 * @Description: TODO(启动定时任务)
-	 * @param cron
-	 */
 	@RequestMapping(value = "/startCron")
-	public void startCron(@RequestParam(value = "cron") String cron) {
-		setCron(cron);
+	@Override
+	public void startCron() {
+		String cron = getCron();
 		stopCron();
-		future = threadPoolTaskScheduler.schedule(new Runnable() {
+		try {
+	    	future = threadPoolTaskScheduler.schedule(new Runnable() {
 
-			@Override
-			public void run() {
-				// 任务逻辑
-				Logs.info("当前时间：" + dateFormat.format(new Date()));
-			}
-		}, new Trigger() {
+				@Override
+				public void run() {
+					// 任务逻辑
+					Logs.info("当前时间：" + dateFormat.format(new Date()));
+				}
+			}, new Trigger() {
 
-			@Override
-			public Date nextExecutionTime(TriggerContext triggerContext) {
-				if ("".equals(cron) || cron == null)
-					return null;
-				// 定时任务触发，可修改定时任务的执行周期
-				CronTrigger trigger = new CronTrigger(cron);
-				Date nextExecDate = trigger.nextExecutionTime(triggerContext);
-				return nextExecDate;
-			}
-		});
+				@Override
+				public Date nextExecutionTime(TriggerContext triggerContext) {
+					if ("".equals(cron) || cron == null)
+						return null;
+					// 定时任务触发，可修改定时任务的执行周期
+					CronTrigger trigger = new CronTrigger(cron);
+					Date nextExecDate = trigger.nextExecutionTime(triggerContext);
+					return nextExecDate;
+				}
+			});
+		} catch (Exception e) {
+			Logs.error("启动定时任务失败");
+		}
 	}
 
-	/**
-	 * 
-	 * @Title:stopCron
-	 * @Description: TODO(关闭定时任务)
-	 */
 	@RequestMapping(value = "/stopCron")
+	@Override
 	public void stopCron() {
 		if (future != null) {
 			// 取消任务调度
 			future.cancel(true);
 		}
 	}
-
+	
 }

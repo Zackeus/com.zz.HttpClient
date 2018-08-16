@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zz.HttpClient.Dao.sys.TimerDao">
+
+	<sql id="timerColumns">
+		[ID],
+      	[NAME],
+      	[START_DATE],
+      	[END_DATE],
+      	[STATUS],
+      	[CREATE_DATE],
+      	[UPDATE_TIME],
+      	[CREATE_BY],
+      	[UPDATE_BY],
+      	[UPDATE_URL],
+      	[START_URL],
+      	[STOP_URL],
+      	[REMARKS]
+	</sql>
+
+	<select id="get" resultType="Timer">
+		SELECT
+		<include refid="timerColumns"/>
+		FROM [Message].[dbo].[SYS_TIMER_CONFIG]
+		WHERE [ID] = #{id}
+	</select>
+
+</mapper>
