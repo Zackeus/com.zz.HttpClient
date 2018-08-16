@@ -5,6 +5,7 @@
 <head>
 	<title>主页</title>
 	<meta name="decorator" content="default"/>
+	<link rel="icon" href="${ctxStatic}/images/favicon.ico">
 	<link rel="stylesheet" href="${ctxStatic}/css/index.css" media="all" />
 </head>
 <body class="main_body">

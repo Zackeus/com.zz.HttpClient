@@ -11,9 +11,6 @@
        	http://www.springframework.org/schema/cache/spring-cache-3.1.xsd">
 
 	<description>Shiro Configuration</description>
-	
-    <!-- 使用spring组件扫描@service  -->
-    <context:component-scan base-package="com.zz.HttpClient"/>
     
     <!-- shiro filter -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">

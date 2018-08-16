@@ -26,7 +26,7 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 	@Autowired
 	private MenuDao menuDao;
 	
-	@Cacheable(value = {"sysMenuCache"})
+	@Cacheable(value = {"sysMenuCache"}, key="#menu.userId")
 	public List<Menu> getAllTreeMenus(Menu menu) {
 		return menuDao.getAllTreeMenus(menu);
 	}

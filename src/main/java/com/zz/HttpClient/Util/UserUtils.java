@@ -126,7 +126,7 @@ public class UserUtils {
 	 */
 	public static List<Menu> getTreeMenusByUser(Principal principal) {
 		if (principal.isAdmin()) {
-			return userUtils.menuService.getAllTreeMenus(new Menu());
+			return userUtils.menuService.getAllTreeMenus(new Menu(principal));
 		}
 		return userUtils.menuService.getTreeMenus(new Menu(principal));
 	}
