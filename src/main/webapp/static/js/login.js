@@ -1,7 +1,14 @@
+layui.config({
+	base : ctxStatic + "/js/"
+}).extend({
+	"request" : "request"
+})
+
 layui.use(['form','layer','jquery'],function(){
     var form = layui.form,
-        layer = parent.layer === undefined ? layui.layer : top.layer
-        $ = layui.jquery;
+        layer = parent.layer === undefined ? layui.layer : top.layer,
+        $ = layui.jquery,
+        request = layui.request;
 
     $(".loginBody .seraph").click(function(){
         layer.msg("这只是做个样式，至于功能，你见过哪个后台能这样登录的？还是老老实实的找管理员去注册吧",{
@@ -11,29 +18,8 @@ layui.use(['form','layer','jquery'],function(){
 
     //登录按钮
     form.on("submit(login)",function(data) {
-    	var btnSubmit = $(this);
-		$.ajax({
-			method: 'POST',
-			url : ctx + '/sys/login',
-			data : data.field,
-			dataType : 'json',
-			beforeSend: function(){
-				btnSubmit.text("登录中...").attr("disabled","disabled").addClass("layui-disabled");
-			},
-			success : function(result) {
-				if (result.code == "0") {
-					location.href = ctx + '/sys/area/index';
-				} else {
-					layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
-					btnSubmit.text("登录").attr("disabled",false).removeClass("layui-disabled");
-				}
-			},
-			error : function(result) {
-				// 错误信息
-				layer.msg('响应失败', {icon: 5,time: 2000,shift: 6}, function(){});
-				btnSubmit.text("登录").attr("disabled",false).removeClass("layui-disabled");
-			}
-		});
+    	var loginBtn = $(this);
+    	request.login(ctx + '/sys/login', data, loginBtn);
 		// 阻止form表单submit
 		return false;
     })

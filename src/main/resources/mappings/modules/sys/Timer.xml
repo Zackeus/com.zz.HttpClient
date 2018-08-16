@@ -9,7 +9,7 @@
       	[END_DATE],
       	[STATUS],
       	[CREATE_DATE],
-      	[UPDATE_TIME],
+      	[UPDATE_DATE],
       	[CREATE_BY],
       	[UPDATE_BY],
       	[UPDATE_URL],
@@ -23,6 +23,13 @@
 		<include refid="timerColumns"/>
 		FROM [Message].[dbo].[SYS_TIMER_CONFIG]
 		WHERE [ID] = #{id}
+	</select>
+	
+	<select id="findList" resultType="Timer">
+		SELECT
+		<include refid="timerColumns"/>
+		FROM [Message].[dbo].[SYS_TIMER_CONFIG]
+		ORDER BY [CREATE_DATE] 
 	</select>
 
 </mapper>

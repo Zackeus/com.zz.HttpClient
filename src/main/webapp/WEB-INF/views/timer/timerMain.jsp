@@ -7,33 +7,21 @@
 	<meta name="decorator" content="default"/>
 </head>
 <body class="childrenBody">
-	<blockquote class="layui-elem-quote">
-		<a class="layui-btn layui-btn-sm" href="${ctx}/testTimer/updateCron?cron=*/5 * * * * ?">启动</a>
-		<a class="layui-btn layui-btn-sm" href="${ctx}/testTimer/stopCron">关闭</a>
-	</blockquote>
-
 	<form class="layui-form" onkeydown="if(event.keyCode==13) return false;">
-		<table id="userGrade" lay-filter="userGrade"></table>
+		<table id="timerList" lay-filter="timerList"></table>
 		
-		<script type="text/html" id="gradeIcon">
-		{{#  if(d.gradeIcon === 'icon-vip1'){ }}
-		<span class="seraph vip1 {{d.gradeIcon}}"></span>
-		{{#  } else if(d.gradeIcon === 'icon-vip2'){ }}
-		<span class="seraph vip2 {{d.gradeIcon}}"></span>
-		{{#  } else if(d.gradeIcon === 'icon-vip3'){ }}
-		<span class="seraph vip3 {{d.gradeIcon}}"></span>
-		{{#  } else if(d.gradeIcon === 'icon-vip4'){ }}
-		<span class="seraph vip4 {{d.gradeIcon}}"></span>
-		{{#  } else if(d.gradeIcon === 'icon-vip5'){ }}
-		<span class="seraph vip5 {{d.gradeIcon}}"></span>
-		{{#  } else if(d.gradeIcon === 'icon-vip6'){ }}
-		<span class="seraph vip6 {{d.gradeIcon}}"></span>
-		{{#  } else if(d.gradeIcon === 'icon-vip7'){ }}
-		<span class="seraph vip7 {{d.gradeIcon}}"></span>
+	<script type="text/html" id="timerStatus">
+		{{#  if(d.status){ }}
+		<input type="checkbox" name="timerStatus" lay-filter="timerStatus" lay-skin="switch" lay-text="启用|禁用" 
+			data-start="{{d.startUrl}}" data-stop="{{d.stopUrl}}" checked>
+		{{#  } else { }}
+		<input type="checkbox" name="timerStatus" lay-filter="timerStatus" lay-skin="switch" lay-text="启用|禁用" 
+			data-start="{{d.startUrl}}" data-stop="{{d.stopUrl}}">
 		{{#  }}}
 	</script>
-		<script type="text/html" id="gradeBar">
-		<input type="checkbox" name="gradeStatus" lay-filter="gradeStatus" lay-skin="switch" lay-text="启用|禁用" checked>
+	
+	<script type="text/html" id="timerListBar">
+		<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="edit">编辑</a>
 	</script>
 	</form>
 	

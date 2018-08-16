@@ -45,7 +45,7 @@
 	<plugins>
 		<plugin interceptor="com.zz.HttpClient.Plugins.PagePlugin">
 			<!-- 默认页码 -->
-			<property name="default.page" value="1"/>
+			<property name="default.page" value="0"/>
 			<!-- 默认每页条数 -->
 			<property name="default.pageSize" value="20"/>
 			<!-- 是否启动分页插件功能 -->

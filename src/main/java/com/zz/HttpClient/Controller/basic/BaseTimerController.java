@@ -2,6 +2,9 @@ package com.zz.HttpClient.Controller.basic;
 
 import java.text.SimpleDateFormat;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -57,7 +60,7 @@ public abstract class BaseTimerController extends BaseController {
      * @see：
      * @param cron
      */
-    public abstract void updateCron(String cron);
+    public abstract void updateCron(String cron, HttpServletRequest request, HttpServletResponse response);
     
     /**
      * 
@@ -65,7 +68,7 @@ public abstract class BaseTimerController extends BaseController {
      * @Description: TODO(启动定时策略)
      * @see：
      */
-    public abstract void startCron();
+    public abstract void startCron(HttpServletRequest request, HttpServletResponse response);
     
     /**
      * 
@@ -73,6 +76,6 @@ public abstract class BaseTimerController extends BaseController {
      * @Description: TODO(停止定时策略)
      * @see：
      */
-    public abstract void stopCron();
+    public abstract void stopCron(HttpServletRequest request, HttpServletResponse response);
     
 }

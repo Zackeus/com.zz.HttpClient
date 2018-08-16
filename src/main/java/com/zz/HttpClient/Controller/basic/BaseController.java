@@ -85,7 +85,10 @@ public abstract class BaseController {
 	 * @return
 	 */
 	protected String renderString(HttpServletResponse response, Object object) {
-		return renderString(response, JsonMapper.toJsonString(object), CONTENT_TYPE);
+		if (response != null) {
+			return renderString(response, JsonMapper.toJsonString(object), CONTENT_TYPE);
+		}
+		return null;
 	}
 	
 	/**
