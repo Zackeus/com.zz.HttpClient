@@ -32,16 +32,16 @@ public class TimerManageController extends BaseController {
 	/**
 	 * 
 	 * @Title：timerMain
-	 * @Description: TODO(任务配置主页面)
+	 * @Description: TODO(任务列表页面)
 	 * @see：
 	 * @param request
 	 * @param response
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/main")
+	@RequestMapping(value = "/list")
 	public String timerMain(HttpServletRequest request, HttpServletResponse response, Model model) {
-		return "timer/timerMain";
+		return "timer/list";
 	}
 	
 	/**

@@ -29,6 +29,11 @@ public class Timer extends DataEntity<Timer> {
 	public Timer(String id) {
 		super(id);
 	}
+	
+	public Timer(String id, boolean status) {
+		super(id);
+		this.status = status;
+	}
 
 	public Timer(String name, Integer startDate, Integer endDate, boolean status, String updateUrl, String startUrl,
 			String stopUrl) {

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zz.HttpClient.Bean.Basic.LayuiResult;
+import com.zz.HttpClient.Bean.Sys.Timer;
 import com.zz.HttpClient.Controller.basic.BaseTimerController;
 import com.zz.HttpClient.Util.Logs;
 
@@ -91,6 +92,7 @@ public class TestTimerController extends BaseTimerController {
 					return nextExecDate;
 				}
 			});
+	    	timerService.updateStatusById(new Timer(ID, true));
 	    	renderString(response, new LayuiResult(0, "操作成功"));
 		} catch (Exception e) {
 			Logs.error("启动定时任务失败");
@@ -110,6 +112,7 @@ public class TestTimerController extends BaseTimerController {
 				// 取消任务调度
 				future.cancel(true);
 			}
+			timerService.updateStatusById(new Timer(ID, false));
 			renderString(response, new LayuiResult(0, "操作成功"));
 		} catch (Exception e) {
 			if (request != null) {

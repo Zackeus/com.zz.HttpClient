@@ -31,5 +31,11 @@
 		FROM [Message].[dbo].[SYS_TIMER_CONFIG]
 		ORDER BY [CREATE_DATE] 
 	</select>
+	
+	<update id="updateStatusById">
+		UPDATE
+		[Message].[dbo].[SYS_TIMER_CONFIG]
+		SET [STATUS] = #{status}
+	</update>
 
 </mapper>

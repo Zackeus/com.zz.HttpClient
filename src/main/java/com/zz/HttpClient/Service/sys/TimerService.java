@@ -21,4 +21,16 @@ public class TimerService extends CrudService<TimerDao, Timer> {
 	@Autowired
 	TimerDao timerDao;
 	
+	/**
+	 * 
+	 * @Title：updateStatusById
+	 * @Description: TODO(根据ID更新任务当前状态)
+	 * @see：
+	 * @param timer
+	 * @return
+	 */
+	public int updateStatusById(Timer timer) {
+		return timerDao.updateStatusById(timer);
+	}
+	
 }

@@ -12,5 +12,7 @@ import com.zz.HttpClient.Dao.Basic.CrudDao;
  * @date 2018年8月16日 上午10:58:26
  */
 public interface TimerDao extends CrudDao<Timer> {
-
+	
+	public int updateStatusById(Timer timer);
+	
 }
