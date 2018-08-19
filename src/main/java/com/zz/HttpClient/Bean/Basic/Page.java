@@ -3,6 +3,10 @@ package com.zz.HttpClient.Bean.Basic;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * 
  * @Title:Page
@@ -46,8 +50,8 @@ public class Page<T> implements Serializable {
 		this(page, pageSize, null, null, null, null, null);
 	}
 	
-	public Page(Integer page, Integer pageSize, Boolean useFlag, Boolean checkFlag, Boolean cleanOrderBy, Integer total,
-			Integer totalPage) {
+	public Page(Integer page, Integer pageSize, Boolean useFlag, Boolean checkFlag,
+			Boolean cleanOrderBy, Integer total, Integer totalPage) {
 		super();
 		this.page = page;
 		this.pageSize = pageSize;
@@ -57,7 +61,25 @@ public class Page<T> implements Serializable {
 		this.total = total;
 		this.totalPage = totalPage;
 	}
-
+	
+	/**
+	 * 构造方法
+	 * @param request 传递 repage 参数，来记住页码
+	 */
+	public Page(HttpServletRequest request) {
+		// 设置页码参数（传递repage参数，来记住页码）
+		String no = request.getParameter("page");
+		if (StringUtils.isNumeric(no)) {
+			this.setPage(Integer.parseInt(no));
+		}
+		
+		// 设置页面大小参数（传递repage参数，来记住页码大小）
+		String size = request.getParameter("pageSize");
+		if (StringUtils.isNumeric(size)) {
+			this.setPageSize(Integer.parseInt(size));
+		}
+	}
+	
 	public Integer getPage() {
 		return page;
 	}

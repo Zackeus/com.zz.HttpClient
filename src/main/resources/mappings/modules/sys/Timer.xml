@@ -15,6 +15,7 @@
       	[UPDATE_URL],
       	[START_URL],
       	[STOP_URL],
+      	[CRON],
       	[REMARKS]
 	</sql>
 
@@ -36,6 +37,14 @@
 		UPDATE
 		[Message].[dbo].[SYS_TIMER_CONFIG]
 		SET [STATUS] = #{status}
+		WHERE [ID] = #{id}
+	</update>
+	
+	<update id="updateCronById">
+		UPDATE
+		[Message].[dbo].[SYS_TIMER_CONFIG]
+		SET [CRON] = #{cron}
+		WHERE [ID] = #{id}
 	</update>
 
 </mapper>

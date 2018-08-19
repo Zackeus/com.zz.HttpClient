@@ -82,8 +82,20 @@
 	    eternal="false"
 	    overflowToDisk="false"   
 	    diskPersistent="false"  
-	    timeToIdleSeconds="120"  
-	    timeToLiveSeconds="120"   
+	    timeToIdleSeconds="259200"  
+	    timeToLiveSeconds="259200"   
+	    diskExpiryThreadIntervalSeconds="120"  
+	    memoryStoreEvictionPolicy="LRU"/>
+	    
+	<!-- 定时任务缓存 -->
+    <cache name="sysTimerCache"          
+       	maxElementsInMemory="1000"
+	    maxElementsOnDisk="10000000"  
+	    eternal="false"
+	    overflowToDisk="false"   
+	    diskPersistent="false"  
+	    timeToIdleSeconds="86400"  
+	    timeToLiveSeconds="86400"   
 	    diskExpiryThreadIntervalSeconds="120"  
 	    memoryStoreEvictionPolicy="LRU"/>
 </ehcache>  

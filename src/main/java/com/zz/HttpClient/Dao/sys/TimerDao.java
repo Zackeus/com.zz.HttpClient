@@ -15,4 +15,6 @@ public interface TimerDao extends CrudDao<Timer> {
 	
 	public int updateStatusById(Timer timer);
 	
+	public int updateCronById(Timer timer);
+	
 }

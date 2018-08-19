@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.zz.HttpClient.Bean.Basic.LayuiPage;
 import com.zz.HttpClient.Bean.Basic.Page;
@@ -54,7 +55,22 @@ public class TimerManageController extends BaseController {
 	 */
 	@RequestMapping(value = "/findList")
 	public void findList(HttpServletRequest request, HttpServletResponse response) {
-		renderString(response, new LayuiPage<>(timerService.findPage(new Page<>(), new Timer())));
+		renderString(response, new LayuiPage<>(timerService.findPage(new Page<>(request), new Timer())));
+	}
+	
+	/**
+	 * 
+	 * @Title：strategy
+	 * @Description: TODO(定时任务策略页面)
+	 * @see：
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "/strategy")
+	public String strategy(@RequestParam(value = "id") String id, HttpServletRequest request, 
+			HttpServletResponse response, Model model) {
+		model.addAttribute("timer", timerService.get(id));
+		return "timer/cron";
 	}
 
 }

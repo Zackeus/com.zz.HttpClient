@@ -11,9 +11,8 @@ import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zz.HttpClient.Bean.Basic.LayuiResult;
 import com.zz.HttpClient.Bean.Sys.Timer;
@@ -37,39 +36,31 @@ public class TestTimerController extends BaseTimerController {
 	
 	private ScheduledFuture<?> future;
 
-	private String cron = "*/3 * * * * ?";
-
 	@PostConstruct
 	@Override
 	public void init() {
 		if (timerService.get(ID).isStatus()) {
-			updateCron("*/3 * * * * ?");
+			startCron(null, null);
 		}
 	}
 
-	@RequestMapping(value = "/getCron")
-	@ResponseBody
-	@Override
-	public String getCron() {
-		return cron;
-	}
-
-	private void updateCron(String cron) {
-		updateCron(cron, null, null);
-	}
-	
 	@RequestMapping(value = "/updateCron")
 	@Override
-	public void updateCron(@RequestParam(value = "cron") String cron, 
-			HttpServletRequest request, HttpServletResponse response) {
-		this.cron = cron;
+	public void updateCron(@RequestBody Timer timer, HttpServletRequest request, 
+			HttpServletResponse response) {
+		try {
+			timerService.updateCronById(new Timer(ID, timer.getCron()));
+		} catch (Exception e) {
+			renderString(response, new LayuiResult(-1, "更新定时策略失败；信息：" + e.getMessage()));
+		}
 		startCron(request, response);
 	}
 
 	@RequestMapping(value = "/startCron")
 	@Override
 	public void startCron(HttpServletRequest request, HttpServletResponse response) {
-		String cron = getCron();
+		Timer timer = timerService.get(ID);
+		
 		try {
 			/*启动任务前停止上一个执行任务 达到新的定时策略能够立即执行*/
 			stopCron();
@@ -84,15 +75,19 @@ public class TestTimerController extends BaseTimerController {
 
 				@Override
 				public Date nextExecutionTime(TriggerContext triggerContext) {
-					if ("".equals(cron) || cron == null)
+					if ("".equals(timer.getCron()) || timer.getCron() == null)
 						return null;
 					// 定时任务触发，可修改定时任务的执行周期
-					CronTrigger trigger = new CronTrigger(cron);
+					CronTrigger trigger = new CronTrigger(timer.getCron());
 					Date nextExecDate = trigger.nextExecutionTime(triggerContext);
 					return nextExecDate;
 				}
 			});
-	    	timerService.updateStatusById(new Timer(ID, true));
+	    	
+	    	if (!timer.isStatus()) {
+	    		timerService.updateStatusById(new Timer(ID, true));
+			}
+	    	
 	    	renderString(response, new LayuiResult(0, "操作成功"));
 		} catch (Exception e) {
 			Logs.error("启动定时任务失败");

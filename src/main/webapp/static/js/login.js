@@ -1,10 +1,8 @@
-layui.config({
-	base : ctxStatic + "/js/"
-}).extend({
-	"request" : "request"
+layui.extend({
+	request: '{/}' + ctxStatic + '/js/request'
 })
 
-layui.use(['form','layer','jquery'],function(){
+layui.use(['request','form','layer','jquery'],function(){
     var form = layui.form,
         layer = parent.layer === undefined ? layui.layer : top.layer,
         $ = layui.jquery,
@@ -18,8 +16,7 @@ layui.use(['form','layer','jquery'],function(){
 
     //登录按钮
     form.on("submit(login)",function(data) {
-    	var loginBtn = $(this);
-    	request.login(ctx + '/sys/login', data, loginBtn);
+		request.login(ctx + '/sys/login', data.field, $(this));
 		// 阻止form表单submit
 		return false;
     })

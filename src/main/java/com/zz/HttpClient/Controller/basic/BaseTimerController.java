@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
+import com.zz.HttpClient.Bean.Sys.Timer;
 import com.zz.HttpClient.Service.sys.TimerService;
 
 /**
@@ -46,21 +47,12 @@ public abstract class BaseTimerController extends BaseController {
     
     /**
      * 
-     * @Title：getCron
-     * @Description: TODO(获取定时策略)
-     * @see：
-     * @return
-     */
-    public abstract String getCron();
-    
-    /**
-     * 
      * @Title：updateCron
      * @Description: TODO(更新定时策略)
      * @see：
      * @param cron
      */
-    public abstract void updateCron(String cron, HttpServletRequest request, HttpServletResponse response);
+    public abstract void updateCron(Timer timer, HttpServletRequest request, HttpServletResponse response);
     
     /**
      * 

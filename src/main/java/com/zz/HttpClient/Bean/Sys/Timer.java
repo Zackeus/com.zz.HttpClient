@@ -21,6 +21,7 @@ public class Timer extends DataEntity<Timer> {
 	private String updateUrl; 	// 更新地址
 	private String startUrl; 	// 启动地址
 	private String stopUrl; 	// 停止地址
+	private String cron; 		// 定时策略
 
 	public Timer() {
 		super();
@@ -30,13 +31,18 @@ public class Timer extends DataEntity<Timer> {
 		super(id);
 	}
 	
+	public Timer(String id, String cron) {
+		super(id);
+		this.cron = cron;
+	}
+	
 	public Timer(String id, boolean status) {
 		super(id);
 		this.status = status;
 	}
-
+	
 	public Timer(String name, Integer startDate, Integer endDate, boolean status, String updateUrl, String startUrl,
-			String stopUrl) {
+			String stopUrl, String cron) {
 		super();
 		this.name = name;
 		this.startDate = startDate;
@@ -45,6 +51,7 @@ public class Timer extends DataEntity<Timer> {
 		this.updateUrl = updateUrl;
 		this.startUrl = startUrl;
 		this.stopUrl = stopUrl;
+		this.cron = cron;
 	}
 
 	public String getName() {
@@ -103,4 +110,11 @@ public class Timer extends DataEntity<Timer> {
 		this.stopUrl = stopUrl;
 	}
 
+	public String getCron() {
+		return cron;
+	}
+
+	public void setCron(String cron) {
+		this.cron = cron;
+	}
 }
