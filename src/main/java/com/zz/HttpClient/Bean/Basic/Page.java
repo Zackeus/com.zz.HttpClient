@@ -20,6 +20,8 @@ public class Page<T> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private Integer code; 			// 数据状态的字段名称 陈功默认为0
+	private String msg; 			// 状态信息的字段名称
 	private Integer page; 			// 当前页码
 	private Integer pageSize; 		// 每页限制条数
 	private Boolean useFlag; 		// 是否启动插件。如果不启动，则不作分页
@@ -38,7 +40,7 @@ public class Page<T> implements Serializable {
 	 * @param pageSize 限制条数
 	 */
 	public Page(Integer pageSize) {
-		this(null, pageSize, null, null, null, null, null);
+		this(null, null, null, pageSize, null, null, null, null, null);
 	}
 	
 	/**
@@ -47,12 +49,23 @@ public class Page<T> implements Serializable {
 	 * @param pageSize 限制条数
  	 */
 	public Page(Integer page, Integer pageSize) {
-		this(page, pageSize, null, null, null, null, null);
+		this(null, null, page, pageSize, null, null, null, null, null);
 	}
 	
-	public Page(Integer page, Integer pageSize, Boolean useFlag, Boolean checkFlag,
+	/**
+	 * 构造方法(初始化数据状态和状态信息)
+	 * @param page 页码
+	 * @param pageSize 限制条数
+ 	 */
+	public Page(Integer code, String msg) {
+		this(code, msg, null, null, null, null, null, null, null);
+	}
+	
+	public Page(Integer code, String msg, Integer page, Integer pageSize, Boolean useFlag, Boolean checkFlag,
 			Boolean cleanOrderBy, Integer total, Integer totalPage) {
 		super();
+		this.code = code;
+		this.msg = msg;
 		this.page = page;
 		this.pageSize = pageSize;
 		this.useFlag = useFlag;
@@ -64,9 +77,12 @@ public class Page<T> implements Serializable {
 	
 	/**
 	 * 构造方法
-	 * @param request 传递 repage 参数，来记住页码
+	 * @param request 传递 repage 参数
 	 */
 	public Page(HttpServletRequest request) {
+		// 默认数据查询成功
+		this(0, "");
+		
 		// 设置页码参数（传递repage参数，来记住页码）
 		String no = request.getParameter("page");
 		if (StringUtils.isNumeric(no)) {
@@ -80,6 +96,22 @@ public class Page<T> implements Serializable {
 		}
 	}
 	
+	public Integer getCode() {
+		return code;
+	}
+
+	public void setCode(Integer code) {
+		this.code = code;
+	}
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+
 	public Integer getPage() {
 		return page;
 	}

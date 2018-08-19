@@ -27,10 +27,10 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
         	statusName: 'code', 					// 数据状态的字段名称，默认：code
         	statusCode: 0, 							// 成功的状态码，默认：0
         	msgName: 'msg', 						// 状态信息的字段名称，默认：msg
-        	countName: 'count', 					// 数据总数的字段名称，默认：count
-        	dataName: 'data' 						// 数据列表的字段名称，默认：data
+        	countName: 'total', 					// 数据总数的字段名称，默认：count
+        	dataName: 'list' 						// 数据列表的字段名称，默认：data
         },
-        request: {
+        request: {									// 定义前端 json 格式
         	  pageName: 'page', 					// 页码的参数名称，默认：page
         	  limitName: 'pageSize' 				// 每页数据量的参数名，默认：limit
         },  
