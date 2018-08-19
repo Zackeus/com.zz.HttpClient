@@ -21,8 +21,8 @@ public class TimerUtil {
 	 * @see：
 	 * @param cron
 	 */
-	public static Date getNextTime(String cron) {
-		return new CronSequenceGenerator(cron).next(new Date());
+	public static String getNextTime(String cron) {
+		return DateUtils.formatDateTime(new CronSequenceGenerator(cron).next(new Date()));
 	}
 
 }

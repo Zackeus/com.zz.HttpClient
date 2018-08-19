@@ -14,7 +14,7 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
     var timerListIns =  table.render({
         elem: '#timerList', 						//	指定原始表格元素选择器（推荐id选择器）
         url : ctx + '/timer/manage/findList', 		//	数据接口
-        cellMinWidth : 80, 							//	（layui 2.2.1 新增）全局定义所有常规单元格的最小宽度（默认：60），一般用于列宽自动分配的情况。其优先级低于表头参数中的 minWidth
+        cellMinWidth : 50, 							//	（layui 2.2.1 新增）全局定义所有常规单元格的最小宽度（默认：60），一般用于列宽自动分配的情况。其优先级低于表头参数中的 minWidth
         loading : true, 							//	是否显示加载条
         page : true, 								//	开启分页
         limit : 20, 								//	每页显示的条数（默认：10）。值务必对应 limits 参数的选项。优先级低于 page 参数中的 limit 参数。
@@ -35,7 +35,7 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
         	  limitName: 'pageSize' 				// 每页数据量的参数名，默认：limit
         },  
         cols : [[
-            {field: 'id', title: 'ID', minWidth: 180, fixed: 'left', sort: 'true', align: 'center'},
+            {field: 'id', title: 'ID', minWidth: 100, fixed: 'left', sort: 'true', align: 'center'},
             {field: 'name', title: '任务名', align:'center'},
             {field: 'startDate', title: '起始时间', sort: 'true', align:'center'},
             {field: 'endDate', title: '结束时间', sort: 'true', align:'center'},
