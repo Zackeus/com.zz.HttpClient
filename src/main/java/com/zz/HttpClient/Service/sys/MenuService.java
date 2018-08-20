@@ -26,6 +26,11 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 	@Autowired
 	private MenuDao menuDao;
 	
+	@Cacheable(value = {"sysMenuCache"})
+	public List<Menu> findAllList() {
+		return menuDao.findAllList();
+	}
+	
 	@Cacheable(value = {"sysMenuCache"}, key="#menu.userId")
 	public List<Menu> getAllTreeMenus(Menu menu) {
 		return menuDao.getAllTreeMenus(menu);
@@ -37,8 +42,8 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 	}
 	
 	@Cacheable(value = {"sysMenuCache"}, key="#menu.parentId")
-	public List<Menu> findAllList(Menu menu) {
-		return menuDao.findAllList(menu);
+	public List<Menu> getAllMenuList(Menu menu) {
+		return menuDao.getAllMenuList(menu);
 	}
 	
 	@Cacheable(value = {"sysMenuCache"}, key="#menu.userId + #menu.parentId")

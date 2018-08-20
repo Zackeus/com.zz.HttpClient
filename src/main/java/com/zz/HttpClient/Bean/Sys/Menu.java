@@ -17,7 +17,7 @@ public class Menu extends DataEntity<Menu> {
 	private static final long serialVersionUID = 1L;
 
 	private String parentId; 		// 父级标识
-	private String title; 			// 菜单名称
+	private String name; 			// 菜单名称
 	private String icon; 			// 菜单图标
 	private Integer sort; 			// 排序
 	private String href; 			// 链接
@@ -48,11 +48,11 @@ public class Menu extends DataEntity<Menu> {
 		this.userId = principal.getId();
 	}
 	
-	public Menu(String parentId, String title, String icon, Integer sort, String href, boolean spread, String sysId,
+	public Menu(String parentId, String name, String icon, Integer sort, String href, boolean spread, String sysId,
 			List<Menu> children) {
 		super();
 		this.parentId = parentId;
-		this.title = title;
+		this.name = name;
 		this.icon = icon;
 		this.sort = sort;
 		this.href = href;
@@ -69,12 +69,12 @@ public class Menu extends DataEntity<Menu> {
 		this.parentId = parentId;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getName() {
+		return name;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getIcon() {

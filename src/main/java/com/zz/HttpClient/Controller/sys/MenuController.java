@@ -3,11 +3,15 @@ package com.zz.HttpClient.Controller.sys;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.zz.HttpClient.Bean.Basic.LayuiTable;
 import com.zz.HttpClient.Controller.basic.BaseController;
+import com.zz.HttpClient.Service.sys.MenuService;
 import com.zz.HttpClient.Util.UserUtils;
 
 /**
@@ -21,6 +25,39 @@ import com.zz.HttpClient.Util.UserUtils;
 @Controller
 @RequestMapping("/sys/menu")
 public class MenuController extends BaseController {
+	
+	@Autowired
+	private MenuService menuService;
+	
+	/**
+	 * 
+	 * @Title：menuMange
+	 * @Description: TODO(菜单管理页面)
+	 * @see：
+	 * @param parentId
+	 * @param request
+	 * @param response
+	 */
+	@RequiresRoles(value = { "admin" })
+	@RequestMapping(value = "/mange")
+	public String menuMange(HttpServletRequest request, HttpServletResponse response) {
+		return "sys/menu/menuMange";
+	}
+	
+	/**
+	 * 
+	 * @Title：menuMange
+	 * @Description: TODO(菜单管理列表)
+	 * @see：
+	 * @param parentId
+	 * @param request
+	 * @param response
+	 */
+	@RequiresRoles(value = { "admin" })
+	@RequestMapping(value = "/mangeList")
+	public void menuMangeList(HttpServletRequest request, HttpServletResponse response) {
+		renderString(response, new LayuiTable<>(menuService.findAllList()));
+	}
 
 	/**
 	 * 

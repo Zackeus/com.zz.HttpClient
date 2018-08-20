@@ -58,7 +58,6 @@ public interface CrudDao<T> extends BaseDao {
 	 * @see：public List<T> findAllList(T entity)
 	 * @return
 	 */
-	@Deprecated
 	public List<T> findAllList();
 	
 	/**

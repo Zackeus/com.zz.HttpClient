@@ -141,7 +141,7 @@ public class UserUtils {
 	public static List<Menu> getMenuListByUser(String parentId) {
 		Principal principal = getPrincipal();
 		if (principal.isAdmin()) {
-			return userUtils.menuService.findAllList(new Menu(principal, parentId));
+			return userUtils.menuService.getAllMenuList(new Menu(principal, parentId));
 		}
 		return userUtils.menuService.getMenuList(new Menu(principal, parentId));
 	}

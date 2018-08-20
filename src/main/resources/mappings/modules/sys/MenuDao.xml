@@ -5,7 +5,7 @@
 	<sql id="menuColumns">
 		M.[ID],
 		M.[PARENT_ID],
-      	M.[TITLE],
+      	M.[NAME],
       	M.[ICON],
       	M.[SORT],
       	M.[HREF],
@@ -28,9 +28,18 @@
 	<resultMap type="Menu" id="allMenuResultMap">
 		<id property="id" column="ID" />
 		<result property="parentId" column="PARENT_ID" />
-		<collection property="children" column="ID" select="findAllList"/>
+		<collection property="children" column="ID" select="getAllMenuList"/>
 	</resultMap>
 	
+	<!-- 获取全部菜单列表 包括功能菜单 -->
+	<select id="findAllList" resultType="Menu">
+		SELECT DISTINCT
+		<include refid="menuColumns"/>
+		FROM [Message].[dbo].[SYS_MENU] M
+		ORDER BY M.[SORT]
+	</select>
+	
+	<!-- 获取全部菜单列表 -->
 	<select id="getAllTreeMenus" resultType="Menu">
 		SELECT DISTINCT
 		<include refid="menuColumns"/>
@@ -39,6 +48,7 @@
 		ORDER BY M.[SORT]
 	</select>
 	
+	<!-- 通过用户权限查询用户功能主菜单列表 -->
 	<select id="getTreeMenus" resultType="Menu">
 		SELECT DISTINCT
 		<include refid="menuColumns"/>,
@@ -52,14 +62,16 @@
 		ORDER BY M.[SORT]
 	</select>
 	
-	<select id="findAllList" resultMap="allMenuResultMap">
-		SELECT
+	<!-- 获取全部菜单列表 -->
+	<select id="getAllMenuList" resultMap="allMenuResultMap">
+		SELECT DISTINCT
 		<include refid="menuColumns"/>
 		FROM [Message].[dbo].[SYS_MENU] M
 		WHERE M.[PARENT_ID] = #{parentId}
 		ORDER BY [SORT]
 	</select>
 	
+	<!-- 通过用户权限查询左侧菜单列表 -->
 	<select id="getMenuList" resultMap="menuResultMap">
 		SELECT DISTINCT
 		<include refid="menuColumns"/>,

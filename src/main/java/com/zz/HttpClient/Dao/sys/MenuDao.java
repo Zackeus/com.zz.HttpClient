@@ -16,8 +16,10 @@ import com.zz.HttpClient.Dao.Basic.CrudDao;
 public interface MenuDao extends CrudDao<Menu> {
 	
 	public List<Menu> getAllTreeMenus(Menu menu);
-
+	
 	public List<Menu> getTreeMenus(Menu menu);
+	
+	public List<Menu> getAllMenuList(Menu menu);
 
 	public List<Menu> getMenuList(Menu menu);
 	
