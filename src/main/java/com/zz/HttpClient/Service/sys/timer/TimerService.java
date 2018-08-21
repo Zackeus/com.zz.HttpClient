@@ -1,4 +1,4 @@
-package com.zz.HttpClient.Service.sys;
+package com.zz.HttpClient.Service.sys.timer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -6,7 +6,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.zz.HttpClient.Bean.Sys.timer.Timer;
-import com.zz.HttpClient.Dao.sys.TimerDao;
+import com.zz.HttpClient.Dao.sys.timer.TimerDao;
 import com.zz.HttpClient.Service.Basic.CrudService;
 
 /**

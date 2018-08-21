@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.zz.HttpClient.Bean.Basic.Page;
 import com.zz.HttpClient.Bean.Sys.timer.Timer;
+import com.zz.HttpClient.Bean.Sys.timer.collectionRobot.CollectionRobotTimer;
 import com.zz.HttpClient.Controller.basic.BaseController;
-import com.zz.HttpClient.Service.sys.TimerService;
+import com.zz.HttpClient.Service.sys.timer.CollectionRobotTimerService;
+import com.zz.HttpClient.Service.sys.timer.TimerService;
 
 /**
  * 
@@ -28,6 +30,9 @@ public class TimerManageController extends BaseController {
 	
 	@Autowired
 	TimerService timerService;
+	
+	@Autowired
+	CollectionRobotTimerService collectionRobotTimerService;
 	
 	/**
 	 * 
@@ -55,6 +60,33 @@ public class TimerManageController extends BaseController {
 	@RequestMapping(value = "/findList")
 	public void findList(HttpServletRequest request, HttpServletResponse response) {
 		renderString(response, timerService.findPage(new Page<>(request), new Timer()));
+	}
+	
+	/**
+	 * 
+	 * @Title：findList
+	 * @Description: TODO(催收任务列表)
+	 * @see：
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "/collectionRobot")
+	public String collectionRobot(HttpServletRequest request, HttpServletResponse response) {
+		return "timer/collectionRobotTimer";
+	}
+	
+	/**
+	 * 
+	 * @Title：findList
+	 * @Description: TODO(分页查询催收机器人定时任务列表)
+	 * @see：
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "/collectionRobotList")
+	public void collectionRobotList(HttpServletRequest request, HttpServletResponse response) {
+		renderString(response, collectionRobotTimerService.findPage(new Page<>(request), 
+				new CollectionRobotTimer()));
 	}
 	
 	/**

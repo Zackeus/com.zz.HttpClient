@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zz.HttpClient.Dao.sys.timer.CollectionRobotTimerDao">
+
+	<sql id="collectionRobotTimerColumns">
+		[ID],
+      	[NAME],
+      	[START_DAY],
+      	[END_DAY],
+      	[CUSTOMER_STYLE_ID],
+      	[CRON],
+      	[STATUS],
+      	[CREATE_DATE],
+      	[UPDATE_DATE],
+      	[CREATE_BY],
+      	[UPDATE_BY],
+      	[UPDATE_URL],
+      	[START_URL],
+      	[STOP_URL],
+      	[REMARKS]
+	</sql>
+	
+	<sql id="customerStyleColumns">
+		[ID],
+      	[NAME],
+      	[CREATE_DATE],
+      	[UPDATE_TIME],
+      	[CREATE_BY],
+      	[UPDATE_BY],
+      	[REMARKS]	
+	</sql>
+	
+	<resultMap type="CollectionRobotTimer" id="collectionRobotTimerResultMap">
+		<id property="id" column="ID" />
+		<association property="customerStyle" column="CUSTOMER_STYLE_ID" select="getCustomerStyle"/>
+	</resultMap>
+	
+	<!-- 获取单条定时任务信息 -->
+	<select id="get" resultMap="collectionRobotTimerResultMap">
+		SELECT
+		<include refid="collectionRobotTimerColumns"/>
+		FROM [Message].[dbo].[SYS_CUSTOMER_TIMER]
+		WHERE [ID] = #{id}
+	</select>
+	
+	<!-- 获取客户类型信息 -->
+	<select id="getCustomerStyle" resultType="CustomerStyle">
+		SELECT
+		<include refid="customerStyleColumns"/>
+		FROM [Message].[dbo].[SYS_CUSTOMER_STYLE]
+		WHERE [ID] = #{id}
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="findList" resultMap="collectionRobotTimerResultMap">
+		SELECT
+		<include refid="collectionRobotTimerColumns"/>
+		FROM [Message].[dbo].[SYS_CUSTOMER_TIMER]
+		ORDER BY [CREATE_DATE] 
+	</select>
+
+</mapper>

@@ -10,24 +10,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
-import com.zz.HttpClient.Bean.Sys.timer.Timer;
-import com.zz.HttpClient.Service.sys.timer.TimerService;
+import com.zz.HttpClient.Bean.Sys.timer.collectionRobot.CollectionRobotTimer;
+import com.zz.HttpClient.Service.sys.timer.CollectionRobotTimerService;
 
 /**
  * 
- * @Title:BaseTimerController
- * @Description:TODO(定时任务支持类)
+ * @Title:BaseCollectionRobotTimerController
+ * @Description:TODO(催收定时任务基类)
  * @Company: 
  * @author zhou.zhang
- * @date 2018年8月16日 上午11:22:14
+ * @date 2018年8月21日 下午1:26:06
  */
 @Component
-public abstract class BaseTimerController extends BaseController {
+public abstract class BaseCollectionRobotTimerController extends BaseController {
 	
 	protected static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 	
 	@Autowired
-	protected TimerService timerService;
+	protected CollectionRobotTimerService collectionRobotTimerService;
 	
 	@Autowired
 	protected ThreadPoolTaskScheduler threadPoolTaskScheduler;
@@ -52,7 +52,8 @@ public abstract class BaseTimerController extends BaseController {
      * @see：
      * @param cron
      */
-    public abstract void updateCron(Timer timer, HttpServletRequest request, HttpServletResponse response);
+    public abstract void updateCron(CollectionRobotTimer collectionRobotTimer, HttpServletRequest request, 
+    		HttpServletResponse response);
     
     /**
      * 
@@ -69,5 +70,5 @@ public abstract class BaseTimerController extends BaseController {
      * @see：
      */
     public abstract void stopCron(HttpServletRequest request, HttpServletResponse response);
-    
+
 }
