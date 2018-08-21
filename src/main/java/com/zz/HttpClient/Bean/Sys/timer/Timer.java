@@ -1,4 +1,4 @@
-package com.zz.HttpClient.Bean.Sys;
+package com.zz.HttpClient.Bean.Sys.timer;
 
 import com.zz.HttpClient.Bean.Basic.DataEntity;
 

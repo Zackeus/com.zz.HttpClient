@@ -5,7 +5,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import com.zz.HttpClient.Bean.Sys.Timer;
+import com.zz.HttpClient.Bean.Sys.timer.Timer;
 import com.zz.HttpClient.Dao.sys.TimerDao;
 import com.zz.HttpClient.Service.Basic.CrudService;
 

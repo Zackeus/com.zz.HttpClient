@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
-import com.zz.HttpClient.Bean.Sys.Timer;
+import com.zz.HttpClient.Bean.Sys.timer.Timer;
 import com.zz.HttpClient.Service.sys.TimerService;
 
 /**

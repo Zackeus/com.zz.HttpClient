@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.zz.HttpClient.Bean.Basic.LayuiResult;
-import com.zz.HttpClient.Bean.Sys.Timer;
+import com.zz.HttpClient.Bean.Sys.timer.Timer;
 import com.zz.HttpClient.Controller.basic.BaseTimerController;
 import com.zz.HttpClient.Util.Logs;
 

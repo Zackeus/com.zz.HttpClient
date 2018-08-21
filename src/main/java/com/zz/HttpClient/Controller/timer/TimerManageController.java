@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.zz.HttpClient.Bean.Basic.Page;
-import com.zz.HttpClient.Bean.Sys.Timer;
+import com.zz.HttpClient.Bean.Sys.timer.Timer;
 import com.zz.HttpClient.Controller.basic.BaseController;
 import com.zz.HttpClient.Service.sys.TimerService;
 

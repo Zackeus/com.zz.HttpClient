@@ -1,6 +1,6 @@
 package com.zz.HttpClient.Dao.sys;
 
-import com.zz.HttpClient.Bean.Sys.Timer;
+import com.zz.HttpClient.Bean.Sys.timer.Timer;
 import com.zz.HttpClient.Dao.Basic.CrudDao;
 
 /**
