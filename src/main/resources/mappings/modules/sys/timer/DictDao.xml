@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zz.HttpClient.Dao.sys.DictDao">
+
+	<sql id="dictColumns">
+		[ID],
+      	[LABEL],
+      	[TYPE],
+      	[DESCRIPTION],
+      	[SORT],
+      	[CREATE_DATE],
+      	[UPDATE_TIME],
+      	[CREATE_BY],
+      	[UPDATE_BY],
+      	[REMARKS]
+	</sql>
+	
+	<!-- 根据类别查询数据字典 -->
+	<select id="findListByType" resultType="Dict">
+		SELECT
+		<include refid="dictColumns"/>
+		FROM [Message].[dbo].[SYS_DICT]
+		WHERE [TYPE] = #{type}
+		ORDER BY [SORT] 
+	</select>
+
+</mapper>

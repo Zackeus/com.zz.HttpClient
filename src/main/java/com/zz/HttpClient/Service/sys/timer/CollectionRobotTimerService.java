@@ -1,6 +1,7 @@
 package com.zz.HttpClient.Service.sys.timer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,23 @@ public class CollectionRobotTimerService extends CrudService<CollectionRobotTime
 	@Override
 	public CollectionRobotTimer get(String jobName) {
 		return super.get(jobName);
+	}
+	
+	/**
+	 * 
+	 * @Title：updateStatusById
+	 * @Description: TODO(根据ID更新任务当前状态)
+	 * @see：
+	 * @param collectionRobotTimer
+	 * @param status
+	 * @return
+	 */
+	@CacheEvict(value = {"sysTimerCache"}, key = "#collectionRobotTimer.jobName",  beforeInvocation = true)
+	public int updateStatusByJobName(CollectionRobotTimer collectionRobotTimer, boolean status) {
+		if (collectionRobotTimer.isStatus() != status) {
+			return collectionRobotTimerDao.updateStatusByJobName(collectionRobotTimer, status);
+		}
+		return 0;
 	}
 
 }

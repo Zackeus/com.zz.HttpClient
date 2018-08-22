@@ -49,10 +49,10 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
     // 启用/禁用任务
     form.on('switch(timerStatus)', function(data) {
         var tipText = '确定禁用当前任务？';
-        var url = $(data.elem).data("stop");
+        var url = ctx + '/timer/collectionRobot/stopJob?jobName=' + this.value;
         if(data.elem.checked) {
             tipText = '确定启用当前任务？';
-            var url = $(data.elem).data("start");
+            url = ctx + '/timer/collectionRobot/startJob?jobName=' + this.value;
         }
         
         layer.msg(tipText, {
@@ -60,7 +60,7 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
         	btn: ['确定', '取消'],
             btn1: function(index, layero) {
             	// 启用/禁用定时任务
-            	request.operatTimer(form, data, index, ctx + url);
+            	request.operatTimer(form, data, index, url);
             },
             btn2: function(index, layero) {
             	// 取消
@@ -88,27 +88,39 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
     
     //编辑定时任务
     function editTimer(data) {
-		layer.open({
+    	var index = layui.layer.open({
             type: 2,
             title: '编辑定时任务', 		// 不显示标题栏
             closeBtn: 1,			// 关闭按钮
-            area: ['820px', '500px'],
             shade: 0, 				// 遮罩
             shadeClose: false, 		// 是否点击遮罩关闭
-            offset: 'auto',			// 垂直水平居中
             anim: 0, 				// 弹出动画
             isOutAnim: true, 		// 关闭动画
             scrollbar: false, 		// 是否允许浏览器出现滚动条
             maxmin: true, 			// 最大最小化
             id: 'LAY_EditTimer', 	// 用于控制弹层唯一标识
             moveType: 1,
-            content: [ctx + '/timer/manage/strategy?id=' + data.id, 'no'],
+            content: [ctx + '/timer/collectionRobot/editTimer?jobName=' + data.jobName, 'no'],
+            success : function(layero, index){
+                var body = layui.layer.getChildFrame('body', index);
+                setTimeout(function(){
+                    layui.layer.tips('点击此处返回任务列表', '.layui-layer-setwin .layui-layer-close', {
+                        tips: 3
+                    });
+                },500)
+            },
             cancel: function(index, layero) {
             },
             end:function(index) {
             	collectionRobotListIns.reload();
            }
     	});
+    	layui.layer.full(index);
+        window.sessionStorage.setItem("index",index);
+        //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+        $(window).on("resize",function(){
+        	layui.layer.full(window.sessionStorage.getItem("index"));
+        })
     }
 
     //控制表格编辑时文本的位置【跟随渲染时的位置】

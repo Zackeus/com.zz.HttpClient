@@ -40,7 +40,7 @@ layui.define(['jquery','layer'],function(exports){
         			success : function(result) {
         				layer.closeAll('loading');
         				if (result.code == "0") {
-        					layer.msg('操作成功', {icon: 6,time: 1000});
+        					layer.msg(result.message, {icon: 6,time: 1000});
         				} else {
         					layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
                         	data.elem.checked = !data.elem.checked;

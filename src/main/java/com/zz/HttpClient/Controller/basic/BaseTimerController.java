@@ -1,17 +1,14 @@
 package com.zz.HttpClient.Controller.basic;
 
-import java.text.SimpleDateFormat;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.zz.HttpClient.Bean.Sys.timer.Timer;
-import com.zz.HttpClient.Service.sys.timer.TimerService;
+import com.zz.HttpClient.Service.sys.timer.TimerMangeService;
 
 /**
  * 
@@ -24,19 +21,21 @@ import com.zz.HttpClient.Service.sys.timer.TimerService;
 @Component
 public abstract class BaseTimerController extends BaseController {
 	
-	protected static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+	// 默认任务组名
+	protected static final String JOB_GROUP_NAME = "EXTJWEB_JOBGROUP_NAME";
+	
+	// JOB 任务不存在状态字段
+	protected static final String JOB_STATUS_NONE = "NONE";
+	
+	// JOB 任务正常运行状态字段
+	protected static final String JOB_STATUS_NORMAL = "NORMAL";
+	
+	// JOB 任务暂停状态字段
+	protected static final String JOB_STATUS_PAUSED = "PAUSED";
 	
 	@Autowired
-	protected TimerService timerService;
+	protected TimerMangeService timerMangeService;
 	
-	@Autowired
-	protected ThreadPoolTaskScheduler threadPoolTaskScheduler;
-	
-    @Bean
-    protected ThreadPoolTaskScheduler threadPoolTaskScheduler(){
-        return new ThreadPoolTaskScheduler();
-    }
-    
     /**
      * 
      * @Title：init
@@ -47,27 +46,69 @@ public abstract class BaseTimerController extends BaseController {
     
     /**
      * 
-     * @Title：updateCron
-     * @Description: TODO(更新定时策略)
+     * @Title：main
+     * @Description: TODO(任务主界面)
      * @see：
-     * @param cron
+     * @param request
+     * @param response
      */
-    public abstract void updateCron(Timer timer, HttpServletRequest request, HttpServletResponse response);
+    public abstract String main(HttpServletRequest request, HttpServletResponse response);
     
     /**
      * 
-     * @Title：startCron
-     * @Description: TODO(启动定时策略)
+     * @Title：editTimer
+     * @Description: TODO(修改任务界面)
      * @see：
+     * @param jobName
+     * @param request
+     * @param response
+     * @return
      */
-    public abstract void startCron(HttpServletRequest request, HttpServletResponse response);
+	public abstract String editTimer(String jobName, HttpServletRequest request, HttpServletResponse response, Model model);
     
     /**
      * 
-     * @Title：stopCron
-     * @Description: TODO(停止定时策略)
+     * @Title：findList
+     * @Description: TODO(分页查询列表)
      * @see：
+     * @param request
+     * @param response
      */
-    public abstract void stopCron(HttpServletRequest request, HttpServletResponse response);
+    public abstract void findList(HttpServletRequest request, HttpServletResponse response);
+    
+    /**
+     * 
+     * @Title：startJob
+     * @Description: TODO(启动定时任务)
+     * @see：
+     * @param request
+     * @param response
+     */
+    public abstract void startJob(String jobName, HttpServletRequest request, HttpServletResponse response);
+    
+    /**
+     * 
+     * @Title：stopJob
+     * @Description: TODO(停止定时任务)
+     * @see：
+     * @param jobName
+     * @param request
+     * @param response
+     */
+    public abstract void stopJob(String jobName, HttpServletRequest request, HttpServletResponse response);
+    
+	/**
+	 * 
+	 * @Title：strategy
+	 * @Description: TODO(定时任务策略页面)
+	 * @see：
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "/cron")
+	public String cron(HttpServletRequest request, HttpServletResponse response) {
+		return "sys/timer/cron";
+	}
+    
     
 }

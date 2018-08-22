@@ -492,11 +492,12 @@
 						    </tr>
                         </tbody>
                     </table>
+                    
+	                <div style="padding:5px" align="center">
+				    	<button id="editTimer" class="easyui-linkbutton">确定</button>
+				    	<button href="javascript:void(0)" class="easyui-linkbutton" type="reset">重置</button>
+				    </div>
                 </form>
-               	<div style="float:right; padding:5px">
-			    	<a href="javascript:void(0)" id="editTimer" class="easyui-linkbutton" data-url="${timer.updateUrl}">确定</a>
-			    	<a href="javascript:void(0)" class="easyui-linkbutton">重置</a>
-			    </div>
            	</div>
             <!-- 表达式 E -->
         </div>

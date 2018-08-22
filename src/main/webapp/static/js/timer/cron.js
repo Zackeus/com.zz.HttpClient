@@ -469,45 +469,10 @@ $(function() {
 
 	
 	$("#editTimer").click(function() {
-		var timer = new Object();
-		timer.cron = $('#cron').val();
-		
-	    layer.msg('是否更改此策略？', {
-	    	time: 0, 
-	    	btn: ['确定', '取消'],
-	        btn1: function(index, layero) {
-	        	layer.close(index);
-	    		$.ajax({
-	    			method: 'POST',
-	    			url : ctx + $('#editTimer').data('url'),
-	    			data : JSON.stringify(timer),
-	    			contentType : 'application/json',
-	    			dataType : 'json',
-	    			beforeSend: function() {
-	    				layer.load();
-	    			},
-	    			success : function(result) {
-	    				layer.closeAll('loading');
-	    				if (result.code == "0") {
-	    					layer.msg(result.message, {icon: 6,time: 1000});
-	    					// 关闭自己
-	    					setTimeout(function(){
-	    						parent.layer.close(parent.layer.getFrameIndex(window.name));
-			                },500)
-	    				} else {
-	    					layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
-	    				}
-	    			},
-	    			error : function(result) {
-	    				// 错误信息
-	    				layer.msg('响应失败', {icon: 5,time: 2000,shift: 6}, function(){});
-	    				layer.closeAll('loading');
-	    			}
-	    		});
-	        },
-	        btn2: function(index, layero) {
-	        	layer.close(index);
-	        }
-	    });
+		// 给父页面传值
+		var $$ = parent.layui.jquery;
+		$$('#jobTime').val($('#cron').val());
+		// 关闭自己
+		parent.layer.close(parent.layer.getFrameIndex(window.name));
 	});
 });

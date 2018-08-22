@@ -57,5 +57,20 @@
 		FROM [Message].[dbo].[SYS_CUSTOMER_TIMER]
 		ORDER BY [CREATE_DATE] 
 	</select>
+	
+	<!-- 查询全部数据 -->
+	<select id="findAllList" resultType="CollectionRobotTimer">
+		SELECT
+		<include refid="collectionRobotTimerColumns"/>
+		FROM [Message].[dbo].[SYS_CUSTOMER_TIMER]
+	</select>
+	
+	<!-- 根据 jobName 更新任务当前状态 -->
+	<update id="updateStatusByJobName">
+		UPDATE
+		[Message].[dbo].[SYS_CUSTOMER_TIMER]
+		SET [STATUS] = #{status}
+		WHERE [JOB_NAME] = #{collectionRobotTimer.jobName}
+	</update>
 
 </mapper>

@@ -19,6 +19,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
+import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -170,14 +171,11 @@ public class TimerMangeService {
      * @see：
      * @param jobName
      * @param jobGroupName
+     * @throws SchedulerException 
      */
-    public void pauseJob(String jobName, String jobGroupName) {
-        try {
-            JobKey jobKey = JobKey.jobKey(jobName, jobGroupName);  
-            scheduler.pauseJob(jobKey);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        } 
+    public void pauseJob(String jobName, String jobGroupName) throws SchedulerException {
+        JobKey jobKey = JobKey.jobKey(jobName, jobGroupName);  
+        scheduler.pauseJob(jobKey);
     }
     
     /**
@@ -212,6 +210,25 @@ public class TimerMangeService {
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * 
+     * @Title：getJobState
+     * @Description: TODO(查询其中任务的状态)
+     * @see：
+     * @param jobName
+     * @param jobGroupName
+     * @return
+     */
+    public String getJobState(String jobName, String jobGroupName) {
+    	try {
+			TriggerState triggerState = scheduler.getTriggerState(TriggerKey.triggerKey(jobName, jobGroupName));
+			return triggerState.name();
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
+		return null;
     }
     
     /**
