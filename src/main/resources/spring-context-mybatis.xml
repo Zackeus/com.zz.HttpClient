@@ -94,4 +94,10 @@
     
     <!-- 注解方式配置事务 -->
     <tx:annotation-driven transaction-manager="transactionManager" />
+    
+    <!-- quartz的定时任务的factorybean,配置其他config -->   
+    <bean id="jobFactory" class="com.zz.HttpClient.Util.timer.JobFactory"></bean>  
+    <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+        <property name="jobFactory" ref="jobFactory"></property>  
+    </bean>
 </beans>  

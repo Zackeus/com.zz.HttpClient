@@ -13,7 +13,7 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
 
     var collectionRobotListIns =  table.render({
         elem: '#collectionRobotTimerList',
-        url : ctx + '/timer/manage/collectionRobotList',
+        url : ctx + '/timer/collectionRobot/findList',
         cellMinWidth : 50, 							//	（layui 2.2.1 新增）全局定义所有常规单元格的最小宽度（默认：60），一般用于列宽自动分配的情况。其优先级低于表头参数中的 minWidth
         loading : true, 							//	是否显示加载条
         page : true, 								//	开启分页
@@ -35,12 +35,12 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
         	  limitName: 'pageSize' 				// 每页数据量的参数名，默认：limit
         },  
         cols : [[
-            {field: 'id', title: 'ID', minWidth: 100, fixed: 'left', sort: 'true', align: 'center'},
+            {field: 'jobName', title: 'ID', minWidth: 100, fixed: 'left', sort: 'true', align: 'center'},
             {field: 'name', title: '任务名', align:'center'},
             {field: 'startDay', title: '逾期天数', sort: 'true', align:'center'},
             {field: 'endDay', title: '逾期天数', sort: 'true', align:'center'},
-            {templet: '#customerStyle', title: '客户类型', align:'center'},
-            {field: 'cron', title: '定时策略', align:'center'},
+            {templet: '<div>{{d.customerStyle.name}}</div>', title: '客户类型', align:'center'},
+            {field: 'jobTime', title: '定时策略', align:'center'},
             {field: 'status', title: '当前状态', minWidth:100, templet: '#timerStatus', align:'center'},
             {title: '操作', fixed:"right", align: 'center', templet:'#timerListBar'}
         ]]

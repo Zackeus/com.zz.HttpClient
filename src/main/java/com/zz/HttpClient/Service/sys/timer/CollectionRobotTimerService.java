@@ -22,10 +22,10 @@ public class CollectionRobotTimerService extends CrudService<CollectionRobotTime
 	@Autowired
 	CollectionRobotTimerDao collectionRobotTimerDao;
 	
-	@Cacheable(value = {"sysTimerCache"}, key="#id")
+	@Cacheable(value = {"sysTimerCache"}, key="#jobName")
 	@Override
-	public CollectionRobotTimer get(String id) {
-		return super.get(id);
+	public CollectionRobotTimer get(String jobName) {
+		return super.get(jobName);
 	}
 
 }

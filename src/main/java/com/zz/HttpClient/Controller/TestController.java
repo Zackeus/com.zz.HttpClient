@@ -12,17 +12,11 @@ import com.zz.HttpClient.Bean.Basic.Page;
 import com.zz.HttpClient.Bean.Msg.BusinessSMS;
 import com.zz.HttpClient.Service.BusinessSMSService;
 import com.zz.HttpClient.Service.SendOdCustomerService;
-import com.zz.HttpClient.Timer.TestTask;
 import com.zz.HttpClient.Util.Logs;
 
 @Controller
 @RequestMapping("/test")
 public class TestController {
-	
-	private Integer cx = 0;
-	
-	@Autowired
-	private TestTask testTask;
 	
 //	@Autowired
 //	private TimerTask timerTask;
@@ -38,14 +32,6 @@ public class TestController {
 //		timerTask.sendOdGuarantee();
 //		timerTask.sendOdCustomer();
 		return "testTask";
-	}
-	
-	@RequestMapping(value = "/changeCron")
-	public void changeTask(HttpServletRequest request, HttpServletResponse response) {
-		cx += 5;
-		String cron = "0/" + cx + " * * * * ?";
-		Logs.info("参数:"  + cron);
-		testTask.startCron(cron);
 	}
 	
 	@RequestMapping(value = "/testData")

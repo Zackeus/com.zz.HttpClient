@@ -15,6 +15,7 @@
 		<!-- log4j日志文件管理包版本 -->
 		<slf4j.version>1.7.7</slf4j.version>
 		<log4j.version>1.2.17</log4j.version>
+		<quartz.version>2.2.1</quartz.version>
 		<sitemesh.version>2.4.2</sitemesh.version>
 		<jackson.version>2.7.0</jackson.version>
 		<jython.version>2.5.3</jython.version>
@@ -201,6 +202,12 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
+		<!-- 定时任务 -->
+		<dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${quartz.version}</version>
+        </dependency>
 		<!-- 上传组件包 -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>

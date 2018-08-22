@@ -14,15 +14,15 @@ public class CollectionRobotTimer extends DataEntity<CollectionRobotTimer> {
 
 	private static final long serialVersionUID = 1L;
 
+	private String jobName; 				// 定时任务名；实际是定时任务Id
+	private String jobGroupName; 			// 定时任务组名
 	private String name; 					// 定时任务名
 	private Integer startDay; 				// 起始逾期天数
 	private Integer endDay; 				// 结束逾期天数
 	private CustomerStyle customerStyle; 	// 客户类型
-	private String cron; 					// 定时策略
+	private String jobTime; 				// 定时策略
 	private boolean status; 				// 当前状态(true：启用；false：禁用)
-	private String updateUrl; 				// 更新地址
-	private String startUrl; 				// 启动地址
-	private String stopUrl; 				// 停止地址
+	private String jobClass; 				// 定时任务执行类名
 
 	public CollectionRobotTimer() {
 		super();
@@ -32,18 +32,34 @@ public class CollectionRobotTimer extends DataEntity<CollectionRobotTimer> {
 		super(id);
 	}
 
-	public CollectionRobotTimer(String name, Integer startDay, Integer endDay, CustomerStyle customerStyle, String cron,
-			boolean status, String updateUrl, String startUrl, String stopUrl) {
+	public CollectionRobotTimer(String jobName, String jobGroupName, String name, Integer startDay, Integer endDay,
+			CustomerStyle customerStyle, String jobTime, boolean status, String jobClass) {
 		super();
+		this.jobName = jobName;
+		this.jobGroupName = jobGroupName;
 		this.name = name;
 		this.startDay = startDay;
 		this.endDay = endDay;
 		this.customerStyle = customerStyle;
-		this.cron = cron;
+		this.jobTime = jobTime;
 		this.status = status;
-		this.updateUrl = updateUrl;
-		this.startUrl = startUrl;
-		this.stopUrl = stopUrl;
+		this.jobClass = jobClass;
+	}
+
+	public String getJobName() {
+		return jobName;
+	}
+
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
+	}
+
+	public String getJobGroupName() {
+		return jobGroupName;
+	}
+
+	public void setJobGroupName(String jobGroupName) {
+		this.jobGroupName = jobGroupName;
 	}
 
 	public String getName() {
@@ -78,12 +94,12 @@ public class CollectionRobotTimer extends DataEntity<CollectionRobotTimer> {
 		this.customerStyle = customerStyle;
 	}
 
-	public String getCron() {
-		return cron;
+	public String getJobTime() {
+		return jobTime;
 	}
 
-	public void setCron(String cron) {
-		this.cron = cron;
+	public void setJobTime(String jobTime) {
+		this.jobTime = jobTime;
 	}
 
 	public boolean isStatus() {
@@ -94,28 +110,12 @@ public class CollectionRobotTimer extends DataEntity<CollectionRobotTimer> {
 		this.status = status;
 	}
 
-	public String getUpdateUrl() {
-		return updateUrl;
+	public String getJobClass() {
+		return jobClass;
 	}
 
-	public void setUpdateUrl(String updateUrl) {
-		this.updateUrl = updateUrl;
-	}
-
-	public String getStartUrl() {
-		return startUrl;
-	}
-
-	public void setStartUrl(String startUrl) {
-		this.startUrl = startUrl;
-	}
-
-	public String getStopUrl() {
-		return stopUrl;
-	}
-
-	public void setStopUrl(String stopUrl) {
-		this.stopUrl = stopUrl;
+	public void setJobClass(String jobClass) {
+		this.jobClass = jobClass;
 	}
 
 }

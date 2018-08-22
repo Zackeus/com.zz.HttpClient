@@ -7,12 +7,18 @@
 	<meta name="decorator" content="default"/>
 </head>
 <body class="childrenBody">
+	<blockquote class="layui-elem-quote quoteBox">
+		<div class="demoTable">
+			<div class="layui-inline">
+		    	<div class="layui-input-inline">
+		      		<a class="layui-btn" id="btn-expand" href="${ctx}/quartz/manage/addJob">测试启动</a>
+		    	</div>
+			</div>
+		</div>
+	</blockquote>
+
 	<form class="layui-form" onkeydown="if(event.keyCode==13) return false;">
 		<table id="collectionRobotTimerList" lay-filter="collectionRobotTimerList"></table>
-		
-		<script type="text/javascript" id="customerStyle">
-			{{d.customerStyle.name}}
-		</script>
 		
 		<script type="text/html" id="timerStatus">
 			{{#  if(d.status){ }}
