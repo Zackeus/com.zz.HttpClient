@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2005-2012 springside.org.cn
  */
-package com.zz.HttpClient.Util;
+package com.zz.HttpClient.Util.exception;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

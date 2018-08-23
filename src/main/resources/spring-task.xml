@@ -7,7 +7,7 @@
 	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd"
 	default-autowire="byName" default-lazy-init="false">
 	<!--配置包扫描 -->
-	<context:component-scan base-package="com.zz.HttpClient.Timer" />
+	<context:component-scan base-package="com.zz.HttpClient.Job" />
 
 	<!-- 定时任务配置 scheduler 方式 注解 -->
 	<task:executor id="executor" pool-size="5" />

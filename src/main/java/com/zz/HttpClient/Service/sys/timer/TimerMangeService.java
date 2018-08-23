@@ -26,8 +26,6 @@ import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.zz.HttpClient.Util.Logs;
-
 /**
  * 
  * @Title:TimerMangeService
@@ -38,6 +36,18 @@ import com.zz.HttpClient.Util.Logs;
  */
 @Service("timerMangeService")
 public class TimerMangeService {
+	
+	// 默认任务组名
+	public static final String JOB_GROUP_NAME = "EXTJWEB_JOBGROUP_NAME";
+
+	// JOB 任务不存在状态字段
+	public static final String JOB_STATUS_NONE = "NONE";
+
+	// JOB 任务正常运行状态字段
+	public static final String JOB_STATUS_NORMAL = "NORMAL";
+
+	// JOB 任务暂停状态字段
+	public static final String JOB_STATUS_PAUSED = "PAUSED";
 	
     @Autowired
     private Scheduler scheduler;
@@ -84,9 +94,10 @@ public class TimerMangeService {
      * @param jobName 任务名称
      * @param jobGroupName 任务组名
      * @param jobTime 时间表达式 (这是每隔多少秒为一次任务)
+     * @throws SchedulerException 
      */
-    public void addJob(Class<? extends Job> jobClass, String jobName, String jobGroupName, int jobTime) {
-        addJob(jobClass, jobName, jobGroupName, jobTime, -1);
+    public void addJob(Class<? extends Job> jobClass, String jobName, String jobGroupName, int jobTime) throws SchedulerException {
+    	addJob(jobClass, jobName, jobGroupName, jobTime, -1);
     }
     
     /**
@@ -99,28 +110,25 @@ public class TimerMangeService {
      * @param jobGroupName 任务组名
      * @param jobTime 时间表达式 (这是每隔多少秒为一次任务)
      * @param jobTimes 运行的次数 （<0:表示不限次数）
+     * @throws SchedulerException 
      */
-    public void addJob(Class<? extends Job> jobClass, String jobName, String jobGroupName, int jobTime, int jobTimes) {
-         try {
-             JobDetail jobDetail = JobBuilder.newJob(jobClass)
-                             .withIdentity(jobName, jobGroupName)
-                             .build();
-             Trigger trigger = null;
-             if(jobTimes < 0){
-                 trigger = TriggerBuilder.newTrigger().withIdentity(jobName, jobGroupName)  
-                        .withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(1).withIntervalInSeconds(jobTime))  
-                        .startNow().build();
-             }else{
-                 trigger = TriggerBuilder.newTrigger().withIdentity(jobName, jobGroupName)  
-                        .withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(1).withIntervalInSeconds(jobTime).withRepeatCount(jobTimes))  
-                        .startNow().build();
-             }
-             scheduler.scheduleJob(jobDetail, trigger);
-            if (!scheduler.isShutdown()) {
-            	scheduler.start();
-            }
-        } catch (SchedulerException e) {
-            e.printStackTrace();
+    public void addJob(Class<? extends Job> jobClass, String jobName, String jobGroupName, int jobTime, int jobTimes) throws SchedulerException {
+        JobDetail jobDetail = JobBuilder.newJob(jobClass)
+        		.withIdentity(jobName, jobGroupName)
+                .build();
+        Trigger trigger = null;
+        if(jobTimes < 0) {
+        	trigger = TriggerBuilder.newTrigger().withIdentity(jobName, jobGroupName)
+                    .withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(1).withIntervalInSeconds(jobTime))  
+                    .startNow().build();
+        } else {
+        	trigger = TriggerBuilder.newTrigger().withIdentity(jobName, jobGroupName)
+                    .withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(1).withIntervalInSeconds(jobTime).withRepeatCount(jobTimes))  
+                    .startNow().build();
+        }
+        scheduler.scheduleJob(jobDetail, trigger);
+        if (!scheduler.isShutdown()) {
+        	scheduler.start();
         }
     }
     
@@ -221,15 +229,11 @@ public class TimerMangeService {
      * @param jobName
      * @param jobGroupName
      * @return
+     * @throws SchedulerException 
      */
-    public String getJobState(String jobName, String jobGroupName) {
-    	try {
-			TriggerState triggerState = scheduler.getTriggerState(TriggerKey.triggerKey(jobName, jobGroupName));
-			return triggerState.name();
-		} catch (SchedulerException e) {
-			Logs.error("查询定时任务状态异常：" + e.getMessage());
-		}
-		return null;
+    public String getJobState(String jobName, String jobGroupName) throws SchedulerException {
+		TriggerState triggerState = scheduler.getTriggerState(TriggerKey.triggerKey(jobName, jobGroupName));
+		return triggerState.name();
     }
     
     /**
@@ -238,32 +242,28 @@ public class TimerMangeService {
      * @Description: TODO(获取所有计划中的任务列表)
      * @see：
      * @return
+     * @throws SchedulerException 
      */
-    public List<Map<String,Object>> queryAllJob() {
-        List<Map<String,Object>> jobList = null;
-        try {
-             GroupMatcher<JobKey> matcher = GroupMatcher.anyJobGroup();  
-             Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
-             jobList = new ArrayList<Map<String,Object>>();  
-             for (JobKey jobKey : jobKeys) {  
-                  List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);  
-                  for (Trigger trigger : triggers) {  
-                      Map<String,Object> map = new HashMap<>();
-                      map.put("jobName", jobKey.getName());
-                      map.put("jobGroupName", jobKey.getGroup());
-                      map.put("description", "触发器:" + trigger.getKey());
-                      Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());  
-                      map.put("jobStatus", triggerState.name());
-                      if (trigger instanceof CronTrigger) {  
-                          CronTrigger cronTrigger = (CronTrigger) trigger;  
-                          String cronExpression = cronTrigger.getCronExpression();  
-                          map.put("jobTime",cronExpression);
-                      }  
-                      jobList.add(map);  
-                  }  
-              }  
-        } catch (SchedulerException e) {
-            e.printStackTrace();
+    public List<Map<String,Object>> queryAllJob() throws SchedulerException {
+        GroupMatcher<JobKey> matcher = GroupMatcher.anyJobGroup();  
+        Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
+        List<Map<String,Object>> jobList = new ArrayList<Map<String,Object>>();  
+        for (JobKey jobKey : jobKeys) {  
+        	List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);  
+        	for (Trigger trigger : triggers) {
+        		Map<String,Object> map = new HashMap<>();
+        		map.put("jobName", jobKey.getName());
+        		map.put("jobGroupName", jobKey.getGroup());
+        		map.put("description", "触发器:" + trigger.getKey());
+        		Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());  
+        		map.put("jobStatus", triggerState.name());
+        		if (trigger instanceof CronTrigger) {  
+        			CronTrigger cronTrigger = (CronTrigger) trigger;  
+        			String cronExpression = cronTrigger.getCronExpression();  
+        			map.put("jobTime",cronExpression);
+        		}  
+        		jobList.add(map);  
+        	}  
         }  
         return jobList;  
     }
@@ -274,31 +274,27 @@ public class TimerMangeService {
      * @Description: TODO(获取所有正在运行的job)
      * @see：
      * @return
+     * @throws SchedulerException 
      */
-    public List<Map<String,Object>> queryRunJon() {
-        List<Map<String,Object>> jobList=null;
-        try {
-            List<JobExecutionContext> executingJobs = scheduler.getCurrentlyExecutingJobs();
-            jobList = new ArrayList<Map<String,Object>>(executingJobs.size());  
-            for (JobExecutionContext executingJob : executingJobs) {  
-                Map<String,Object> map = new HashMap<String, Object>();  
-                JobDetail jobDetail = executingJob.getJobDetail();  
-                JobKey jobKey = jobDetail.getKey();  
-                Trigger trigger = executingJob.getTrigger(); 
-                map.put("jobName", jobKey.getName());
-                map.put("jobGroupName", jobKey.getGroup());
-                map.put("description", "触发器:" + trigger.getKey());
-                Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());  
-                map.put("jobStatus", triggerState.name());
-                if (trigger instanceof CronTrigger) {  
-                    CronTrigger cronTrigger = (CronTrigger) trigger;  
-                    String cronExpression = cronTrigger.getCronExpression();  
-                    map.put("jobTime",cronExpression);
-                }  
-                jobList.add(map);  
+    public List<Map<String,Object>> queryRunJon() throws SchedulerException {
+        List<JobExecutionContext> executingJobs = scheduler.getCurrentlyExecutingJobs();
+        List<Map<String,Object>> jobList = new ArrayList<Map<String,Object>>(executingJobs.size());  
+        for (JobExecutionContext executingJob : executingJobs) {  
+            Map<String,Object> map = new HashMap<String, Object>();  
+            JobDetail jobDetail = executingJob.getJobDetail();  
+            JobKey jobKey = jobDetail.getKey();  
+            Trigger trigger = executingJob.getTrigger(); 
+            map.put("jobName", jobKey.getName());
+            map.put("jobGroupName", jobKey.getGroup());
+            map.put("description", "触发器:" + trigger.getKey());
+            Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());  
+            map.put("jobStatus", triggerState.name());
+            if (trigger instanceof CronTrigger) {  
+                CronTrigger cronTrigger = (CronTrigger) trigger;  
+                String cronExpression = cronTrigger.getCronExpression();  
+                map.put("jobTime",cronExpression);
             }  
-        } catch (SchedulerException e) {
-            e.printStackTrace();
+            jobList.add(map);  
         }  
         return jobList;  
     }

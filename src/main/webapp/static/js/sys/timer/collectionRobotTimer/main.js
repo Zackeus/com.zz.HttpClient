@@ -138,6 +138,43 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
             }
         });
     }
+    
+    // 添加任务
+    $('#addTimer').click(function () {
+    	var addJobIndex = layui.layer.open({
+            type: 2,
+            title: '增加定时任务', 		// 不显示标题栏
+            closeBtn: 1,			// 关闭按钮
+            shade: 0, 				// 遮罩
+            shadeClose: false, 		// 是否点击遮罩关闭
+            anim: 0, 				// 弹出动画
+            isOutAnim: true, 		// 关闭动画
+            scrollbar: false, 		// 是否允许浏览器出现滚动条
+            maxmin: true, 			// 最大最小化
+            id: 'LAY_AddTimer', 	// 用于控制弹层唯一标识
+            moveType: 1,
+            content: [ctx + '/timer/collectionRobot/addTimer'],
+            success : function(layero, index){
+                var body = layui.layer.getChildFrame('body', index);
+                setTimeout(function(){
+                    layui.layer.tips('点击此处返回任务列表', '.layui-layer-setwin .layui-layer-close', {
+                        tips: 3
+                    });
+                },500)
+            },
+            cancel: function(index, layero) {
+            },
+            end:function(index) {
+            	collectionRobotListIns.reload();
+           }
+    	});
+    	layui.layer.full(addJobIndex);
+        window.sessionStorage.setItem("addJobIndex", addJobIndex);
+        //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+        $(window).on("resize",function() {
+        	layui.layer.full(window.sessionStorage.getItem("addJobIndex"));
+        })
+    });
 
     //控制表格编辑时文本的位置【跟随渲染时的位置】
     $("body").on("click",".layui-table-body.layui-table-main tbody tr td",function(){

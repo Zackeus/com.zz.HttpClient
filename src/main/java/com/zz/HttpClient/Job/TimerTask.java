@@ -1,4 +1,4 @@
-package com.zz.HttpClient.Timer;
+package com.zz.HttpClient.Job;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

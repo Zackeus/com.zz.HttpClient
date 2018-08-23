@@ -65,6 +65,28 @@
 		FROM [Message].[dbo].[SYS_CUSTOMER_TIMER]
 	</select>
 	
+	<!-- 插入单笔数据 -->
+	<insert id="insert">
+		INSERT INTO
+		[Message].[dbo].[SYS_CUSTOMER_TIMER]
+		(<include refid="collectionRobotTimerColumns"/>)
+		VALUES (
+			#{jobName},
+			#{jobGroupName},
+			#{name},
+			#{startDay},
+			#{endDay},
+			#{customerStyleId},
+			#{jobTime},
+			#{status},
+			#{jobClass},
+			#{createDate},
+			#{updateDate},
+			#{createBy.id},
+			#{updateBy.id},
+			#{remarks})
+	</insert>
+	
 	<!-- 更新单笔数据 -->
 	<update id="update">
 		UPDATE

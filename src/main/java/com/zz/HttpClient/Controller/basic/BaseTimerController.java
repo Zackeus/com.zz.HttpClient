@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.zz.HttpClient.Bean.Basic.LayuiResult;
 import com.zz.HttpClient.Service.sys.timer.TimerMangeService;
 import com.zz.HttpClient.Util.WebUtils;
+import com.zz.HttpClient.Util.exception.TimerException;
 
 /**
  * 
@@ -25,18 +26,6 @@ import com.zz.HttpClient.Util.WebUtils;
  */
 @Component
 public abstract class BaseTimerController<T> extends BaseController {
-
-	// 默认任务组名
-	protected static final String JOB_GROUP_NAME = "EXTJWEB_JOBGROUP_NAME";
-
-	// JOB 任务不存在状态字段
-	protected static final String JOB_STATUS_NONE = "NONE";
-
-	// JOB 任务正常运行状态字段
-	protected static final String JOB_STATUS_NORMAL = "NORMAL";
-
-	// JOB 任务暂停状态字段
-	protected static final String JOB_STATUS_PAUSED = "PAUSED";
 
 	@Autowired
 	protected TimerMangeService timerMangeService;
@@ -58,6 +47,17 @@ public abstract class BaseTimerController<T> extends BaseController {
 	 * @param response
 	 */
 	public abstract String main(HttpServletRequest request, HttpServletResponse response);
+	
+	/**
+	 * 
+	 * @Title：addTimer
+	 * @Description: TODO(增加任务界面)
+	 * @see：
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public abstract String addTimer(HttpServletRequest request, HttpServletResponse response);
 
 	/**
 	 * 
@@ -84,11 +84,25 @@ public abstract class BaseTimerController<T> extends BaseController {
 
 	/**
 	 * 
+	 * @Title：addJob
+	 * @Description: TODO(增加定时任务)
+	 * @see：
+	 * @param t
+	 * @param request
+	 * @param response
+	 * @throws SchedulerException 
+	 * @throws Exception 
+	 */
+	public abstract void addJob(T t, HttpServletRequest request, HttpServletResponse response);
+	
+	/**
+	 * 
 	 * @Title：startJob
 	 * @Description: TODO(启动定时任务) 
 	 * @see：
 	 * @param request
 	 * @param response
+	 * @throws SchedulerException 
 	 */
 	public abstract void startJob(String jobName, HttpServletRequest request, HttpServletResponse response);
 
@@ -102,8 +116,7 @@ public abstract class BaseTimerController<T> extends BaseController {
 	 * @param response
 	 * @throws SchedulerException
 	 */
-	public abstract void stopJob(String jobName, HttpServletRequest request, HttpServletResponse response)
-			throws SchedulerException;
+	public abstract void stopJob(String jobName, HttpServletRequest request, HttpServletResponse response);
 
 	/**
 	 * 
@@ -118,7 +131,7 @@ public abstract class BaseTimerController<T> extends BaseController {
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	public abstract void updateJob(T t, HttpServletRequest request, HttpServletResponse response) throws SchedulerException;
+	public abstract void updateJob(T t, HttpServletRequest request, HttpServletResponse response);
 	
 	/**
 	 * 
@@ -130,7 +143,7 @@ public abstract class BaseTimerController<T> extends BaseController {
 	 * @param response
 	 * @throws SchedulerException
 	 */
-	public abstract void deleteJob(String jobName, HttpServletRequest request, HttpServletResponse response) throws SchedulerException;
+	public abstract void deleteJob(String jobName, HttpServletRequest request, HttpServletResponse response);
 
 	/**
 	 * 
@@ -154,10 +167,10 @@ public abstract class BaseTimerController<T> extends BaseController {
 	 * @param response
 	 * @return
 	 */
-	@ExceptionHandler({ SchedulerException.class })
-	public String schedulerException(HttpServletRequest request, HttpServletResponse response, SchedulerException e) {
+	@ExceptionHandler({ TimerException.class })
+	public String schedulerException(HttpServletRequest request, HttpServletResponse response, TimerException e) {
 		if (WebUtils.isAjaxRequest(request)) {
-			renderString(response, new LayuiResult(-1, "操作定时任务异常：" + e.getMessage()));
+			renderString(response, new LayuiResult(-1, e.getMessage()));
 			return null;
 		} else {
 			return "sys/Error";

@@ -11,7 +11,7 @@
 		<div class="demoTable">
 			<div class="layui-inline">
 		    	<div class="layui-input-inline">
-		    		<button class="layui-btn"><i class="layui-icon">&#xe608;</i> 添加</button>
+		    		<button id="addTimer" class="layui-btn"><i class="layui-icon">&#xe608;</i> 添加</button>
 		    	</div>
 			</div>
 		</div>
