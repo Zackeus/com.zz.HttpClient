@@ -16,10 +16,11 @@ import com.zz.HttpClient.Service.sys.timer.TimerMangeService;
  * @Description:TODO(定时任务支持类)
  * @Company: 
  * @author zhou.zhang
+ * @param <T>
  * @date 2018年8月16日 上午11:22:14
  */
 @Component
-public abstract class BaseTimerController extends BaseController {
+public abstract class BaseTimerController<T> extends BaseController {
 	
 	// 默认任务组名
 	protected static final String JOB_GROUP_NAME = "EXTJWEB_JOBGROUP_NAME";
@@ -97,9 +98,20 @@ public abstract class BaseTimerController extends BaseController {
      */
     public abstract void stopJob(String jobName, HttpServletRequest request, HttpServletResponse response);
     
+    /**
+     * 
+     * @Title：updateJob
+     * @Description: TODO(更新定时任务)
+     * @see：
+     * @param t
+     * @param request
+     * @param response
+     */
+	public abstract void updateJob(T t, HttpServletRequest request, HttpServletResponse response); 
+    
 	/**
 	 * 
-	 * @Title：strategy
+	 * @Title：cron
 	 * @Description: TODO(定时任务策略页面)
 	 * @see：
 	 * @param request
@@ -109,6 +121,5 @@ public abstract class BaseTimerController extends BaseController {
 	public String cron(HttpServletRequest request, HttpServletResponse response) {
 		return "sys/timer/cron";
 	}
-    
     
 }

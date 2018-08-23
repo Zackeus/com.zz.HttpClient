@@ -23,6 +23,8 @@ public class CollectionRobotTimer extends DataEntity<CollectionRobotTimer> {
 	private String jobTime; 				// 定时策略
 	private boolean status; 				// 当前状态(true：启用；false：禁用)
 	private String jobClass; 				// 定时任务执行类名
+	
+	private String customerStyleId; 		// 客户类型Id 更新时使用
 
 	public CollectionRobotTimer() {
 		super();
@@ -116,6 +118,14 @@ public class CollectionRobotTimer extends DataEntity<CollectionRobotTimer> {
 
 	public void setJobClass(String jobClass) {
 		this.jobClass = jobClass;
+	}
+
+	public String getCustomerStyleId() {
+		return customerStyleId;
+	}
+
+	public void setCustomerStyleId(String customerStyleId) {
+		this.customerStyleId = customerStyleId;
 	}
 
 }

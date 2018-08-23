@@ -26,6 +26,8 @@ import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zz.HttpClient.Util.Logs;
+
 /**
  * 
  * @Title:TimerMangeService
@@ -226,7 +228,7 @@ public class TimerMangeService {
 			TriggerState triggerState = scheduler.getTriggerState(TriggerKey.triggerKey(jobName, jobGroupName));
 			return triggerState.name();
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			Logs.error("查询定时任务状态异常：" + e.getMessage());
 		}
 		return null;
     }

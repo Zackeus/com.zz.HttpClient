@@ -23,6 +23,6 @@
 		</script>
 	</form>
 	
-	<script type="text/javascript" src="${ctxStatic}/js/timer/collectionRobotTimer/main.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/js/sys/timer/collectionRobotTimer/main.js"></script>
 </body>
 </html>

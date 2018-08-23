@@ -20,7 +20,7 @@ import com.zz.HttpClient.Bean.Sys.Menu;
 import com.zz.HttpClient.Bean.Sys.Principal;
 import com.zz.HttpClient.Bean.Sys.Role;
 import com.zz.HttpClient.Bean.Sys.User;
-import com.zz.HttpClient.Dao.UserDao;
+import com.zz.HttpClient.Dao.sys.UserDao;
 import com.zz.HttpClient.Service.sys.MenuService;
 import com.zz.HttpClient.Service.sys.RoleService;
 

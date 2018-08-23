@@ -9,6 +9,7 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,7 +31,7 @@ import com.zz.HttpClient.Util.StringUtils;
  */
 @Controller
 @RequestMapping("/timer/collectionRobot")
-public class CollectionRobotTimerController extends BaseTimerController {
+public class CollectionRobotTimerController extends BaseTimerController<CollectionRobotTimer> {
 
 	@Autowired
 	CollectionRobotTimerService collectionRobotTimerService;
@@ -130,6 +131,13 @@ public class CollectionRobotTimerController extends BaseTimerController {
 		}
 		collectionRobotTimerService.updateStatusByJobName(collectionRobotTimer, false);
 		renderString(response, new LayuiResult(0, "停止任务成功"));
+	}
+	
+	@RequestMapping(value = "/updateJob", produces = "application/json;charset=UTF-8")
+	@Override
+	public void updateJob(@RequestBody CollectionRobotTimer collectionRobotTimer, 
+			HttpServletRequest request, HttpServletResponse response) {
+		renderString(response, new LayuiResult(0, "更新任务成功"));
 	}
 
 }

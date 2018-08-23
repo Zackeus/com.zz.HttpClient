@@ -1,4 +1,4 @@
-package com.zz.HttpClient.Dao;
+package com.zz.HttpClient.Dao.sys;
 
 import com.zz.HttpClient.Bean.Sys.User;
 import com.zz.HttpClient.Dao.Basic.CrudDao;

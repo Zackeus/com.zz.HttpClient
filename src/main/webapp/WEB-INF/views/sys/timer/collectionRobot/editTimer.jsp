@@ -21,6 +21,12 @@
 			</div>
 		</div>
 		<div class="layui-form-item layui-row layui-col-xs12">
+			<label class="layui-form-label">执行类</label>
+			<div class="layui-input-block">
+				<input id="jobClass" name="jobClass" type="text" class="layui-input" value="${collectionRobotTimer.jobClass}" disabled>
+			</div>
+		</div>
+		<div class="layui-form-item layui-row layui-col-xs12">
 			<label class="layui-form-label">任务名</label>
 			<div class="layui-input-block">
 				<input id="name" name="name" type="text" class="layui-input" value="${collectionRobotTimer.name}" lay-verify="required" placeholder="请输入任务名">
@@ -39,7 +45,7 @@
 		<div class="layui-form-item">
 		    <label class="layui-form-label">用户类型</label>
 		    <div class="layui-input-block">
-		      <select id="customerStyle.id" name="customerStyle.id" lay-verify="required">
+		      <select id="customerStyleId" name="customerStyleId" lay-verify="required">
 		      	<option value="">请选择类别</option>
 				<c:forEach items="${fns:getDictList('customer_type')}" var="obj">
 					<c:choose>
@@ -68,6 +74,6 @@
 	 	</div>
 	</form>
 	
-	<script type="text/javascript" src="${ctxStatic}/js/timer/collectionRobotTimer/editTimer.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/js/sys/timer/collectionRobotTimer/editTimer.js"></script>
 </body>
 </html>

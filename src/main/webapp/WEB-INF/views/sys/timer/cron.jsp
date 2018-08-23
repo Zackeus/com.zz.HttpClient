@@ -505,6 +505,6 @@
     <script type="text/javascript">var ctx = '${ctx}', ctxStatic='${ctxStatic}';</script>
     <script src="${ctxStatic}/jquery/easyui-1.3.3/jquery.easyui.min.js" type="text/javascript"></script>
     <script src="${ctxStatic}/layer/layer.js" type="text/javascript"></script>
-    <script src="${ctxStatic}/js/timer/cron.js" type="text/javascript"></script>
+    <script src="${ctxStatic}/js/sys/timer/cron.js" type="text/javascript"></script>
 </body>
 </html>
