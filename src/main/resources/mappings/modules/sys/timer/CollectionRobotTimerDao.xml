@@ -65,6 +65,22 @@
 		FROM [Message].[dbo].[SYS_CUSTOMER_TIMER]
 	</select>
 	
+	<!-- 更新单笔数据 -->
+	<update id="update">
+		UPDATE
+		[Message].[dbo].[SYS_CUSTOMER_TIMER]
+		SET
+		[NAME] = #{name},
+		[START_DAY] = #{startDay},
+		[END_DAY] = #{endDay},
+		[CUSTOMER_STYLE_ID] = #{customerStyleId},
+		[JOB_TIME] = #{jobTime},
+		[UPDATE_DATE] = #{updateDate},
+		[UPDATE_BY] = #{updateBy.id},
+		[REMARKS] = #{remarks}
+		WHERE [JOB_NAME] = #{jobName}
+	</update>
+	
 	<!-- 根据 jobName 更新任务当前状态 -->
 	<update id="updateStatusByJobName">
 		UPDATE
@@ -72,5 +88,12 @@
 		SET [STATUS] = #{status}
 		WHERE [JOB_NAME] = #{collectionRobotTimer.jobName}
 	</update>
+	
+	<!-- 删除单笔数据 -->
+	<delete id="delete">
+		DELETE
+		[Message].[dbo].[SYS_CUSTOMER_TIMER]
+		WHERE [JOB_NAME] = #{jobName}
+	</delete>
 
 </mapper>

@@ -16,52 +16,52 @@
     <!-- diskExpiryThreadIntervalSeconds="100" 磁盘失效线程运行时间间隔,默认是120秒  -->
     <!-- memoryStoreEvictionPolicy="LFU" 内存存储与释放策略.当达到maxElementsInMemory时共有三种策略,分别为LRU(最近最少使用)、LFU(最常用的)、FIFO(先进先出)默认使用"最近使用"策略 -->
     
-    <!-- 设定缓存的默认数据过期策略 -->
+    <!-- 设定缓存的默认数据过期策略  三天-->
     <defaultCache
         maxElementsInMemory="1000"
         maxElementsOnDisk="10000000"  
         eternal="false"
         overflowToDisk="false"   
         diskPersistent="false"  
-        timeToIdleSeconds="120"  
-        timeToLiveSeconds="120"   
+        timeToIdleSeconds="259200"  
+        timeToLiveSeconds="259200"   
         diskExpiryThreadIntervalSeconds="120"  
         memoryStoreEvictionPolicy="LRU">  
     </defaultCache>
     
-    <!--  自定义缓存策略-白名单缓存容器对应策略-->
+    <!--  自定义缓存策略-白名单缓存容器对应策略 15天 -->
     <cache name="ipWhileCache"          
        	maxElementsInMemory="1000"
 	    maxElementsOnDisk="10000000"  
 	    eternal="false"
 	    overflowToDisk="false"   
 	    diskPersistent="false"  
-	    timeToIdleSeconds="120"  
-	    timeToLiveSeconds="120"   
+	    timeToIdleSeconds="1296000"  
+	    timeToLiveSeconds="1296000"   
 	    diskExpiryThreadIntervalSeconds="120"  
 	    memoryStoreEvictionPolicy="LRU"/>
 	    
-	<!-- 认证缓存 -->
+	<!-- 认证缓存  5天 -->
 	<cache name="authenticationCache"
 		maxElementsInMemory="1000"
 		maxElementsOnDisk="10000000"
 		eternal="false"
 		overflowToDisk="false"
 		diskPersistent="false"
-		timeToIdleSeconds="120"
-		timeToLiveSeconds="240"
+		timeToIdleSeconds="432000"
+		timeToLiveSeconds="432000"
 		diskExpiryThreadIntervalSeconds="120"
 		memoryStoreEvictionPolicy="LRU"/>
 	
-	<!-- 授权缓存 -->
+	<!-- 授权缓存 5天 -->
 	<cache name="authorizationCache"
 		maxElementsInMemory="1000"
 		maxElementsOnDisk="10000000"
 		eternal="false"
 		overflowToDisk="false"
 		diskPersistent="false"
-		timeToIdleSeconds="120"
-		timeToLiveSeconds="240"
+		timeToIdleSeconds="432000"
+		timeToLiveSeconds="432000"
 		diskExpiryThreadIntervalSeconds="120"
 		memoryStoreEvictionPolicy="LRU"/>
 		
@@ -75,15 +75,15 @@
         diskExpiryThreadIntervalSeconds="600" 
         memoryStoreEvictionPolicy="LRU"/>
         
-    <!-- 系统菜单缓存 -->
+    <!-- 系统菜单缓存 30天 -->
     <cache name="sysMenuCache"          
        	maxElementsInMemory="1000"
 	    maxElementsOnDisk="10000000"  
 	    eternal="false"
 	    overflowToDisk="false"   
 	    diskPersistent="false"  
-	    timeToIdleSeconds="259200"  
-	    timeToLiveSeconds="259200"   
+	    timeToIdleSeconds="2592000"  
+	    timeToLiveSeconds="2592000"   
 	    diskExpiryThreadIntervalSeconds="120"  
 	    memoryStoreEvictionPolicy="LRU"/>
 	    
@@ -99,15 +99,15 @@
 	    diskExpiryThreadIntervalSeconds="120"  
 	    memoryStoreEvictionPolicy="LRU"/>
 	    
-	<!-- 定时任务缓存 -->
+	<!-- 定时任务缓存 30天 -->
     <cache name="sysTimerCache"          
        	maxElementsInMemory="1000"
 	    maxElementsOnDisk="10000000"  
 	    eternal="false"
 	    overflowToDisk="false"   
 	    diskPersistent="false"  
-	    timeToIdleSeconds="86400"  
-	    timeToLiveSeconds="86400"   
+	    timeToIdleSeconds="2592000"  
+	    timeToLiveSeconds="2592000"   
 	    diskExpiryThreadIntervalSeconds="120"  
 	    memoryStoreEvictionPolicy="LRU"/>
 </ehcache>  

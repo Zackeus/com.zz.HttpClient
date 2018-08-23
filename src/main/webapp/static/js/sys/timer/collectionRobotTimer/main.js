@@ -69,7 +69,6 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
             	layer.close(index);
             }
         });
-        
     });
     
     //列表操作
@@ -77,8 +76,11 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
 		switch (obj.event) {
 		
 		case "edit":
-			// 编辑
 			editTimer(obj.data);
+			break;
+			
+		case "del":
+			delTimer(obj.data);
 			break;
 			
 		default:
@@ -86,7 +88,7 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
 		}
     });
     
-    //编辑定时任务
+    // 编辑定时任务
     function editTimer(data) {
     	var index = layui.layer.open({
             type: 2,
@@ -100,7 +102,7 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
             maxmin: true, 			// 最大最小化
             id: 'LAY_EditTimer', 	// 用于控制弹层唯一标识
             moveType: 1,
-            content: [ctx + '/timer/collectionRobot/editTimer?jobName=' + data.jobName, 'no'],
+            content: [ctx + '/timer/collectionRobot/editTimer?jobName=' + data.jobName],
             success : function(layero, index){
                 var body = layui.layer.getChildFrame('body', index);
                 setTimeout(function(){
@@ -116,11 +118,25 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
            }
     	});
     	layui.layer.full(index);
-        window.sessionStorage.setItem("index",index);
+        window.sessionStorage.setItem("index", index);
         //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-        $(window).on("resize",function(){
+        $(window).on("resize",function() {
         	layui.layer.full(window.sessionStorage.getItem("index"));
         })
+    }
+    
+    // 删除定时任务
+    function delTimer(data) {
+        layer.msg('确定删除此任务？', {
+        	time: 0, 
+        	btn: ['确定', '取消'],
+            btn1: function(index, layero) {
+            	request.delTimer(ctx + '/timer/collectionRobot/deleteJob', data, index, collectionRobotListIns);
+            },
+            btn2: function(index, layero) {
+            	layer.close(index);
+            }
+        });
     }
 
     //控制表格编辑时文本的位置【跟随渲染时的位置】

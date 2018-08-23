@@ -111,6 +111,7 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 			renderString(response, new LayuiResult(-2, "启动任务失败, 信息：" + e.getMessage()));
 			return;
 		}
+		
 		collectionRobotTimerService.updateStatusByJobName(collectionRobotTimer, true);
 		renderString(response, new LayuiResult(0, "启动任务成功"));
 	}
@@ -118,26 +119,56 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 	@RequestMapping(value = "/stopJob")
 	@Override
 	public void stopJob(@RequestParam(value = "jobName") String jobName, HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response) throws SchedulerException {
 		CollectionRobotTimer collectionRobotTimer = collectionRobotTimerService.get(jobName);
 		String state = timerMangeService.getJobState(collectionRobotTimer.getJobName(), collectionRobotTimer.getJobGroupName());
 		if (StringUtils.isNoneEmpty(state) && StringUtils.equals(JOB_STATUS_NORMAL, state)) {
-			try {
-				timerMangeService.pauseJob(collectionRobotTimer.getJobName(), collectionRobotTimer.getJobGroupName());
-			} catch (SchedulerException e) {
-				renderString(response, new LayuiResult(-1, "停止任务失败, 信息：" + e.getMessage()));
-				return;
-			}
+			timerMangeService.pauseJob(collectionRobotTimer.getJobName(), collectionRobotTimer.getJobGroupName());
 		}
 		collectionRobotTimerService.updateStatusByJobName(collectionRobotTimer, false);
 		renderString(response, new LayuiResult(0, "停止任务成功"));
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/updateJob", produces = "application/json;charset=UTF-8")
 	@Override
 	public void updateJob(@RequestBody CollectionRobotTimer collectionRobotTimer, 
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response) throws SchedulerException {
+		collectionRobotTimerService.Update(collectionRobotTimer);
+		
+		if (timerMangeService.checkJobExist(collectionRobotTimer.getJobName(),
+				collectionRobotTimer.getJobGroupName())) {
+			// 任务已经注册 进行更新操作
+			timerMangeService.updateJob(collectionRobotTimer.getJobName(), collectionRobotTimer.getJobGroupName(), 
+					collectionRobotTimer.getJobTime());
+		} else {
+			try {
+				// 任务未注册 添加 JOB
+				timerMangeService.addJob(
+						(Class<? extends Job>) (Class.forName((String) collectionRobotTimer.getJobClass())
+						.newInstance().getClass()),
+				collectionRobotTimer.getJobName(), collectionRobotTimer.getJobGroupName(),
+				collectionRobotTimer.getJobTime());
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				renderString(response, new LayuiResult(-1, "更新任务失败：" + e.getMessage()));
+			}
+		}
+		
+		collectionRobotTimerService.updateStatusByJobName(collectionRobotTimer, true);
 		renderString(response, new LayuiResult(0, "更新任务成功"));
+	}
+
+	@RequestMapping(value = "/deleteJob")
+	@Override
+	public void deleteJob(@RequestParam(value = "jobName") String jobName, HttpServletRequest request, 
+			HttpServletResponse response) throws SchedulerException {
+		CollectionRobotTimer collectionRobotTimer = collectionRobotTimerService.get(jobName);
+		if (timerMangeService.checkJobExist(collectionRobotTimer.getJobName(),
+				collectionRobotTimer.getJobGroupName())) {
+			timerMangeService.deleteJob(collectionRobotTimer.getJobName(), collectionRobotTimer.getJobGroupName());
+		}
+		collectionRobotTimerService.delete(collectionRobotTimer);
+		renderString(response, new LayuiResult(0, "删除任务成功"));
 	}
 
 }

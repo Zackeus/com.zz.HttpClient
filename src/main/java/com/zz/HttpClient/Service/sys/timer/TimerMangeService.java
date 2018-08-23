@@ -51,30 +51,27 @@ public class TimerMangeService {
      * @param jobName 任务名称
      * @param jobGroupName 任务组名
      * @param jobTime 时间表达式 （如：0/5 * * * * ? ）
+     * @throws SchedulerException 
      */
-    public void addJob(Class<? extends Job> jobClass, String jobName, String jobGroupName, String jobTime) {
-        try {
-            //创建jobDetail实例，绑定Job实现类  
-            //指明job的名称，所在组的名称，以及绑定job类
-        	//任务名称和组构成任务key
-            JobDetail jobDetail = JobBuilder.newJob(jobClass)
-                            .withIdentity(jobName, jobGroupName)
-                            .build();
-            //定义调度触发规则  
-            //使用cornTrigger规则 
-            Trigger trigger = TriggerBuilder.newTrigger()
+    public void addJob(Class<? extends Job> jobClass, String jobName, String jobGroupName, String jobTime) throws SchedulerException {
+        //创建jobDetail实例，绑定Job实现类  
+        //指明job的名称，所在组的名称，以及绑定job类
+    	//任务名称和组构成任务key
+        JobDetail jobDetail = JobBuilder.newJob(jobClass)
                         .withIdentity(jobName, jobGroupName)
-                        .startAt(DateBuilder.futureDate(1, IntervalUnit.SECOND))
-                        .withSchedule(CronScheduleBuilder.cronSchedule(jobTime))
-                        .startNow().build();
-            //把作业和触发器注册到任务调度中
-            scheduler.scheduleJob(jobDetail, trigger);
-            // 启动
-            if (!scheduler.isShutdown()) {
-            	scheduler.start();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                        .build();
+        //定义调度触发规则  
+        //使用cornTrigger规则 
+        Trigger trigger = TriggerBuilder.newTrigger()
+                    .withIdentity(jobName, jobGroupName)
+                    .startAt(DateBuilder.futureDate(1, IntervalUnit.SECOND))
+                    .withSchedule(CronScheduleBuilder.cronSchedule(jobTime))
+                    .startNow().build();
+        //把作业和触发器注册到任务调度中
+        scheduler.scheduleJob(jobDetail, trigger);
+        // 启动
+        if (!scheduler.isShutdown()) {
+        	scheduler.start();
         }
     }
     
@@ -135,19 +132,16 @@ public class TimerMangeService {
      * @param jobName
      * @param jobGroupName
      * @param jobTime
+     * @throws SchedulerException 
      */
-    public void updateJob(String jobName, String jobGroupName, String jobTime){
-        try {
-            TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroupName);  
-            CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);  
-            trigger = trigger.getTriggerBuilder().withIdentity(triggerKey)
-                    .withSchedule(CronScheduleBuilder.cronSchedule(jobTime))
-                    .build();
-            //重启触发器
-            scheduler.rescheduleJob(triggerKey, trigger);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }  
+    public void updateJob(String jobName, String jobGroupName, String jobTime) throws SchedulerException {
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroupName);  
+        CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);  
+        trigger = trigger.getTriggerBuilder().withIdentity(triggerKey)
+                .withSchedule(CronScheduleBuilder.cronSchedule(jobTime))
+                .build();
+        //重启触发器
+        scheduler.rescheduleJob(triggerKey, trigger);
     }
     
     /**
@@ -157,13 +151,10 @@ public class TimerMangeService {
      * @see：
      * @param jobName 任务名称
      * @param jobGroupName 任务组名
+     * @throws SchedulerException 
      */
-    public void deleteJob(String jobName, String jobGroupName) {
-        try {
-        	scheduler.deleteJob(new JobKey(jobName, jobGroupName));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void deleteJob(String jobName, String jobGroupName) throws SchedulerException {
+    	scheduler.deleteJob(JobKey.jobKey(jobName, jobGroupName));
     }
     
     /**
@@ -187,14 +178,11 @@ public class TimerMangeService {
      * @see：
      * @param jobName
      * @param jobGroupName
+     * @throws SchedulerException 
      */
-    public void resumeJob(String jobName, String jobGroupName) {
-        try {
-            JobKey jobKey = JobKey.jobKey(jobName, jobGroupName);
-            scheduler.resumeJob(jobKey);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
+    public void resumeJob(String jobName, String jobGroupName) throws SchedulerException {
+        JobKey jobKey = JobKey.jobKey(jobName, jobGroupName);
+        scheduler.resumeJob(jobKey);
     }
     
     /**
@@ -204,14 +192,25 @@ public class TimerMangeService {
      * @see：
      * @param jobName
      * @param jobGroupName
+     * @throws SchedulerException 
      */
-    public void runAJobNow(String jobName, String jobGroupName) {
-        try {
-            JobKey jobKey = JobKey.jobKey(jobName, jobGroupName);
-            scheduler.triggerJob(jobKey);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
+    public void runAJobNow(String jobName, String jobGroupName) throws SchedulerException {
+        JobKey jobKey = JobKey.jobKey(jobName, jobGroupName);
+        scheduler.triggerJob(jobKey);
+    }
+    
+    /**
+     * 
+     * @Title：checkJobExist
+     * @Description: TODO(判断任务是否存在)
+     * @see：
+     * @param jobName
+     * @param jobGroupName
+     * @return
+     * @throws SchedulerException
+     */
+    public boolean checkJobExist(String jobName, String jobGroupName) throws SchedulerException {
+    	return scheduler.checkExists(JobKey.jobKey(jobName, jobGroupName));
     }
     
     /**

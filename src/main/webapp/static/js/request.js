@@ -82,6 +82,34 @@ layui.define(['jquery','layer'],function(exports){
         			}
         		});
 			},
+			// 删除定时任务
+			delTimer: function (url, data, index, tableIns) {
+        		$.ajax({
+        			method: 'POST',
+        			url : url,
+        			dataType : 'json',
+        			data : {
+        				jobName : data.jobName
+        			},
+        			beforeSend: function() {
+        				layer.close(index);
+        				layer.load();
+        			},
+        			success : function(result) {
+        				layer.closeAll('loading');
+        				if (result.code == "0") {
+        					layer.msg(result.message, {icon: 6,time: 1000});
+        					tableIns.reload();
+        				} else {
+							layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
+        				}
+        			},
+        			error : function(result) {
+        				layer.closeAll('loading');
+        				layer.msg('响应失败', {icon: 5,time: 2000,shift: 6}, function(){});
+        			}
+        		});
+			},
 			// 删除菜单
 			delMenu: function (data, index, url) {
         		$.ajax({

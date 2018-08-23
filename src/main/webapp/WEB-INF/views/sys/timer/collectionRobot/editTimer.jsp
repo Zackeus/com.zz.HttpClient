@@ -66,6 +66,12 @@
 				<input id="jobTime" name="jobTime" type="text" class="layui-input" value="${collectionRobotTimer.jobTime}" readonly>
 			</div>
 		</div>
+		<div class="layui-form-item layui-form-text">
+			<label class="layui-form-label">备注</label>
+		    <div class="layui-input-block">
+		    	<textarea id="remarks" name="remarks" class="layui-textarea" placeholder="请输入内容">${collectionRobotTimer.remarks}</textarea>
+		    </div>
+		</div>
 		<div class="layui-form-item">
 	    	<div class="layui-input-block">
 	      		<button class="layui-btn" lay-submit lay-filter="editTimer">提交</button>

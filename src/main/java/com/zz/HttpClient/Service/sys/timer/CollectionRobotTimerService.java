@@ -31,6 +31,20 @@ public class CollectionRobotTimerService extends CrudService<CollectionRobotTime
 	
 	/**
 	 * 
+	 * @Title：Update
+	 * @Description: TODO(更新单笔数据)
+	 * @see：
+	 * @param collectionRobotTimer
+	 * @return
+	 */
+	@CacheEvict(value = {"sysTimerCache"}, key = "#collectionRobotTimer.jobName",  beforeInvocation = true)
+	public int Update(CollectionRobotTimer collectionRobotTimer) {
+		collectionRobotTimer.preUpdate();
+		return collectionRobotTimerDao.update(collectionRobotTimer);
+	}
+	
+	/**
+	 * 
 	 * @Title：updateStatusById
 	 * @Description: TODO(根据ID更新任务当前状态)
 	 * @see：
@@ -44,6 +58,20 @@ public class CollectionRobotTimerService extends CrudService<CollectionRobotTime
 			return collectionRobotTimerDao.updateStatusByJobName(collectionRobotTimer, status);
 		}
 		return 0;
+	}
+	
+	/**
+	 * 
+	 * @Title：Delete
+	 * @Description: TODO(删除单笔数据)
+	 * @see：
+	 * @param collectionRobotTimer
+	 * @return
+	 */
+	@CacheEvict(value = {"sysTimerCache"}, key = "#collectionRobotTimer.jobName",  beforeInvocation = true)
+	@Override
+	public void delete(CollectionRobotTimer collectionRobotTimer) {
+		super.delete(collectionRobotTimer);
 	}
 
 }
