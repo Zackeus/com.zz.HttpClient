@@ -99,8 +99,12 @@
 			        WHERE P.AGREEMENT_SEQ = 1 and sysdate >= DUE_DTE AND (P.SETTLE_AMT is null OR P.SETTLE_AMT &lt; P.RENTAL_AMT OR O.NET_OVERDUE_AMT > 0)
 					GROUP BY P.CONTRACT_ID,C.EXTERNAL_CONTRACT_NBR ,AD.FIRST_THI_NME,PHO.BNAME,PHO.PHONE_NUMBER,PHO.RTYPE,PHO.ADDRESS_TYPE,CD.COMPANY_THI_NME					 
 			) A WHERE PHONE_NUMBER IS NOT NULL AND PHONE_NUMBER <![CDATA[<> ]]> ''0'' AND ISNUMERIC(PHONE_NUMBER) > 0 
-			AND OD_NAME IS NOT NULL AND CUSTOME_NAME IS NOT NULL AND A.OD_DAYS BETWEEN ''3'' AND ''10''
+			AND OD_NAME IS NOT NULL AND CUSTOME_NAME IS NOT NULL AND A.OD_DAYS BETWEEN ''{START_DAY}'' AND ''{END_DAY}''
 		')
+	</select>
+	
+	<select id="getOverdueGuaranteeParamter" resultMap="overdueGuaranteeResult" parameterType="java.lang.String">
+        ${_parameter}        
 	</select>
 	
 	<select id="getReplaySet" resultMap="replaySet">
@@ -113,16 +117,16 @@
 			LEFT JOIN (SELECT 
 							TOP 1 [TASK_ID] AS [SECOND_TASK_ID]
 							FROM [Message].[dbo].[COLLECTION_INFO]
-							WHERE SEND_BATCH = 'G-2' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [RTYPE] <![CDATA[<> ]]> #{rtype}) G2 ON 1 = 1 
+							WHERE SEND_BATCH = 'G-2' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [JOB_NAME] = #{collectionRobotTimer.jobName}) G2 ON 1 = 1 
 			LEFT JOIN (SELECT 
 							TOP 1 [TASK_ID] AS [THIRD_TASK_ID]
 							FROM [Message].[dbo].[COLLECTION_INFO]
-							WHERE SEND_BATCH = 'G-3' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [RTYPE] <![CDATA[<> ]]> #{rtype}) G3 ON 1 = 1
+							WHERE SEND_BATCH = 'G-3' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [JOB_NAME] = #{collectionRobotTimer.jobName}) G3 ON 1 = 1
 			LEFT JOIN (SELECT 
 							TOP 1 [TASK_ID] AS [FOURTH_TASK_ID]
 							FROM [Message].[dbo].[COLLECTION_INFO]
-							WHERE SEND_BATCH = 'G-4' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [RTYPE] <![CDATA[<> ]]> #{rtype}) G4 ON 1 = 1
-			WHERE SEND_BATCH = 'G-1' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [RTYPE] <![CDATA[<> ]]> #{rtype}
+							WHERE SEND_BATCH = 'G-4' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [JOB_NAME] = #{collectionRobotTimer.jobName}) G4 ON 1 = 1
+			WHERE SEND_BATCH = 'G-1' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [JOB_NAME] = #{collectionRobotTimer.jobName}
 	</select>
 	
 	<!-- 插入催收信息 -->
@@ -141,7 +145,8 @@
 		    [REQUEST_EMPNO],
 		    [REQUEST_DATETIME],
 		    [REMARK],
-		    [SEND_BATCH]
+		    [SEND_BATCH],
+		    [JOB_NAME]
 		) VALUES
 		<foreach collection = "guarantees" index="index" item="index" separator = ",">
             (
@@ -157,7 +162,8 @@
       		#{empno},
       		CONVERT(varchar(100), GETDATE(), 20),
       		'T',
-      		#{sendBatch}
+      		#{sendBatch},
+      		#{collectionRobotTimer.jobName}
       		)
         </foreach>
     </insert>
@@ -257,16 +263,21 @@
 			        WHERE P.AGREEMENT_SEQ = 1 and sysdate >= DUE_DTE AND (P.SETTLE_AMT is null OR P.SETTLE_AMT &lt; P.RENTAL_AMT OR O.NET_OVERDUE_AMT > 0)
 					GROUP BY P.CONTRACT_ID,C.EXTERNAL_CONTRACT_NBR ,AD.FIRST_THI_NME,PHO.BNAME,PHO.PHONE_NUMBER,PHO.RTYPE,PHO.ADDRESS_TYPE,CD.COMPANY_THI_NME					 
 			) A WHERE PHONE_NUMBER IS NOT NULL AND PHONE_NUMBER <![CDATA[<> ]]> ''0'' AND ISNUMERIC(PHONE_NUMBER) > 0 
-			AND OD_NAME IS NOT NULL AND CUSTOME_NAME IS NOT NULL AND A.OD_DAYS BETWEEN ''3'' AND ''10''
+			AND OD_NAME IS NOT NULL AND CUSTOME_NAME IS NOT NULL AND A.OD_DAYS BETWEEN ''{START_DAY}'' AND ''{END_DAY}''
 		')) CU ON CI.[CONTRACT_NUM] = CU.[EXTERNAL_CONTRACT_NBR]
 		LEFT JOIN (SELECT CII.[TASK_ID],[CONTRACT_NUM],[PHONE_NUM],[SEND_BATCH]
 				FROM [Message].[dbo].[COLLECTION_INFO] CII
 				LEFT JOIN [Message].[dbo].[COLLECTION_RESULT] CRR ON CII.TASK_ID = CRR.TASK_ID AND CII.PHONE_NUM = CRR.TELL_NUMBER
-				WHERE DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND CII.SEND_BATCH = #{sendBatch} AND CRR.RESULT IN (0,15,16)) CS 
+				WHERE DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND CII.SEND_BATCH = '{sendBatch}' AND CRR.RESULT IN (0,15,16)) CS 
 				ON CI.TASK_ID = CS.TASK_ID AND CI.PHONE_NUM = CS.[PHONE_NUM]
-		WHERE CI.SEND_BATCH = #{sendBatch}
+		WHERE CI.SEND_BATCH = '{sendBatch}'
+		AND CI.[JOB_NAME] = '{collectionRobotTimer.jobName}'
 		AND CS.CONTRACT_NUM IS NULL
 		AND CU.[EXTERNAL_CONTRACT_NBR] IS NOT NULL
 		AND DATEDIFF(DD, CI.[REQUEST_DATETIME], GETDATE()) = 0 
+	</select>
+	
+	<select id="getReplayGuaranteeParameter" resultType="com.zz.HttpClient.Bean.Guarantee">
+		${_parameter}
 	</select>
 </mapper>  

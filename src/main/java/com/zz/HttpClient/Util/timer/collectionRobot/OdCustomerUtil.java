@@ -1,4 +1,4 @@
-package com.zz.HttpClient.Job;
+package com.zz.HttpClient.Util.timer.collectionRobot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,10 +10,12 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.zz.HttpClient.Bean.HttpClient.HttpClientResult;
 import com.zz.HttpClient.Bean.Msg.WeiXinMsg;
+import com.zz.HttpClient.Bean.Sys.timer.collectionRobot.CollectionRobotTimer;
 import com.zz.HttpClient.Config.GlobalConfig;
 import com.zz.HttpClient.Config.JuHeConfig;
 import com.zz.HttpClient.Config.MsgConfig;
@@ -47,19 +49,15 @@ public class OdCustomerUtil {
 
 	@Resource(name = "msgConfig")
 	private MsgConfig msgConfig;
+	
+	@Autowired
+	private SendOdCustomerService sendOdCustomerService;
 
 	public static OdCustomerUtil odCustomerUtil;
 
-	/**
-	 * 
-	 * @Title:init
-	 * @Description: TODO(初始化的时候，将本类中的配置变量赋值给静态的本类变量)
-	 */
 	@PostConstruct
 	public void init() {
 		odCustomerUtil = this;
-		odCustomerUtil.juHeConfig = this.juHeConfig;
-		odCustomerUtil.msgConfig = this.msgConfig;
 	}
 
 	/**
@@ -70,8 +68,8 @@ public class OdCustomerUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String judgeSendBatch(SendOdCustomerService sendOdCustomerService, String rtype) throws Exception {
-		ReplaySet replaySet = sendOdCustomerService.getReplaySet(rtype);
+	public static String judgeSendBatch(CollectionRobotTimer collectionRobotTimer) throws Exception {
+		ReplaySet replaySet = odCustomerUtil.sendOdCustomerService.getReplaySet(collectionRobotTimer);
 		CollectionTel collectionTel = getCollectionTel(odCustomerUtil.juHeConfig.getTelNum());
 
 		if ((replaySet == null || replaySet.getFirstTaskId() == null) && collectionTel.getUsed() == 0) {
@@ -105,8 +103,8 @@ public class OdCustomerUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String judgeStopTaskId(SendOdCustomerService sendOdCustomerService, String rtype) throws Exception {
-		ReplaySet replaySet = sendOdCustomerService.getReplaySet(rtype);
+	public static String judgeStopTaskId(CollectionRobotTimer collectionRobotTimer) throws Exception {
+		ReplaySet replaySet = odCustomerUtil.sendOdCustomerService.getReplaySet(collectionRobotTimer);
 		CollectionTel collectionTel = getCollectionTel(odCustomerUtil.juHeConfig.getTelNum());
 		
 		if (replaySet != null && replaySet.getFourthTaskId() != null && collectionTel.getUsed() == 1) {
@@ -189,8 +187,7 @@ public class OdCustomerUtil {
 	 * @param repeatList
 	 * @return
 	 */
-	public static Map<String, Object> getPostList(SendOdCustomerService sendOdCustomerService, String sendBatch,
-			String rtype) {
+	public static Map<String, Object> getPostList(String sendBatch, CollectionRobotTimer collectionRobotTimer) {
 		Map<String, Object> map = new HashMap<>();
 		List<Customer> customers = new ArrayList<>();
 		List<Customer> repeatCustomers = new ArrayList<>();
@@ -203,13 +200,13 @@ public class OdCustomerUtil {
 			taskConfig = new TaskConfig(null, null,
 					"裕隆催收" + DateUtils.getDate(DateUtils.parsePatterns[0]) + GlobalConfig.firstTime, null, null, null,
 					null, null, null, null, odCustomerUtil.juHeConfig.getTelNum(), null, null, null, 0, 60, null);
-			map = ListUtil.getSplitList(sendOdCustomerService.getOverdueCustomer());
+			map = ListUtil.getSplitList(odCustomerUtil.sendOdCustomerService.getOverdueCustomer(collectionRobotTimer));
 			map.put("taskConfig", taskConfig);
 			return map;
 
 		case GlobalConfig.secondTime:
-			customers = sendOdCustomerService.getReplayCustomer(GlobalConfig.firstTime, rtype);
-			repeatCustomers = sendOdCustomerService.getRepeatCollectionInfo(GlobalConfig.firstTime, rtype);
+			customers = odCustomerUtil.sendOdCustomerService.getReplayCustomer(GlobalConfig.firstTime, collectionRobotTimer);
+			repeatCustomers = odCustomerUtil.sendOdCustomerService.getRepeatCollectionInfo(GlobalConfig.firstTime, collectionRobotTimer);
 
 			taskConfig = new TaskConfig(null, null,
 					"裕隆催收" + DateUtils.getDate(DateUtils.parsePatterns[0]) + GlobalConfig.secondTime, null, null, null,
@@ -236,8 +233,8 @@ public class OdCustomerUtil {
 			return map;
 
 		case GlobalConfig.thirdTime:
-			customers = sendOdCustomerService.getReplayCustomer(GlobalConfig.secondTime, rtype);
-			repeatCustomers = sendOdCustomerService.getRepeatCollectionInfo(GlobalConfig.secondTime, rtype);
+			customers = odCustomerUtil.sendOdCustomerService.getReplayCustomer(GlobalConfig.secondTime, collectionRobotTimer);
+			repeatCustomers = odCustomerUtil.sendOdCustomerService.getRepeatCollectionInfo(GlobalConfig.secondTime, collectionRobotTimer);
 
 			taskConfig = new TaskConfig(null, null,
 					"裕隆催收" + DateUtils.getDate(DateUtils.parsePatterns[0]) + GlobalConfig.thirdTime, null, null, null,
@@ -263,8 +260,8 @@ public class OdCustomerUtil {
 			return map;
 
 		case GlobalConfig.fouthTime:
-			customers = sendOdCustomerService.getReplayCustomer(GlobalConfig.thirdTime, rtype);
-			repeatCustomers = sendOdCustomerService.getRepeatCollectionInfo(GlobalConfig.thirdTime, rtype);
+			customers = odCustomerUtil.sendOdCustomerService.getReplayCustomer(GlobalConfig.thirdTime, collectionRobotTimer);
+			repeatCustomers = odCustomerUtil.sendOdCustomerService.getRepeatCollectionInfo(GlobalConfig.thirdTime, collectionRobotTimer);
 
 			taskConfig = new TaskConfig(null, null,
 					"裕隆催收" + DateUtils.getDate(DateUtils.parsePatterns[0]) + GlobalConfig.fouthTime, null, null, null,
@@ -297,15 +294,12 @@ public class OdCustomerUtil {
 	 * @Title:createTask
 	 * @Description: TODO(创建任务)
 	 * @param juHeService
-	 * @param requestEmpno
-	 *            提交者
-	 * @param sendBatch
-	 *            发送标签
+	 * @param requestEmpno 提交者
+	 * @param sendBatch 发送标签
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public static void createTask(SendOdCustomerService sendOdCustomerService, String requestEmpno, String sendBatch,
-			String rtype) throws Exception {
+	public static void createTask(String requestEmpno, String sendBatch, CollectionRobotTimer collectionRobotTimer) throws Exception {
 		// 待发送的微信信息
 		WeiXinMsg weiXinMsg = new WeiXinMsg(GlobalConfig.requestErrorSys, GlobalConfig.requestUser,
 				GlobalConfig.receiverName, null, GlobalConfig.receiverCompany, GlobalConfig.receiverRole, null,
@@ -313,7 +307,7 @@ public class OdCustomerUtil {
 				odCustomerUtil.msgConfig.getCollectDpId(), odCustomerUtil.msgConfig.getCollectAgentId());
 
 		// 获取逾期客户数据 对合同号和手机号去重
-		Map<String, Object> map = getPostList(sendOdCustomerService, sendBatch, rtype);
+		Map<String, Object> map = getPostList(sendBatch, collectionRobotTimer);
 		// 待插入数据
 		List<Customer> customers = (List<Customer>) map.get("list");
 		// 重复手机号数据
@@ -326,7 +320,7 @@ public class OdCustomerUtil {
 			String taskId = JSONObject.fromObject(httpClientResult.getContent()).getJSONObject("result")
 					.getJSONArray("rows").getJSONObject(0).getString("taskId");
 
-			sendOdCustomerService.insertCollectionInfo(taskId, requestEmpno, sendBatch, customers, customerRepeats);
+			odCustomerUtil.sendOdCustomerService.insertCollectionInfo(taskId, requestEmpno, sendBatch, customers, customerRepeats, collectionRobotTimer);
 
 			weiXinMsg.setMsg_content("【裕隆汽车金融】 智能催收-借款人任务创建成功；TaskId: " + taskId + "; SendBatch: " + sendBatch);
 			SendMsgUtil.sendWX(odCustomerUtil.msgConfig.getWxUrl(), weiXinMsg);

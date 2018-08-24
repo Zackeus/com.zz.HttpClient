@@ -30,16 +30,16 @@
 			LEFT JOIN (SELECT 
 							TOP 1 [TASK_ID] AS [SECOND_TASK_ID]
 							FROM [Message].[dbo].[COLLECTION_INFO]
-							WHERE SEND_BATCH = 'T-2' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [RTYPE] = #{rtype}) T2 ON 1 = 1 
+							WHERE SEND_BATCH = 'T-2' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [JOB_NAME] = #{collectionRobotTimer.jobName}) T2 ON 1 = 1 
 			LEFT JOIN (SELECT 
 							TOP 1 [TASK_ID] AS [THIRD_TASK_ID]
 							FROM [Message].[dbo].[COLLECTION_INFO]
-							WHERE SEND_BATCH = 'T-3' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [RTYPE] = #{rtype}) T3 ON 1 = 1
+							WHERE SEND_BATCH = 'T-3' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [JOB_NAME] = #{collectionRobotTimer.jobName}) T3 ON 1 = 1
 			LEFT JOIN (SELECT 
 							TOP 1 [TASK_ID] AS [FOURTH_TASK_ID]
 							FROM [Message].[dbo].[COLLECTION_INFO]
-							WHERE SEND_BATCH = 'T-4' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [RTYPE] = #{rtype}) T4 ON 1 = 1
-			WHERE SEND_BATCH = 'T-1' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [RTYPE] = #{rtype}
+							WHERE SEND_BATCH = 'T-4' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [JOB_NAME] = #{collectionRobotTimer.jobName}) T4 ON 1 = 1
+			WHERE SEND_BATCH = 'T-1' AND DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND [JOB_NAME] = #{collectionRobotTimer.jobName}
 	</select>
 	
 	<select id="getFirstResultTimes" resultMap="replaySet">
@@ -132,8 +132,13 @@
 					) WHERE PHONE_TYPE_DSC = ''手机'' AND RTYPE = ''借款人'') PHO ON C.EXTERNAL_CONTRACT_NBR = PHO.EXTERNAL_CONTRACT_NBR
 			        WHERE P.AGREEMENT_SEQ = 1 and sysdate <![CDATA[>= ]]> DUE_DTE AND (P.SETTLE_AMT is null OR P.SETTLE_AMT &lt; P.RENTAL_AMT OR O.NET_OVERDUE_AMT &gt; 0)
 					GROUP BY P.CONTRACT_ID,C.EXTERNAL_CONTRACT_NBR ,AD.FIRST_THI_NME,PHO.PHONE_NUMBER,PHO.RTYPE,PHO.ADDRESS_TYPE,CD.COMPANY_THI_NME					 
-			) A WHERE PHONE_NUMBER IS NOT NULL AND PHONE_NUMBER <![CDATA[<> ]]> ''0'' AND ISNUMERIC(PHONE_NUMBER) &gt; 0 AND OD_NAME IS NOT NULL AND A.OD_DAYS BETWEEN ''1'' AND ''10''
+			) A WHERE PHONE_NUMBER IS NOT NULL AND PHONE_NUMBER <![CDATA[<> ]]> ''0'' AND ISNUMERIC(PHONE_NUMBER) &gt; 0 AND OD_NAME IS NOT NULL 
+			AND A.OD_DAYS BETWEEN ''{START_DAY}'' AND ''{END_DAY}''
 		')
+	</select>
+	
+	<select id="getOverdueCustomerParameter" resultMap="overdueCustomerResult" parameterType="java.lang.String">
+        ${_parameter}        
 	</select>
 	
 	<!-- 插入催收信息 -->
@@ -152,7 +157,8 @@
 		    [REQUEST_EMPNO],
 		    [REQUEST_DATETIME],
 		    [REMARK],
-		    [SEND_BATCH]
+		    [SEND_BATCH],
+		    [JOB_NAME]
 		) VALUES
 		<foreach collection = "customers" index="index" item="customer" separator = ",">
             (
@@ -168,7 +174,8 @@
       		#{empno},
       		CONVERT(varchar(100), GETDATE(), 20),
       		'T',
-      		#{sendBatch}
+      		#{sendBatch},
+      		#{collectionRobotTimer.jobName}
       		)
         </foreach>
     </insert>
@@ -188,7 +195,8 @@
 		    [ADDRESS_TYPE],
 		    [REQUEST_EMPNO],
 		    [REQUEST_DATETIME],
-		    [SEND_BATCH]
+		    [SEND_BATCH],
+		    [JOB_NAME]
 		) VALUES
 		<foreach collection = "customerRepeats" index="index" item="item" separator = ",">
             (
@@ -203,7 +211,8 @@
       		#{item.addressType},
       		#{empno},
       		CONVERT(varchar(100), GETDATE(), 20),
-      		#{sendBatch}
+      		#{sendBatch},
+      		#{collectionRobotTimer.jobName}
       		)
         </foreach>
     </insert>
@@ -226,7 +235,7 @@
 		FROM [Message].[dbo].[COLLECTION_REPEAT_INFO]
 		WHERE LEFT(CONVERT(varchar(100), [REQUEST_DATETIME], 120), 10) = LEFT(CONVERT(varchar(100), GETDATE(), 20), 10)
 		AND [SEND_BATCH] = #{sendBatch}
-		AND [RTYPE] = #{rtype}
+		AND [JOB_NAME] = #{collectionRobotTimer.jobName}
     </select>
     
     <!-- 按结果获取客户 -->
@@ -345,17 +354,21 @@
 					) WHERE PHONE_TYPE_DSC = ''手机'' AND RTYPE = ''借款人'') PHO ON C.EXTERNAL_CONTRACT_NBR = PHO.EXTERNAL_CONTRACT_NBR
 			        WHERE P.AGREEMENT_SEQ = 1 and sysdate <![CDATA[>= ]]> DUE_DTE AND (P.SETTLE_AMT is null OR P.SETTLE_AMT &lt; P.RENTAL_AMT OR O.NET_OVERDUE_AMT &gt; 0)
 					GROUP BY P.CONTRACT_ID,C.EXTERNAL_CONTRACT_NBR ,AD.FIRST_THI_NME,PHO.PHONE_NUMBER,PHO.RTYPE,PHO.ADDRESS_TYPE,CD.COMPANY_THI_NME					 
-			) A WHERE PHONE_NUMBER IS NOT NULL AND PHONE_NUMBER <![CDATA[<> ]]> ''0'' AND OD_NAME IS NOT NULL AND A.OD_DAYS BETWEEN ''1'' AND ''10''
+			) A WHERE PHONE_NUMBER IS NOT NULL AND PHONE_NUMBER <![CDATA[<> ]]> ''0'' AND OD_NAME IS NOT NULL AND A.OD_DAYS BETWEEN ''{START_DAY}'' AND ''{END_DAY}''
 		')) CU ON CI.[CONTRACT_NUM] = CU.[EXTERNAL_CONTRACT_NBR]
 		LEFT JOIN (SELECT CII.[TASK_ID],[CONTRACT_NUM],[PHONE_NUM],[SEND_BATCH]
 				FROM [Message].[dbo].[COLLECTION_INFO] CII
 				LEFT JOIN [Message].[dbo].[COLLECTION_RESULT] CRR ON CII.TASK_ID = CRR.TASK_ID AND CII.PHONE_NUM = CRR.TELL_NUMBER
-				WHERE DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND CII.SEND_BATCH = #{sendBatch} AND CRR.RESULT <![CDATA[<> ]]> 3) CS 
+				WHERE DATEDIFF(dd, [REQUEST_DATETIME], GETDATE()) = 0 AND CII.SEND_BATCH = '{sendBatch}' AND CRR.RESULT <![CDATA[<> ]]> 3) CS 
 				ON CI.TASK_ID = CS.TASK_ID AND CI.PHONE_NUM = CS.[PHONE_NUM]
-		WHERE CI.SEND_BATCH = #{sendBatch}
-		AND CI.[RTYPE] = #{rtype}
+		WHERE CI.SEND_BATCH = '{sendBatch}'
+		AND CI.[JOB_NAME] = '{collectionRobotTimer.jobName}'
 		AND CS.CONTRACT_NUM IS NULL
 		AND CU.[EXTERNAL_CONTRACT_NBR] IS NOT NULL
 		AND DATEDIFF(dd, CI.[REQUEST_DATETIME], GETDATE()) = 0 
+	</select>
+	
+	<select id="getRepeatCollectionInfoParameter" resultType="Customer" parameterType="java.lang.String">
+		${_parameter}
 	</select>
 </mapper>  

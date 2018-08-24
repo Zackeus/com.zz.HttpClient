@@ -1,4 +1,4 @@
-package com.zz.HttpClient.Job;
+package com.zz.HttpClient.Util.timer.collectionRobot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.zz.HttpClient.Bean.HttpClient.HttpClientResult;
 import com.zz.HttpClient.Bean.Msg.WeiXinMsg;
+import com.zz.HttpClient.Bean.Sys.timer.collectionRobot.CollectionRobotTimer;
 import com.zz.HttpClient.Config.GlobalConfig;
 import com.zz.HttpClient.Config.JuHeConfig;
 import com.zz.HttpClient.Config.MsgConfig;
@@ -44,6 +45,9 @@ public class OdGuaranteeUtil {
 
 	@Autowired
 	private MsgConfig msgConfig;
+	
+	@Autowired
+	private SendOdCuaranteeService sendOdCuaranteeService;
 
 	public static OdGuaranteeUtil odGuaranteeUtil;
 
@@ -66,8 +70,8 @@ public class OdGuaranteeUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String judgeSendBatch(SendOdCuaranteeService sendOdCuaranteeService, String rtype) throws Exception {
-		ReplaySet replaySet = sendOdCuaranteeService.getReplaySet(rtype);
+	public static String judgeSendBatch(CollectionRobotTimer collectionRobotTimer) throws Exception {
+		ReplaySet replaySet = odGuaranteeUtil.sendOdCuaranteeService.getReplaySet(collectionRobotTimer);
 		CollectionTel collectionTel = OdCustomerUtil.getCollectionTel(odGuaranteeUtil.juHeConfig.getTelGuaranteeNum());
 
 		if ((replaySet == null || replaySet.getFirstTaskId() == null) && collectionTel.getUsed() == 0) {
@@ -103,7 +107,7 @@ public class OdGuaranteeUtil {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Map<String, Object> getTaskData(SendOdCuaranteeService sendOdCuaranteeService, String sendBatch) {
+	public static Map<String, Object> getTaskData(String sendBatch, CollectionRobotTimer collectionRobotTimer) {
 		Map<String, Object> taskMap = new HashMap<>();
 		// 待提交数据
 		List<Guarantee> guarantees = new ArrayList<>();
@@ -113,7 +117,7 @@ public class OdGuaranteeUtil {
 		switch (sendBatch) {
 		case GlobalConfig.firstGime:
 			// G-1
-			guarantees = (List<Guarantee>) ListUtil.getSplitList(sendOdCuaranteeService.getOverdueGuarantee()).get("list");
+			guarantees = (List<Guarantee>) ListUtil.getSplitList(odGuaranteeUtil.sendOdCuaranteeService.getOverdueGuarantee(collectionRobotTimer)).get("list");
 			taskConfig = new TaskConfig(null, null,
 					"裕隆催收" + DateUtils.getDate(DateUtils.parsePatterns[0]) + GlobalConfig.firstGime, null, null, null,
 					null, null, null, null, odGuaranteeUtil.juHeConfig.getTelGuaranteeNum(), null, null, null, 0, 60, null);
@@ -121,7 +125,7 @@ public class OdGuaranteeUtil {
 
 		case GlobalConfig.secondGime:
 			// G-2
-			guarantees = sendOdCuaranteeService.getReplayGuarantee(GlobalConfig.firstGime);
+			guarantees = odGuaranteeUtil.sendOdCuaranteeService.getReplayGuarantee(GlobalConfig.firstGime, collectionRobotTimer);
 			taskConfig = new TaskConfig(null, null,
 					"裕隆催收" + DateUtils.getDate(DateUtils.parsePatterns[0]) + GlobalConfig.secondGime, null, null, null,
 					null, null, null, null, odGuaranteeUtil.juHeConfig.getTelGuaranteeNum(), null, null, null, 1, 5, null);
@@ -129,7 +133,7 @@ public class OdGuaranteeUtil {
 
 		case GlobalConfig.thirdGime:
 			// G-3
-			guarantees = sendOdCuaranteeService.getReplayGuarantee(GlobalConfig.secondGime);
+			guarantees = odGuaranteeUtil.sendOdCuaranteeService.getReplayGuarantee(GlobalConfig.secondGime, collectionRobotTimer);
 			taskConfig = new TaskConfig(null, null,
 					"裕隆催收" + DateUtils.getDate(DateUtils.parsePatterns[0]) + GlobalConfig.thirdGime, null, null, null,
 					null, null, null, null, odGuaranteeUtil.juHeConfig.getTelGuaranteeNum(), null, null, null, 1, 5, null);
@@ -137,7 +141,7 @@ public class OdGuaranteeUtil {
 
 		case GlobalConfig.fouthGime:
 			// G-4
-			guarantees = sendOdCuaranteeService.getReplayGuarantee(GlobalConfig.thirdGime);
+			guarantees = odGuaranteeUtil.sendOdCuaranteeService.getReplayGuarantee(GlobalConfig.thirdGime, collectionRobotTimer);
 			taskConfig = new TaskConfig(null, null,
 					"裕隆催收" + DateUtils.getDate(DateUtils.parsePatterns[0]) + GlobalConfig.fouthGime, null, null, null,
 					null, null, null, null, odGuaranteeUtil.juHeConfig.getTelGuaranteeNum(), null, null, null, 2, 5, null);
@@ -159,19 +163,17 @@ public class OdGuaranteeUtil {
 	 * @param sendOdCustomerService
 	 * @param requestEmpno
 	 * @param sendBatch
-	 * @param rtype
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public static void createTask(SendOdCuaranteeService sendOdCuaranteeService, String requestEmpno, String sendBatch,
-			String rtype) throws Exception {
+	public static void createTask(String requestEmpno, String sendBatch, CollectionRobotTimer collectionRobotTimer) throws Exception {
 		// 待发送的微信信息
 		WeiXinMsg weiXinMsg = new WeiXinMsg(GlobalConfig.requestInfoSys, GlobalConfig.requestUser,
 				GlobalConfig.receiverName, null, GlobalConfig.receiverCompany, GlobalConfig.receiverRole, null,
 				GlobalConfig.repeatTimes, GlobalConfig.repeatInterval, null, null, null, null,
 				odGuaranteeUtil.msgConfig.getCollectDpId(), odGuaranteeUtil.msgConfig.getCollectAgentId());
 		
-		Map<String, Object> taskMap = getTaskData(sendOdCuaranteeService, sendBatch);
+		Map<String, Object> taskMap = getTaskData(sendBatch, collectionRobotTimer);
 		List<Guarantee> guarantees = (List<Guarantee>) taskMap.get("dataList");
 		
 		if (ObjectUtils.isEmpty(guarantees)) {
@@ -186,7 +188,7 @@ public class OdGuaranteeUtil {
 			String taskId = JSONObject.fromObject(httpClientResult.getContent()).getJSONObject("result")
 					.getJSONArray("rows").getJSONObject(0).getString("taskId");
 
-			sendOdCuaranteeService.insertCollectionInfo(taskId, requestEmpno, sendBatch, guarantees);
+			odGuaranteeUtil.sendOdCuaranteeService.insertCollectionInfo(taskId, requestEmpno, sendBatch, guarantees, collectionRobotTimer);
 
 			weiXinMsg.setMsg_content("【裕隆汽车金融】 智能催收-担保人任务创建成功；TaskId: " + taskId + "; SendBatch: " + sendBatch);
 			SendMsgUtil.sendWX(odGuaranteeUtil.msgConfig.getWxUrl(), weiXinMsg);
