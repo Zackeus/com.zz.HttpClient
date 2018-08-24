@@ -202,9 +202,9 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * @Description: TODO(获取当天24点时间戳)
      * @return
      */
-    public static long getTimesnight(){ 
+    public static long getTimesnight(int hour){ 
     	Calendar cal = Calendar.getInstance(); 
-    	cal.set(Calendar.HOUR_OF_DAY, 24); 
+    	cal.set(Calendar.HOUR_OF_DAY, hour); 
     	cal.set(Calendar.SECOND, 0); 
     	cal.set(Calendar.MINUTE, 0); 
     	cal.set(Calendar.MILLISECOND, 0); 
@@ -220,5 +220,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 //		System.out.println(getDate("yyyy年MM月dd日 E"));
 //		long time = new Date().getTime()-parseDate("2012-11-19").getTime();
 //		System.out.println(time/(24*60*60*1000));
+		System.out.println(longToDate(getTimesnight(21)));
 	}
 }

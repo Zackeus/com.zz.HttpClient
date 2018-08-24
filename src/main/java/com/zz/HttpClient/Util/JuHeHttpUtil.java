@@ -274,7 +274,7 @@ public class JuHeHttpUtil {
 	 */
 	public static TaskConfig createTaskConfig(String fileName, String orgFileName, TaskConfig taskDataConfig) {
 		return new TaskConfig(fileName, orgFileName, taskDataConfig.getName(), System.currentTimeMillis(),
-				DateUtils.getTimesnight(), juHeHttpUtil.juHeConfig.getSpeechSkillId(),
+				DateUtils.getTimesnight(21), juHeHttpUtil.juHeConfig.getSpeechSkillId(),
 				juHeHttpUtil.juHeConfig.getRobotVoiceId(), 80, 0, null, taskDataConfig.getTelNum(),
 				juHeHttpUtil.juHeConfig.getSysType(), juHeHttpUtil.juHeConfig.getTimeRange(), 1,
 				taskDataConfig.getRecallMaxCount(), taskDataConfig.getRecallWaitTime(),
@@ -291,7 +291,7 @@ public class JuHeHttpUtil {
 	 */
 	public static TaskConfig createGuaranteeTaskConfig(String fileName, String orgFileName, TaskConfig taskDataConfig) {
 		return new TaskConfig(fileName, orgFileName, taskDataConfig.getName(), System.currentTimeMillis(),
-				DateUtils.getTimesnight(), juHeHttpUtil.juHeConfig.getGuaranteeSpeechSkillId(),
+				DateUtils.getTimesnight(21), juHeHttpUtil.juHeConfig.getGuaranteeSpeechSkillId(),
 				juHeHttpUtil.juHeConfig.getRobotVoiceId(), 80, 0, null, taskDataConfig.getTelNum(),
 				juHeHttpUtil.juHeConfig.getSysType(), juHeHttpUtil.juHeConfig.getTimeRange(), 1,
 				taskDataConfig.getRecallMaxCount(), taskDataConfig.getRecallWaitTime(),

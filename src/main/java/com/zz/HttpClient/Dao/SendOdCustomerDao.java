@@ -21,13 +21,13 @@ public interface SendOdCustomerDao {
 	int insertRepeatCollectionInfo(@Param("taskId") String taskId, @Param("empno") String empno, @Param("sendBatch") String sendBatch, 
 			@Param("customerRepeats") List<CustomerRepeat> customerRepeats, @Param("collectionRobotTimer") CollectionRobotTimer collectionRobotTimer);
 	
-	List<Customer> getRepeatCollectionInfo();
-	
-	List<Customer> getRepeatCollectionInfoParameter(String sql);
+	List<Customer> getRepeatCollectionInfo(@Param("sendBatch") String sendBatch, @Param("collectionRobotTimer") CollectionRobotTimer collectionRobotTimer);
 	
 	List<Customer> getCustomerByResult(@Param("result") String result, @Param("sendBatch") String sendBatch);
 	
-	List<Customer> getReplayCustomer(@Param("sendBatch") String sendBatch, @Param("collectionRobotTimer") CollectionRobotTimer collectionRobotTimer);
+	List<Customer> getReplayCustomer();
+	
+	List<Customer> getReplayCustomerParameter(String sql);
 	
 	ReplaySet getReplaySet(@Param("collectionRobotTimer") CollectionRobotTimer collectionRobotTimer);
 }

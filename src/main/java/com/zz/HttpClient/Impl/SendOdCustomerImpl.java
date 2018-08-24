@@ -66,7 +66,13 @@ public class SendOdCustomerImpl implements SendOdCustomerService {
 	}
 
 	public List<Customer> getReplayCustomer(String sendBatch, CollectionRobotTimer collectionRobotTimer) {
-		return sendOdCustomerDao.getReplayCustomer(sendBatch, collectionRobotTimer);
+		String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.Dao.SendOdCustomerDao.getReplayCustomer")
+				.getBoundSql(null).getSql();
+		sqlcode = sqlcode.replace("{START_DAY}", collectionRobotTimer.getStartDay().toString());
+		sqlcode = sqlcode.replace("{END_DAY}", collectionRobotTimer.getEndDay().toString());
+		sqlcode = sqlcode.replace("{sendBatch}", sendBatch);
+		sqlcode = sqlcode.replace("{collectionRobotTimer.jobName}", collectionRobotTimer.getJobName());
+		return sendOdCustomerDao.getReplayCustomerParameter(sqlcode);
 	}
 
 	public ReplaySet getReplaySet(CollectionRobotTimer collectionRobotTimer) {
@@ -74,12 +80,6 @@ public class SendOdCustomerImpl implements SendOdCustomerService {
 	}
 
 	public List<Customer> getRepeatCollectionInfo(String sendBatch, CollectionRobotTimer collectionRobotTimer) {
-		String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.Dao.SendOdCustomerDao.getRepeatCollectionInfo")
-				.getBoundSql(null).getSql();
-		sqlcode = sqlcode.replace("{START_DAY}", collectionRobotTimer.getStartDay().toString());
-		sqlcode = sqlcode.replace("{END_DAY}", collectionRobotTimer.getEndDay().toString());
-		sqlcode = sqlcode.replace("{sendBatch}", sendBatch);
-		sqlcode = sqlcode.replace("{collectionRobotTimer.jobName}", collectionRobotTimer.getJobName());
-		return sendOdCustomerDao.getRepeatCollectionInfoParameter(sqlcode);
+		return sendOdCustomerDao.getRepeatCollectionInfo(sendBatch, collectionRobotTimer);
 	}
 }

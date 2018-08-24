@@ -368,7 +368,7 @@
 		AND DATEDIFF(dd, CI.[REQUEST_DATETIME], GETDATE()) = 0 
 	</select>
 	
-	<select id="getRepeatCollectionInfoParameter" resultType="Customer" parameterType="java.lang.String">
+	<select id="getReplayCustomerParameter" resultType="Customer" parameterType="java.lang.String">
 		${_parameter}
 	</select>
 </mapper>  
