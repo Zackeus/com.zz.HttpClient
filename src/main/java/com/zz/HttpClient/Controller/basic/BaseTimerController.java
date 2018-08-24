@@ -1,5 +1,7 @@
 package com.zz.HttpClient.Controller.basic;
 
+import java.lang.reflect.ParameterizedType;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -7,13 +9,9 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.zz.HttpClient.Bean.Basic.LayuiResult;
 import com.zz.HttpClient.Service.sys.timer.TimerMangeService;
-import com.zz.HttpClient.Util.WebUtils;
-import com.zz.HttpClient.Util.exception.TimerException;
 
 /**
  * 
@@ -25,8 +23,8 @@ import com.zz.HttpClient.Util.exception.TimerException;
  * @date 2018年8月16日 上午11:22:14
  */
 @Component
-public abstract class BaseTimerController<T> extends BaseController {
-
+public abstract class BaseTimerController<T, J> extends BaseController {
+	
 	@Autowired
 	protected TimerMangeService timerMangeService;
 
@@ -157,24 +155,18 @@ public abstract class BaseTimerController<T> extends BaseController {
 	public String cron(HttpServletRequest request, HttpServletResponse response) {
 		return "sys/timer/cron";
 	}
-
+	
 	/**
 	 * 
-	 * @Title：schedulerException
-	 * @Description: TODO(定时任务操作异常) 
+	 * @Title：getJobClass
+	 * @Description: TODO(子类 job 执行类，可以使用指定的执行类，也可使用动态的执行类)
 	 * @see：
-	 * @param request
-	 * @param response
 	 * @return
 	 */
-	@ExceptionHandler({ TimerException.class })
-	public String schedulerException(HttpServletRequest request, HttpServletResponse response, TimerException e) {
-		if (WebUtils.isAjaxRequest(request)) {
-			renderString(response, new LayuiResult(-1, e.getMessage()));
-			return null;
-		} else {
-			return "sys/Error";
-		}
+	@SuppressWarnings("unchecked")
+	public String getJobClass() {
+        Class<J> jobClass = (Class <J>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];  
+		return jobClass.getName();
 	}
 
 }

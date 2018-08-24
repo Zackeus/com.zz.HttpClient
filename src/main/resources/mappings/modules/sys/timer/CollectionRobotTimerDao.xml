@@ -97,6 +97,7 @@
 		[END_DAY] = #{endDay},
 		[CUSTOMER_STYLE_ID] = #{customerStyleId},
 		[JOB_TIME] = #{jobTime},
+		[STATUS] = #{status},
 		[UPDATE_DATE] = #{updateDate},
 		[UPDATE_BY] = #{updateBy.id},
 		[REMARKS] = #{remarks}

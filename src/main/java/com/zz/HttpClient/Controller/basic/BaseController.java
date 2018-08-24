@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.zz.HttpClient.Bean.Basic.LayuiResult;
 import com.zz.HttpClient.Util.DateUtils;
 import com.zz.HttpClient.Util.JsonMapper;
 import com.zz.HttpClient.Util.WebUtils;
+import com.zz.HttpClient.Util.exception.MyException;
 
 import net.sf.json.JSONObject;
 
@@ -163,15 +165,52 @@ public abstract class BaseController {
     public String authorizationException(HttpServletRequest request, HttpServletResponse response) {
         if (WebUtils.isAjaxRequest(request)) {
             // 输出JSON
-        	JSONObject jsonObject = new JSONObject();
-            jsonObject.put("retcode", "-100");
-            jsonObject.put("error_msg", "当前账号无权限进行此操作！！！");
-            renderString(response, jsonObject.toString(), CONTENT_TYPE);
+            renderString(response, new LayuiResult(-1, "当前账号无权进行此操作!!!"));
             return null;
         } else {
             return "sys/403";
         }
     }
+    
+	/**
+	 * 
+	 * @Title：schedulerException
+	 * @Description: TODO(自定义异常) 
+	 * @see：
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ExceptionHandler({ MyException.class })
+	public String schedulerException(HttpServletRequest request, HttpServletResponse response, MyException e) {
+		if (WebUtils.isAjaxRequest(request)) {
+			renderString(response, new LayuiResult(-1, e.getMessage()));
+			return null;
+		} else {
+			return "sys/Error";
+		}
+	}
+	
+	/**
+	 * 
+	 * @Title：exception
+	 * @Description: TODO(未知异常)
+	 * @see：
+	 * @param request
+	 * @param response
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler({ Exception.class })
+	public String exception(HttpServletRequest request, HttpServletResponse response, Exception e) {
+		if (WebUtils.isAjaxRequest(request)) {
+			renderString(response, new LayuiResult(-1, "未知的错误：" + e.getMessage()));
+			e.printStackTrace();
+			return null;
+		} else {
+			return "sys/Error";
+		}
+	}
 	
 	/**
 	 * 

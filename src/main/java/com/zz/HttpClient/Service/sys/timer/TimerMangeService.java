@@ -37,18 +37,6 @@ import org.springframework.stereotype.Service;
 @Service("timerMangeService")
 public class TimerMangeService {
 	
-	// 默认任务组名
-	public static final String JOB_GROUP_NAME = "EXTJWEB_JOBGROUP_NAME";
-
-	// JOB 任务不存在状态字段
-	public static final String JOB_STATUS_NONE = "NONE";
-
-	// JOB 任务正常运行状态字段
-	public static final String JOB_STATUS_NORMAL = "NORMAL";
-
-	// JOB 任务暂停状态字段
-	public static final String JOB_STATUS_PAUSED = "PAUSED";
-	
     @Autowired
     private Scheduler scheduler;
     

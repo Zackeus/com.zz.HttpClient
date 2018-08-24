@@ -8,7 +8,7 @@ package com.zz.HttpClient.Util.exception;
  * @author zhou.zhang
  * @date 2018年8月23日 下午5:36:29
  */
-public class TimerException extends RuntimeException {
+public class MyException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -27,7 +27,7 @@ public class TimerException extends RuntimeException {
 	 * 
 	 * @param message
 	 */
-	public TimerException(String message) {
+	public MyException(String message) {
 		super(message);
 	}
 
@@ -36,7 +36,7 @@ public class TimerException extends RuntimeException {
 	 * @param errorCode 错误编码
 	 * @param message 信息描述
 	 */
-	public TimerException(String errorCode, String message) {
+	public MyException(String errorCode, String message) {
 		this(errorCode, message, true);
 	}
 
@@ -46,7 +46,7 @@ public class TimerException extends RuntimeException {
 	 * @param message
 	 * @param cause
 	 */
-	public TimerException(String errorCode, String message, Throwable cause) {
+	public MyException(String errorCode, String message, Throwable cause) {
 		this(errorCode, message, cause, true);
 	}
 
@@ -56,7 +56,7 @@ public class TimerException extends RuntimeException {
 	 * @param message 信息描述
 	 * @param propertiesKey 消息是否为属性文件中的Key
 	 */ 
-	public TimerException(String errorCode, String message, boolean propertiesKey) {
+	public MyException(String errorCode, String message, boolean propertiesKey) {
 		super(message);
 		this.setErrorCode(errorCode);
 		this.setPropertiesKey(propertiesKey);
@@ -69,7 +69,7 @@ public class TimerException extends RuntimeException {
 	 * @param cause
 	 * @param propertiesKey
 	 */
-	public TimerException(String errorCode, String message, Throwable cause, boolean propertiesKey) {
+	public MyException(String errorCode, String message, Throwable cause, boolean propertiesKey) {
 		super(message, cause);
 		this.setErrorCode(errorCode);
 		this.setPropertiesKey(propertiesKey);
@@ -80,7 +80,7 @@ public class TimerException extends RuntimeException {
 	 * @param message
 	 * @param cause 根异常类（可以存入任何异常）
 	 */
-	public TimerException(String message, Throwable cause) {
+	public MyException(String message, Throwable cause) {
 		super(message, cause);
 	}
 

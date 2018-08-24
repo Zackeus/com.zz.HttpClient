@@ -20,7 +20,6 @@ import com.zz.HttpClient.Bean.Sys.timer.collectionRobot.CollectionRobotTimer;
 import com.zz.HttpClient.Controller.basic.BaseTimerController;
 import com.zz.HttpClient.Job.CollectionRobotJob;
 import com.zz.HttpClient.Service.sys.timer.CollectionRobotTimerService;
-import com.zz.HttpClient.Service.sys.timer.TimerMangeService;
 import com.zz.HttpClient.Util.IdGen;
 import com.zz.HttpClient.Util.Logs;
 
@@ -34,9 +33,7 @@ import com.zz.HttpClient.Util.Logs;
  */
 @Controller
 @RequestMapping("/timer/collectionRobot")
-public class CollectionRobotTimerController extends BaseTimerController<CollectionRobotTimer> {
-	
-	private static final String JOB_CLASS = CollectionRobotJob.class.getName();
+public class CollectionRobotTimerController extends BaseTimerController<CollectionRobotTimer, CollectionRobotJob> {
 	
 	@Autowired
 	CollectionRobotTimerService collectionRobotTimerService;
@@ -91,8 +88,8 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 	public void addJob(@RequestBody CollectionRobotTimer collectionRobotTimer, HttpServletRequest request,
 			HttpServletResponse response) {
 		collectionRobotTimer.setJobName(IdGen.uuid());
-		collectionRobotTimer.setJobGroupName(TimerMangeService.JOB_GROUP_NAME);
-		collectionRobotTimer.setJobClass(JOB_CLASS);
+		// 使用指定的执行类
+		collectionRobotTimer.setJobClass(getJobClass());
 		collectionRobotTimer.setUpdateDate(new Date());
 		collectionRobotTimer.setCreateDate(collectionRobotTimer.getUpdateDate());
 		collectionRobotTimerService.addJob(collectionRobotTimer);
@@ -119,6 +116,8 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 	@Override
 	public void updateJob(@RequestBody CollectionRobotTimer collectionRobotTimer, HttpServletRequest request,
 			HttpServletResponse response) {
+		// 更新启动
+		collectionRobotTimer.setStatus(true);
 		collectionRobotTimerService.updateJob(collectionRobotTimer);
 		renderString(response, new LayuiResult(0, "更新任务成功"));
 	}
