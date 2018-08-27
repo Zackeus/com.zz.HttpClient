@@ -100,7 +100,7 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 	@Override
 	public void startJob(@RequestParam(value = "jobName") String jobName, HttpServletRequest request,
 			HttpServletResponse response) {
-		collectionRobotTimerService.startJob(jobName);
+		collectionRobotTimerService.startJob(new CollectionRobotTimer(jobName));
 		renderString(response, new LayuiResult(0, "启动任务成功"));
 	}
 
@@ -108,7 +108,7 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 	@Override
 	public void stopJob(@RequestParam(value = "jobName") String jobName, HttpServletRequest request,
 			HttpServletResponse response) {
-		collectionRobotTimerService.stopJob(jobName);
+		collectionRobotTimerService.stopJob(new CollectionRobotTimer(jobName));
 		renderString(response, new LayuiResult(0, "停止任务成功"));
 	}
 
@@ -126,7 +126,7 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 	@Override
 	public void deleteJob(@RequestParam(value = "jobName") String jobName, HttpServletRequest request,
 			HttpServletResponse response) {
-		collectionRobotTimerService.deleteJob(jobName);
+		collectionRobotTimerService.deleteJob(new CollectionRobotTimer(jobName));
 		renderString(response, new LayuiResult(0, "删除任务成功"));
 	}
 
