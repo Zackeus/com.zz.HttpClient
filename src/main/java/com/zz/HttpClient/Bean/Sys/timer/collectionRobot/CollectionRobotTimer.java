@@ -25,16 +25,16 @@ public class CollectionRobotTimer extends TimerJob<CollectionRobotTimer> {
 		super();
 	}
 
-	public CollectionRobotTimer(String jobName, String jobGroupName, String name, String jobTime, String jobClass) {
-		super(jobName, jobGroupName, name, jobTime, jobClass);
-	}
-
 	public CollectionRobotTimer(String jobName) {
 		super(jobName);
 	}
 	
 	public CollectionRobotTimer(String jobName, String jobGroupName) {
 		super(jobName, jobGroupName);
+	}
+	
+	public CollectionRobotTimer(String jobName, String jobGroupName, String name, String jobTime, String jobClass) {
+		super(jobName, jobGroupName, name, jobTime, jobClass);
 	}
 
 	public CollectionRobotTimer(Integer startDay, Integer endDay, CustomerStyle customerStyle, boolean status,

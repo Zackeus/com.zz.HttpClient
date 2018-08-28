@@ -5,11 +5,13 @@ import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.groups.Default;
 
 import org.quartz.Job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +22,9 @@ import com.zz.HttpClient.Bean.Sys.timer.collectionRobot.CollectionRobotTimer;
 import com.zz.HttpClient.Controller.basic.BaseTimerController;
 import com.zz.HttpClient.Job.CollectionRobotJob;
 import com.zz.HttpClient.Service.sys.timer.CollectionRobotTimerService;
+import com.zz.HttpClient.Service.sys.valid.CreateVaild;
+import com.zz.HttpClient.Service.sys.valid.SpecialVaild;
+import com.zz.HttpClient.Service.sys.valid.UpdateVaild;
 import com.zz.HttpClient.Util.IdGen;
 import com.zz.HttpClient.Util.Logs;
 
@@ -34,7 +39,7 @@ import com.zz.HttpClient.Util.Logs;
 @Controller
 @RequestMapping("/timer/collectionRobot")
 public class CollectionRobotTimerController extends BaseTimerController<CollectionRobotTimer, CollectionRobotJob> {
-	
+
 	@Autowired
 	CollectionRobotTimerService collectionRobotTimerService;
 
@@ -44,15 +49,15 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 	public void init() {
 		for (CollectionRobotTimer collectionRobotTimer : collectionRobotTimerService.findAllList()) {
 			if (collectionRobotTimer.isStatus()) {
-				try {
-					timerMangeService.addJob(
-							(Class<? extends Job>) (Class.forName((String) collectionRobotTimer.getJobClass())
-									.newInstance().getClass()),
-							collectionRobotTimer.getJobName(), collectionRobotTimer.getJobGroupName(),
-							collectionRobotTimer.getJobTime());
-				} catch (Exception e) {
-					Logs.error("初始化催收机器人排程异常：" + e.getMessage());
-				}
+//				try {
+//					timerMangeService.addJob(
+//							(Class<? extends Job>) (Class.forName((String) collectionRobotTimer.getJobClass())
+//									.newInstance().getClass()),
+//							collectionRobotTimer.getJobName(), collectionRobotTimer.getJobGroupName(),
+//							collectionRobotTimer.getJobTime());
+//				} catch (Exception e) {
+//					Logs.error("初始化催收机器人排程异常：" + e.getMessage());
+//				}
 			}
 		}
 	}
@@ -85,8 +90,9 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 
 	@RequestMapping(value = "/addJob", produces = "application/json;charset=UTF-8")
 	@Override
-	public void addJob(@RequestBody CollectionRobotTimer collectionRobotTimer, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void addJob(
+			@Validated({ Default.class, CreateVaild.class }) @RequestBody CollectionRobotTimer collectionRobotTimer,
+			HttpServletRequest request, HttpServletResponse response) {
 		collectionRobotTimer.setJobName(IdGen.uuid());
 		// 使用指定的执行类
 		collectionRobotTimer.setJobClass(getJobClass());
@@ -114,8 +120,10 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 
 	@RequestMapping(value = "/updateJob", produces = "application/json;charset=UTF-8")
 	@Override
-	public void updateJob(@RequestBody CollectionRobotTimer collectionRobotTimer, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void updateJob(
+			@Validated({ Default.class, UpdateVaild.class, SpecialVaild.class }) 
+			@RequestBody CollectionRobotTimer collectionRobotTimer,
+			HttpServletRequest request, HttpServletResponse response) {
 		// 更新启动
 		collectionRobotTimer.setStatus(true);
 		collectionRobotTimerService.updateJob(collectionRobotTimer);

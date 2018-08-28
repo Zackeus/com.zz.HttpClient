@@ -15,6 +15,7 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -164,12 +165,33 @@ public abstract class BaseController {
     @ExceptionHandler({ UnauthorizedException.class, AuthorizationException.class })
     public String authorizationException(HttpServletRequest request, HttpServletResponse response) {
         if (WebUtils.isAjaxRequest(request)) {
-            // 输出JSON
             renderString(response, new LayuiResult(-1, "当前账号无权进行此操作!!!"));
             return null;
         } else {
             return "sys/403";
         }
+    }
+    
+    /**
+     * 
+     * @Title：runTimeException
+     * @Description: TODO(参数校验异常)
+     * @see：
+     * @param request
+     * @param response
+     * @param e
+     * @return
+     */
+    @ExceptionHandler({ MethodArgumentNotValidException.class })
+    public String methodArgumentNotValidExceptio(HttpServletRequest request, HttpServletResponse response, 
+    		MethodArgumentNotValidException e) {
+		if (WebUtils.isAjaxRequest(request)) {
+	    	String errorMesssage = "参数校验异常：" + e.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+	        renderString(response, new LayuiResult(400, errorMesssage));
+	        return null;
+		} else {
+			return "sys/400";
+		}
     }
     
 	/**
