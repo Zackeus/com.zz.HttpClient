@@ -1,4 +1,4 @@
-package com.zz.HttpClient.Util.validator.annotation;
+package com.zz.HttpClient.Util.annotation.validator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

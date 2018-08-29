@@ -12,9 +12,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.zz.HttpClient.Bean.Basic.DataEntity;
-import com.zz.HttpClient.Bean.Interface.SupCol;
 import com.zz.HttpClient.Config.GlobalConfig;
 import com.zz.HttpClient.Util.Collections3;
+import com.zz.HttpClient.Util.annotation.SupCol;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package com.zz.HttpClient.Util.validator.annotation;
+package com.zz.HttpClient.Util.annotation.validator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,7 +25,7 @@ import org.springframework.util.ClassUtils;
 @Constraint(validatedBy = IsExistClass.Validator.class)
 public @interface IsExistClass {
 	
-	String message() default "{timerJob.jobClass.IsExistClass}";
+	String message() default "{IsExistClass}";
 
 	Class<?>[] groups() default {};
 

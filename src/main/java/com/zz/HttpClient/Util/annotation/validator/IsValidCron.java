@@ -1,4 +1,4 @@
-package com.zz.HttpClient.Util.validator.annotation;
+package com.zz.HttpClient.Util.annotation.validator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,7 +25,7 @@ import com.zz.HttpClient.Util.TimerUtil;
 @Constraint(validatedBy = IsValidCron.Validator.class)
 public @interface IsValidCron {
 	
-	String message() default "{timerJob.jobTime.IsValidCron}";
+	String message() default "{IsValidCron}";
 
 	Class<?>[] groups() default {};
 

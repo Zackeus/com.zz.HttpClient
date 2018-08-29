@@ -3,10 +3,11 @@ package com.zz.HttpClient.Bean.Sys.timer;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.zz.HttpClient.Bean.Basic.DataEntity;
+import com.zz.HttpClient.Service.sys.valid.First;
 import com.zz.HttpClient.Service.sys.valid.SpecialVaild;
 import com.zz.HttpClient.Service.sys.valid.UpdateVaild;
-import com.zz.HttpClient.Util.validator.annotation.IsExistClass;
-import com.zz.HttpClient.Util.validator.annotation.IsValidCron;
+import com.zz.HttpClient.Util.annotation.validator.IsExistClass;
+import com.zz.HttpClient.Util.annotation.validator.IsValidCron;
 
 /**
  * 
@@ -31,7 +32,7 @@ public class TimerJob<T> extends DataEntity<T> {
 	private String name; 			// 定时任务名
 	
 	@NotBlank(message = "{timerJob.jobTime.NotBlank}")
-	@IsValidCron
+	@IsValidCron(groups = {First.class})
 	private String jobTime; 		// 定时策略
 	
 	@NotBlank(message = "{timerJob.jobClass.NotBlank}", groups = {UpdateVaild.class})

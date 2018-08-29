@@ -1,6 +1,14 @@
 package com.zz.HttpClient.Bean.Sys.timer.collectionRobot;
 
+import javax.validation.GroupSequence;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.zz.HttpClient.Bean.Sys.timer.TimerJob;
+import com.zz.HttpClient.Service.sys.valid.First;
+import com.zz.HttpClient.Service.sys.valid.Second;
 
 /**
  * 
@@ -10,15 +18,23 @@ import com.zz.HttpClient.Bean.Sys.timer.TimerJob;
  * @author zhou.zhang
  * @date 2018年8月21日 上午11:42:57
  */
+@GroupSequence({CollectionRobotTimer.class, First.class, Second.class})
 public class CollectionRobotTimer extends TimerJob<CollectionRobotTimer> {
 
 	private static final long serialVersionUID = 1L;
 
+	@Min(value = 1, message = "{collectionRobotTimer.startDay.Min}")
 	private Integer startDay; 				// 起始逾期天数
+	
+	@Min(value = 1, message = "{collectionRobotTimer.endDay.Min}")
 	private Integer endDay; 				// 结束逾期天数
+	
 	private CustomerStyle customerStyle; 	// 客户类型
+	
+	@NotNull(message = "{collectionRobotTimer.status.NotNull}")
 	private boolean status; 				// 当前状态(true：启用；false：禁用)
 	
+	@NotBlank(message = "{collectionRobotTimer.customerStyleId.NotBlank}")
 	private String customerStyleId; 		// 客户类型Id 更新时使用
 	
 	public CollectionRobotTimer() {

@@ -3,7 +3,7 @@ package com.zz.HttpClient.Bean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.zz.HttpClient.Bean.Interface.ExcelField;
+import com.zz.HttpClient.Util.annotation.excel.ExcelField;
 
 /**
  * 
