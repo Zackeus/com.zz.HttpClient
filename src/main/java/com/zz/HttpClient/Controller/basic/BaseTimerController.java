@@ -5,7 +5,6 @@ import java.lang.reflect.ParameterizedType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -23,11 +22,12 @@ import com.zz.HttpClient.Service.sys.timer.TimerMangeService;
  * @date 2018年8月16日 上午11:22:14
  */
 @Component
-public abstract class BaseTimerController<T, J> extends BaseController {
+public abstract class BaseTimerController<T> extends BaseController {
 	
 	@Autowired
 	protected TimerMangeService timerMangeService;
-
+	
+	
 	/**
 	 * 
 	 * @Title：init
@@ -79,70 +79,7 @@ public abstract class BaseTimerController<T, J> extends BaseController {
 	 * @param response
 	 */
 	public abstract void findList(HttpServletRequest request, HttpServletResponse response);
-
-	/**
-	 * 
-	 * @Title：addJob
-	 * @Description: TODO(增加定时任务)
-	 * @see：
-	 * @param t
-	 * @param request
-	 * @param response
-	 * @throws SchedulerException 
-	 * @throws Exception 
-	 */
-	public abstract void addJob(T t, HttpServletRequest request, HttpServletResponse response);
 	
-	/**
-	 * 
-	 * @Title：startJob
-	 * @Description: TODO(启动定时任务) 
-	 * @see：
-	 * @param request
-	 * @param response
-	 * @throws SchedulerException 
-	 */
-	public abstract void startJob(String jobName, HttpServletRequest request, HttpServletResponse response);
-
-	/**
-	 * 
-	 * @Title：stopJob
-	 * @Description: TODO(停止定时任务) 
-	 * @see：
-	 * @param jobName
-	 * @param request
-	 * @param response
-	 * @throws SchedulerException
-	 */
-	public abstract void stopJob(String jobName, HttpServletRequest request, HttpServletResponse response);
-
-	/**
-	 * 
-	 * @Title：updateJob
-	 * @Description: TODO(更新定时任务) 
-	 * @see：
-	 * @param t
-	 * @param request
-	 * @param response
-	 * @throws SchedulerException
-	 * @throws ClassNotFoundException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 */
-	public abstract void updateJob(T t, HttpServletRequest request, HttpServletResponse response);
-	
-	/**
-	 * 
-	 * @Title：deleteJob
-	 * @Description: TODO(删除job)
-	 * @see：
-	 * @param jobName
-	 * @param request
-	 * @param response
-	 * @throws SchedulerException
-	 */
-	public abstract void deleteJob(String jobName, HttpServletRequest request, HttpServletResponse response);
-
 	/**
 	 * 
 	 * @Title：cron
@@ -165,7 +102,7 @@ public abstract class BaseTimerController<T, J> extends BaseController {
 	 */
 	@SuppressWarnings("unchecked")
 	public String getJobClass() {
-        Class<J> jobClass = (Class <J>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];  
+        Class<T> jobClass = (Class <T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];  
 		return jobClass.getName();
 	}
 

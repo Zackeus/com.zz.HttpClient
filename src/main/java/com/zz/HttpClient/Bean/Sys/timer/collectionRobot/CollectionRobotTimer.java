@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.zz.HttpClient.Bean.Sys.timer.TimerJob;
 import com.zz.HttpClient.Service.sys.valid.First;
 import com.zz.HttpClient.Service.sys.valid.Second;
+import com.zz.HttpClient.Util.annotation.validator.CollectionRobotValidator;
 
 /**
  * 
@@ -19,6 +20,7 @@ import com.zz.HttpClient.Service.sys.valid.Second;
  * @date 2018年8月21日 上午11:42:57
  */
 @GroupSequence({CollectionRobotTimer.class, First.class, Second.class})
+@CollectionRobotValidator(groups = {Second.class})
 public class CollectionRobotTimer extends TimerJob<CollectionRobotTimer> {
 
 	private static final long serialVersionUID = 1L;

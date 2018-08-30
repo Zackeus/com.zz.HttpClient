@@ -27,6 +27,7 @@ import com.zz.HttpClient.Service.sys.valid.SpecialVaild;
 import com.zz.HttpClient.Service.sys.valid.UpdateVaild;
 import com.zz.HttpClient.Util.IdGen;
 import com.zz.HttpClient.Util.Logs;
+import com.zz.HttpClient.Util.annotation.validator.DataVerificat;
 
 /**
  * 
@@ -38,7 +39,8 @@ import com.zz.HttpClient.Util.Logs;
  */
 @Controller
 @RequestMapping("/timer/collectionRobot")
-public class CollectionRobotTimerController extends BaseTimerController<CollectionRobotTimer, CollectionRobotJob> {
+@Validated
+public class CollectionRobotTimerController extends BaseTimerController<CollectionRobotJob> {
 
 	@Autowired
 	CollectionRobotTimerService collectionRobotTimerService;
@@ -88,8 +90,16 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 		renderString(response, collectionRobotTimerService.findPage(new Page<>(request), new CollectionRobotTimer()));
 	}
 
+	/**
+	 * 
+	 * @Title：addJob
+	 * @Description: TODO(增加定时任务) 
+	 * @see：
+	 * @param collectionRobotTimer
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = "/addJob", produces = "application/json;charset=UTF-8")
-	@Override
 	public void addJob(
 			@Validated({ Default.class, CreateVaild.class }) @RequestBody CollectionRobotTimer collectionRobotTimer,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -102,27 +112,53 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 		renderString(response, new LayuiResult(0, "增加任务成功"));
 	}
 
+	/**
+	 * 
+	 * @Title：startJob
+	 * @Description: TODO(启动定时任务) 
+	 * @see：
+	 * @param jobName
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = "/startJob")
-	@Override
-	public void startJob(@RequestParam(value = "jobName") String jobName, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void startJob(
+			@DataVerificat(service = CollectionRobotTimerService.class) @RequestParam(value = "jobName") String jobName,
+			HttpServletRequest request, HttpServletResponse response) {
 		collectionRobotTimerService.startJob(new CollectionRobotTimer(jobName));
 		renderString(response, new LayuiResult(0, "启动任务成功"));
 	}
 
+	/**
+	 * 
+	 * @Title：stopJob
+	 * @Description: TODO(停止定时任务) 
+	 * @see：
+	 * @param jobName
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = "/stopJob")
-	@Override
-	public void stopJob(@RequestParam(value = "jobName") String jobName, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void stopJob(
+			@DataVerificat(service = CollectionRobotTimerService.class) @RequestParam(value = "jobName") String jobName,
+			HttpServletRequest request, HttpServletResponse response) {
 		collectionRobotTimerService.stopJob(new CollectionRobotTimer(jobName));
 		renderString(response, new LayuiResult(0, "停止任务成功"));
 	}
 
+	/**
+	 * 
+	 * @Title：updateJob
+	 * @Description: TODO(更新定时任务) 
+	 * @see：
+	 * @param collectionRobotTimer
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = "/updateJob", produces = "application/json;charset=UTF-8")
-	@Override
 	public void updateJob(
-			@Validated({ Default.class, UpdateVaild.class, SpecialVaild.class }) 
-			@RequestBody CollectionRobotTimer collectionRobotTimer,
+			@Validated({ Default.class, UpdateVaild.class,
+					SpecialVaild.class }) @RequestBody CollectionRobotTimer collectionRobotTimer,
 			HttpServletRequest request, HttpServletResponse response) {
 		// 更新启动
 		collectionRobotTimer.setStatus(true);
@@ -130,10 +166,19 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 		renderString(response, new LayuiResult(0, "更新任务成功"));
 	}
 
+	/**
+	 * 
+	 * @Title：deleteJob
+	 * @Description: TODO(删除job) 
+	 * @see：
+	 * @param jobName
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = "/deleteJob")
-	@Override
-	public void deleteJob(@RequestParam(value = "jobName") String jobName, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void deleteJob(
+			@DataVerificat(service = CollectionRobotTimerService.class) @RequestParam(value = "jobName") String jobName,
+			HttpServletRequest request, HttpServletResponse response) {
 		collectionRobotTimerService.deleteJob(new CollectionRobotTimer(jobName));
 		renderString(response, new LayuiResult(0, "删除任务成功"));
 	}

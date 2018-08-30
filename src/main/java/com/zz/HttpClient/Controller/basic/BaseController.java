@@ -4,18 +4,26 @@ import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
+import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -140,42 +148,51 @@ public abstract class BaseController {
 		}
 		return url;
 	}
-
-	/**
-	 * 
-	 * @Title：bindException
-	 * @Description: TODO(参数绑定异常)
-	 * @see：
-	 * @return
-	 */
-	@ExceptionHandler({BindException.class, ConstraintViolationException.class, ValidationException.class})
-    public String bindException() {  
-        return "error/400";
-    }
 	
 	/**
 	 * 
-	 * @Title：authorizationException
-	 * @Description: TODO(授权登录异常)
+	 * @Title：handleMissingServletRequestParameterException
+	 * @Description: TODO(400 - 缺少请求参数)
+	 * @see：
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler({MissingServletRequestParameterException.class})
+	public String handleMissingServletRequestParameterException(HttpServletRequest request, HttpServletResponse response,
+			MissingServletRequestParameterException e) {
+        if (WebUtils.isAjaxRequest(request)) {
+            renderString(response, new LayuiResult(400, "缺少请求参数：" + e.getMessage()));
+            return null;
+        } else {
+            return "sys/400";
+        }
+	}
+	
+	/**
+	 * 
+	 * @Title：handleHttpMessageNotReadableException
+	 * @Description: TODO(400 - 参数解析失败)
 	 * @see：
 	 * @param request
 	 * @param response
+	 * @param e
 	 * @return
 	 */
-    @ExceptionHandler({ UnauthorizedException.class, AuthorizationException.class })
-    public String authorizationException(HttpServletRequest request, HttpServletResponse response) {
+	@ExceptionHandler({HttpMessageNotReadableException.class})
+	public String handleHttpMessageNotReadableException(HttpServletRequest request, HttpServletResponse response,
+			HttpMessageNotReadableException e) {
         if (WebUtils.isAjaxRequest(request)) {
-            renderString(response, new LayuiResult(-1, "当前账号无权进行此操作!!!"));
+            renderString(response, new LayuiResult(400, "参数解析失败：" + e.getMessage()));
             return null;
         } else {
-            return "sys/403";
+            return "sys/400";
         }
-    }
-    
+	}
+	
     /**
      * 
      * @Title：runTimeException
-     * @Description: TODO(参数校验异常)
+     * @Description: TODO(400 - 参数校验异常)
      * @see：
      * @param request
      * @param response
@@ -186,12 +203,180 @@ public abstract class BaseController {
     public String methodArgumentNotValidExceptio(HttpServletRequest request, HttpServletResponse response, 
     		MethodArgumentNotValidException e) {
 		if (WebUtils.isAjaxRequest(request)) {
-	    	String errorMesssage = "参数校验异常：" + e.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
-	        renderString(response, new LayuiResult(400, errorMesssage));
+	    	String errorMesssage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+	        renderString(response, new LayuiResult(400, "参数校验异常：" + errorMesssage));
 	        return null;
 		} else {
 			return "sys/400";
 		}
+    }
+    
+    /**
+     * 
+     * @Title：methodArgumentNotValidExceptio
+     * @Description: TODO(400 - 参数绑定失败)
+     * @see：
+     * @param request
+     * @param response
+     * @param e
+     * @return
+     */
+    @ExceptionHandler({ BindException.class })
+    public String handleBindException(HttpServletRequest request, HttpServletResponse response, 
+    		BindException e) {
+		if (WebUtils.isAjaxRequest(request)) {
+	    	String errorMesssage = e.getBindingResult().getFieldError().getField();
+	        renderString(response, new LayuiResult(400, "参数绑定失败：" + errorMesssage));
+	        return null;
+		} else {
+			return "sys/400";
+		}
+    }
+
+    /**
+     * 
+     * @Title：bindException
+     * @Description: TODO(400 - 参数校验异常)
+     * @see：
+     * @param request
+     * @param response
+     * @param e
+     * @return
+     */
+	@ExceptionHandler({ConstraintViolationException.class})
+    public String handleServiceException(HttpServletRequest request, HttpServletResponse response, 
+    		ConstraintViolationException e) {
+	    Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
+	    ConstraintViolation<?> violation = violations.iterator().next();
+	    String message = violation.getMessage();
+        if (WebUtils.isAjaxRequest(request)) {
+            renderString(response, new LayuiResult(400, "参数校验异常:" + message));
+            return null;
+        } else {
+            return "sys/400";
+        }
+    }
+	
+	/**
+	 * 
+	 * @Title：bindException
+	 * @Description: TODO(400 - 参数验证失败)
+	 * @see：
+	 * @param request
+	 * @param response
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler({ValidationException.class})
+    public String handleValidationException(HttpServletRequest request, HttpServletResponse response, 
+    		ValidationException e) {
+        if (WebUtils.isAjaxRequest(request)) {
+            renderString(response, new LayuiResult(400, "参数验证失败：" + e.getMessage()));
+            return null;
+        } else {
+            return "sys/400";
+        }
+    }
+	
+	/**
+	 * 
+	 * @Title：handleHttpRequestMethodNotSupportedException
+	 * @Description: TODO(405 - 不支持当前请求方法)
+	 * @see：
+	 * @param request
+	 * @param response
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler({HttpRequestMethodNotSupportedException.class})
+    public String handleHttpRequestMethodNotSupportedException(HttpServletRequest request, HttpServletResponse response, 
+    		HttpRequestMethodNotSupportedException e) {
+        if (WebUtils.isAjaxRequest(request)) {
+            renderString(response, new LayuiResult(405, "不支持当前请求方法：" + e.getMessage()));
+            return null;
+        } else {
+            return "sys/405";
+        }
+    }
+	
+	/**
+	 * 
+	 * @Title：handleHttpMediaTypeNotSupportedException
+	 * @Description: TODO(415 - 不支持当前媒体类型)
+	 * @see：
+	 * @param request
+	 * @param response
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+	public String handleHttpMediaTypeNotSupportedException(HttpServletRequest request, HttpServletResponse response,
+			HttpMediaTypeNotSupportedException e) {
+        if (WebUtils.isAjaxRequest(request)) {
+            renderString(response, new LayuiResult(415, "不支持当前媒体类型：" + e.getMessage()));
+            return null;
+        } else {
+            return "sys/415";
+        }
+	}
+    
+	/**
+	 * 
+	 * @Title：authorizationException
+	 * @Description: TODO(403 - 授权登录异常)
+	 * @see：
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+    @ExceptionHandler({ UnauthorizedException.class, AuthorizationException.class })
+    public String authorizationException(HttpServletRequest request, HttpServletResponse response) {
+        if (WebUtils.isAjaxRequest(request)) {
+            renderString(response, new LayuiResult(403, "当前账号无权进行此操作!!!"));
+            return null;
+        } else {
+            return "sys/403";
+        }
+    }
+    
+    /**
+     * 
+     * @Title：handleServiceException
+     * @Description: TODO(500 - 业务逻辑异常)
+     * @see：
+     * @param request
+     * @param response
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(ServiceException.class)
+    public String handleServiceException(HttpServletRequest request, HttpServletResponse response, ServiceException e) {
+        if (WebUtils.isAjaxRequest(request)) {
+            renderString(response, new LayuiResult(500, "业务逻辑异常：" + e.getMessage()));
+            return null;
+        } else {
+            return "sys/500";
+        }
+    }
+    
+    /**
+     * 
+     * @Title：handleException
+     * @Description: TODO(数据库异常)
+     * @see：
+     * @param request
+     * @param response
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public String handleException(HttpServletRequest request, HttpServletResponse response, DataIntegrityViolationException e) {
+        if (WebUtils.isAjaxRequest(request)) {
+            renderString(response, new LayuiResult(-1, "操作数据库异常：" + e.getMessage()));
+            return null;
+        } else {
+            return "sys/Error";
+        }
     }
     
 	/**
