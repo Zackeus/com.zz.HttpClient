@@ -26,17 +26,17 @@ public class RoleService extends CrudService<RoleDao, Role> {
 	@Autowired
 	RoleDao roleDao;
 	
-	@Cacheable(value = {"authorizationCache"})
+	@Cacheable(value = {"authorizationCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Role> findAllList(Role role) {
 		return roleDao.findAllList(role);
 	}
 	
-	@Cacheable(value = {"authorizationCache"})
+	@Cacheable(value = {"authorizationCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Role> getRoleByUser(Role role) {
 		return roleDao.getRoleByUser(role);
 	}
 	
-	@CacheEvict(value = {"authorizationCache"},allEntries = true)
+	@CacheEvict(value = {"authorizationCache"}, allEntries = true, beforeInvocation = true)
 	public void clearCache() {
 		Logs.info("清除用户缓存.......");
 	}

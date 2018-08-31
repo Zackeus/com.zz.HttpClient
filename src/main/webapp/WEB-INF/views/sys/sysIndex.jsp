@@ -21,7 +21,7 @@
 					<c:forEach items="${treeMenus}" var="treeMenu">
 						<li class="layui-nav-item" data-menu="${treeMenu.id}">
 							<a href="javascript:;">
-								<i class="layui-icon" data-icon="${treeMenu.icon}">${treeMenu.icon}</i>
+								<i class="layui-icon ${treeMenu.icon}"></i>
 								<cite>${treeMenu.name}</cite>
 							</a>
 						</li>

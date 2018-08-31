@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import com.zz.HttpClient.Controller.basic.BaseController;
 import com.zz.HttpClient.Service.sys.MenuService;
 import com.zz.HttpClient.Util.Logs;
 import com.zz.HttpClient.Util.UserUtils;
+import com.zz.HttpClient.Util.WebUtils;
 
 /**
  * 
@@ -35,8 +37,23 @@ public class MenuController extends BaseController {
 	
 	/**
 	 * 
+	 * @Title：getMenuList
+	 * @Description: TODO(系统菜单) 
+	 * @see：
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/list")
+	public void getMenuList(@RequestParam(name = "parentId") String parentId, HttpServletRequest request,
+			HttpServletResponse response) {
+		renderString(response, UserUtils.getMenuListByUser(parentId));
+	}
+	
+	/**
+	 * 
 	 * @Title：menuMange
-	 * @Description: TODO(菜单管理页面)
+	 * @Description: TODO(菜单管理)
 	 * @see：
 	 * @param parentId
 	 * @param request
@@ -45,22 +62,46 @@ public class MenuController extends BaseController {
 	@RequiresRoles(value = { "admin" })
 	@RequestMapping(value = "/mange")
 	public String menuMange(HttpServletRequest request, HttpServletResponse response) {
+		if (WebUtils.isAjaxRequest(request)) {
+			renderString(response, new LayuiTable<>(menuService.findAllList()));
+			return null;
+		}
 		return "sys/menu/menuMange";
 	}
 	
 	/**
 	 * 
-	 * @Title：menuMange
-	 * @Description: TODO(菜单管理列表)
+	 * @Title：addMenu
+	 * @Description: TODO(增加菜单页面)
 	 * @see：
-	 * @param parentId
 	 * @param request
 	 * @param response
+	 * @return
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = "/mangeList")
-	public void menuMangeList(HttpServletRequest request, HttpServletResponse response) {
-		renderString(response, new LayuiTable<>(menuService.findAllList()));
+	@RequestMapping(value = "/add/{id}")
+	public String addMenu(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+		Logs.info("排序值：" + menuService.getMaxSortById(id));
+		return "sys/menu/addMenu";
+	}
+	
+	/**
+	 * 
+	 * @Title：choseMenu
+	 * @Description: TODO(选择菜单)
+	 * @see：
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequiresRoles(value = { "admin" })
+	@RequestMapping(value = "/choseMenu")
+	public String choseMenu(HttpServletRequest request, HttpServletResponse response) {
+		if (WebUtils.isAjaxRequest(request)) {
+			renderString(response, menuService.getAllMenuList(new Menu(UserUtils.getPrincipal(), "53cdf74600914890a962399f0fb16df4")));
+			return null;
+		}
+		return "sys/menu/choseMenu";
 	}
 	
 	/**
@@ -75,22 +116,8 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = "/del", produces = "application/json;charset=UTF-8")
 	public void delMenu(@RequestBody Menu menu, HttpServletRequest request, HttpServletResponse response) {
 		Logs.info("菜单：" + menu);
+		menuService.clearCache();
 		renderString(response, new LayuiResult(0, "删除成功"));
-	}
-
-	/**
-	 * 
-	 * @Title：getMenuList
-	 * @Description: TODO(系统菜单) 
-	 * @see：
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/list")
-	public void getMenuList(@RequestParam(name = "parentId") String parentId, HttpServletRequest request,
-			HttpServletResponse response) {
-		renderString(response, UserUtils.getMenuListByUser(parentId));
 	}
 
 }

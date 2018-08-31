@@ -56,5 +56,19 @@ public class AreaController extends BaseController {
 	public String sysMain(HttpServletRequest request, HttpServletResponse response, Model model) {
 		return "sys/sysMain";
 	}
+	
+	/**
+	 * 
+	 * @Title：icon
+	 * @Description: TODO(图标设置)
+	 * @see：
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/icon")
+	public String icon(HttpServletRequest request, HttpServletResponse response) {
+		return "sys/icon";
+	}
 
 }

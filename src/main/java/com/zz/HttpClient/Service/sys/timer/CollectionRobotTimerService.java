@@ -27,7 +27,7 @@ public class CollectionRobotTimerService extends BaseTimerService<CollectionRobo
 	@Autowired
 	CollectionRobotTimerDao collectionRobotTimerDao;
 
-	@Cacheable(value = { "sysTimerCache" }, key = "#jobName")
+	@Cacheable(value = { "sysTimerCache" }, keyGenerator = "cacheKeyGenerator")
 	@Override
 	public CollectionRobotTimer get(String jobName) {
 		return super.get(jobName);
@@ -67,7 +67,7 @@ public class CollectionRobotTimerService extends BaseTimerService<CollectionRobo
 		}
 	}
 
-	@CacheEvict(value = { "sysTimerCache" }, key = "#t.jobName", beforeInvocation = true)
+	@CacheEvict(value = { "sysTimerCache" }, allEntries = true, beforeInvocation = true)
 	@Override
 	public void startJob(CollectionRobotTimer t) {
 		try {
@@ -79,7 +79,7 @@ public class CollectionRobotTimerService extends BaseTimerService<CollectionRobo
 		}
 	}
 
-	@CacheEvict(value = { "sysTimerCache" }, key = "#t.jobName", beforeInvocation = true)
+	@CacheEvict(value = { "sysTimerCache" }, allEntries = true, beforeInvocation = true)
 	@Override
 	public void stopJob(CollectionRobotTimer t) {
 		try {
@@ -91,7 +91,7 @@ public class CollectionRobotTimerService extends BaseTimerService<CollectionRobo
 		}
 	}
 
-	@CacheEvict(value = { "sysTimerCache" }, key = "#t.jobName", beforeInvocation = true)
+	@CacheEvict(value = { "sysTimerCache" }, allEntries = true, beforeInvocation = true)
 	@Override
 	public void updateJob(CollectionRobotTimer t) {
 		try {
@@ -103,7 +103,7 @@ public class CollectionRobotTimerService extends BaseTimerService<CollectionRobo
 		}
 	}
 
-	@CacheEvict(value = { "sysTimerCache" }, key = "#jobName", beforeInvocation = true)
+	@CacheEvict(value = { "sysTimerCache" }, allEntries = true, beforeInvocation = true)
 	@Override
 	public void deleteJob(CollectionRobotTimer t) {
 		try {

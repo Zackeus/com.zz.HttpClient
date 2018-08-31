@@ -24,7 +24,7 @@ public class DictService extends CrudService<DictDao, Dict> {
 	@Autowired
 	private DictDao dictDao;
 	
-	@Cacheable(value = {"sysDictCache"}, key="#type")
+	@Cacheable(value = {"sysDictCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Dict> findListByType(String type) {
 		return dictDao.findListByType(type);
 	}

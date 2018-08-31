@@ -141,10 +141,7 @@ layui.define(['jquery','layer'],function(exports){
         		$.ajax({
         			method: 'POST',
         			url : url,
-        			data : {
-        				id : data.id,
-        				parentId : data.parentId
-        			},
+        			data : JSON.stringify(data),
         			contentType : 'application/json',
         			dataType : 'json',
         			beforeSend: function() {

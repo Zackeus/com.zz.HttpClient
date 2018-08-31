@@ -85,4 +85,9 @@
 		ORDER BY [SORT]
 	</select>
 	
+	<!-- 根据 id 查询子菜单最大最大排序值 -->
+	<select id="getMaxSortById" resultType="int">
+		SELECT DISTINCT MAX([SORT]) FROM [Message].[dbo].[SYS_MENU] WHERE [PARENT_ID] = #{parentId}
+	</select>
+	
 </mapper>

@@ -26,32 +26,60 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 	@Autowired
 	private MenuDao menuDao;
 	
-	@Cacheable(value = {"sysMenuCache"})
+	/**
+	 * 
+	 * @Title：findAllList
+	 * @Description: TODO(获取全部菜单列表（父子菜单不嵌套）)
+	 * @see：
+	 * @param menu
+	 * @return
+	 */
+	@Cacheable(value = {"sysMenuCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Menu> findAllList() {
 		return menuDao.findAllList();
 	}
 	
-	@Cacheable(value = {"sysMenuCache"}, key="#menu.userId")
+	@Cacheable(value = {"sysMenuCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Menu> getAllTreeMenus(Menu menu) {
 		return menuDao.getAllTreeMenus(menu);
 	}
 	
-	@Cacheable(value = {"sysMenuCache"}, key="#menu.userId")
+	@Cacheable(value = {"sysMenuCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Menu> getTreeMenus(Menu menu) {
 		return menuDao.getTreeMenus(menu);
 	}
 	
-	@Cacheable(value = {"sysMenuCache"}, key="#menu.parentId")
+	/**
+	 * 
+	 * @Title：getAllMenuList
+	 * @Description: TODO(获取全部菜单列表（父子菜单嵌套）)
+	 * @see：此方法不能使用缓存，因开启了懒加载模式，开启缓存可能会使嵌套查询不执行
+	 * @param menu
+	 * @return
+	 */
 	public List<Menu> getAllMenuList(Menu menu) {
 		return menuDao.getAllMenuList(menu);
 	}
 	
-	@Cacheable(value = {"sysMenuCache"}, key="#menu.userId + #menu.parentId")
+	@Cacheable(value = {"sysMenuCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Menu> getMenuList(Menu menu) {
 		return menuDao.getMenuList(menu);
 	}
 	
-	@CacheEvict(value = {"sysMenuCache"},allEntries = true)
+	/**
+	 * 
+	 * @Title：getMaxSortById
+	 * @Description: TODO(根据 id 查询子菜单最大最大排序值)
+	 * @see：
+	 * @param id
+	 * @return
+	 */
+	@Cacheable(value = {"sysMenuCache"}, keyGenerator = "cacheKeyGenerator")
+	public Integer getMaxSortById(String id) {
+		return menuDao.getMaxSortById(id);
+	}
+	
+	@CacheEvict(value = {"sysMenuCache"}, allEntries = true, beforeInvocation = true)
 	public void clearCache() {
 		Logs.info("清除菜单缓存.......");
 	}

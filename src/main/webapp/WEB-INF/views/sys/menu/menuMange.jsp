@@ -11,6 +11,12 @@
 	<blockquote class="layui-elem-quote quoteBox">
 		<div class="demoTable">
 			<div class="layui-inline">
+				<div class="layui-input-inline">
+		    		<button class="layui-btn" id="btn-add"><i class="layui-icon">&#xe608;</i> 添加</button>
+		    	</div>
+			</div>
+		
+			<div class="layui-inline">
 		    	<div class="layui-input-inline">
 		      		<button class="layui-btn" id="btn-expand">全部展开</button>
 		    	</div>
@@ -28,7 +34,7 @@
 	<!-- 图标 -->
 	<script type="text/html" id="menu-icon">
 		{{#  if(d.icon != undefined && d.icon != ''){ }}
-			<i class="layui-icon">{{d.icon}}</i>
+			<i class="layui-icon {{d.icon}}"></i>
 		{{#  } else { }}
 			无
 		{{#  }}}

@@ -12,7 +12,7 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
 
     // 渲染表格
     layer.load();
-    treetable.render ({
+    var menuListIns = treetable.render ({
         treeColIndex: 1,						// 树形图标显示在第几列
         treeSpid: 1,							// 最上级的父级id
         treeIdName: 'id',						// id字段的名称
@@ -20,7 +20,7 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
         treeDefaultClose: true,					// 是否默认折叠
         treeLinkage: false,						// 父级展开时是否自动展开所有子级
         elem: '#menulist',
-        url: ctx + '/sys/menu/mangeList',
+        url: ctx + '/sys/menu/mange',
         page: false,
         cols: [[
             {type: 'numbers'},
@@ -68,6 +68,43 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
             }
         });
     }
+    
+    // 添加菜单
+    $('#btn-add').click(function () {
+    	var addMenuIndex = layui.layer.open({
+            type: 2,
+            title: '增加菜单', 		// 不显示标题栏
+            closeBtn: 1,			// 关闭按钮
+            shade: 0, 				// 遮罩
+            shadeClose: false, 		// 是否点击遮罩关闭
+            anim: 0, 				// 弹出动画
+            isOutAnim: true, 		// 关闭动画
+            scrollbar: false, 		// 是否允许浏览器出现滚动条
+            maxmin: true, 			// 最大最小化
+            id: 'LAY_AddMenu', 		// 用于控制弹层唯一标识
+            moveType: 1,
+            content: [ctx + '/sys/menu/add/1'],
+            success : function(layero, index){
+                var body = layui.layer.getChildFrame('body', index);
+                setTimeout(function(){
+                    layui.layer.tips('点击此处返回菜单列表', '.layui-layer-setwin .layui-layer-close', {
+                        tips: 3
+                    });
+                },500)
+            },
+            cancel: function(index, layero) {
+            },
+            end:function(index) {
+            	menuListIns.reload();
+           }
+    	});
+    	layui.layer.full(addMenuIndex);
+        window.sessionStorage.setItem("addMenuIndex", addMenuIndex);
+        //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+        $(window).on("resize",function() {
+        	layui.layer.full(window.sessionStorage.getItem("addMenuIndex"));
+        })
+    });
 
     // 全部展开
     $('#btn-expand').click(function () {
