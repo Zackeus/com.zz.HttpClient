@@ -55,8 +55,8 @@ layui.use(['request','form','layer','laydate','table','laytpl','tree'],function(
     	});
     });
     
-    form.on('submit(addTimer)', function(data) {
-    	request.addTimer(ctx + '/timer/collectionRobot/addJob', data.field, $(this));
+    form.on('submit(addMenu)', function(data) {
+    	request.addMenu(ctx + '/sys/menu/add', data.field, $(this));
     	return false;
     });
     

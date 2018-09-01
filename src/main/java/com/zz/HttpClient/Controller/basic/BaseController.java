@@ -280,6 +280,48 @@ public abstract class BaseController {
 	
 	/**
 	 * 
+	 * @Title：handleIllegalArgumentException
+	 * @Description: TODO(400 - 参数不合法)
+	 * @see：
+	 * @param request
+	 * @param response
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler({IllegalArgumentException.class})
+    public String handleIllegalArgumentException(HttpServletRequest request, HttpServletResponse response, 
+    		IllegalArgumentException e) {
+        if (WebUtils.isAjaxRequest(request)) {
+            renderString(response, new LayuiResult(400, "参数不合法：" + e.getMessage()));
+            return null;
+        } else {
+            return "sys/400";
+        }
+    }
+	
+	/**
+	 * 
+	 * @Title：handleIllegalAccessException
+	 * @Description: TODO(400 - 安全权限异常)
+	 * @see：安全权限异常，一般来说，是由于java在反射时调用了private方法所导致的
+	 * @param request
+	 * @param response
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler({IllegalAccessException.class})
+    public String handleIllegalAccessException(HttpServletRequest request, HttpServletResponse response, 
+    		IllegalAccessException e) {
+        if (WebUtils.isAjaxRequest(request)) {
+            renderString(response, new LayuiResult(400, "安全权限异常：" + e.getMessage()));
+            return null;
+        } else {
+            return "sys/400";
+        }
+    }
+	
+	/**
+	 * 
 	 * @Title：handleHttpRequestMethodNotSupportedException
 	 * @Description: TODO(405 - 不支持当前请求方法)
 	 * @see：

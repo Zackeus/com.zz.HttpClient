@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import com.zz.HttpClient.Bean.Sys.Menu;
 import com.zz.HttpClient.Controller.basic.BaseController;
 import com.zz.HttpClient.Service.sys.MenuService;
 import com.zz.HttpClient.Util.Logs;
+import com.zz.HttpClient.Util.ObjectUtils;
 import com.zz.HttpClient.Util.UserUtils;
 import com.zz.HttpClient.Util.WebUtils;
 
@@ -80,9 +82,30 @@ public class MenuController extends BaseController {
 	 */
 	@RequiresRoles(value = { "admin" })
 	@RequestMapping(value = "/add/{id}")
-	public String addMenu(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
-		Logs.info("排序值：" + menuService.getMaxSortById(id));
+	public String addMenuPage(@PathVariable("id") String id, HttpServletRequest request, 
+			HttpServletResponse response, Model model) {
+		Integer sort  = menuService.getMaxSortById(id);
+		model.addAttribute("sort", ObjectUtils.isEmpty(sort) ? 10 : sort + 10);
 		return "sys/menu/addMenu";
+	}
+	
+	/**
+	 * 
+	 * @Title：addMenu
+	 * @Description: TODO(增加菜单)
+	 * @see：
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequiresRoles(value = { "admin" })
+	@RequestMapping(value = "/add", produces = "application/json;charset=UTF-8")
+	public void addMenu(@RequestBody Menu menu, HttpServletRequest request, 
+			HttpServletResponse response) {
+		Logs.info("菜单：" + menu);
+		renderString(response, new LayuiResult(0, "添加菜单成功"));
 	}
 	
 	/**

@@ -8,20 +8,9 @@
 	<style type="text/css">
 	.downpanel .layui-select-title span{line-height: 38px;}
 	.downpanel dl dd:hover{background-color: inherit;}
-	
-	.layui-icon-input i{
-		position: absolute;
-		left:15px;
-		top:50%;
-		margin-top: 8px;
-	}
-	.layui-icon-input .layui-input {
-		padding-right: 30px;
-		margin-left: 40px;
-	}
-	.choseIcon {
-		margin-left: 40px;
-	}
+	.layui-icon-input i{position: absolute;left:15px;top:50%;margin-top: 8px;}
+	.layui-icon-input .layui-input {padding-right: 30px;margin-left: 40px;}
+	.choseIcon {margin-left: 40px;}
 	</style>
 </head>
 <body class="childrenBody">
@@ -62,6 +51,36 @@
 					<button id="choseIcon" class="layui-btn choseIcon" type="button"><i class="layui-icon layui-icon-tianjia"></i></button>
                 </div>
 			</div>
+		</div>
+		<div class="layui-form-item layui-row layui-col-xs12">
+			<label class="layui-form-label">菜单排序</label>
+			<div class="layui-input-block">
+				<input id="sort" name="sort" type="text" class="layui-input" value="${sort}" lay-verify="required|number" placeholder="请输入菜单排序">
+			</div>
+		</div>
+		<div class="layui-form-item layui-row layui-col-xs12">
+			<label class="layui-form-label">菜单链接</label>
+			<div class="layui-input-block">
+				<input id="href" name="href" type="text" class="layui-input" placeholder="点击菜单跳转的页面">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">是否展开</label>
+	    	<div class="layui-input-block">
+	      		<input id="spread" name="spread" type="checkbox" lay-skin="switch" lay-text="展开|折叠" value="true">
+	    	</div>
+		</div>
+		<div class="layui-form-item layui-row layui-col-xs12">
+			<label class="layui-form-label">系统标识</label>
+			<div class="layui-input-block">
+				<input id="sysId" name="sysId" type="text" class="layui-input" placeholder="请输入系统标识">
+			</div>
+		</div>
+		<div class="layui-form-item layui-form-text">
+			<label class="layui-form-label">备注</label>
+		    <div class="layui-input-block">
+		    	<textarea id="remarks" name="remarks" class="layui-textarea" placeholder="请输入内容"></textarea>
+		    </div>
 		</div>
 		<div class="layui-form-item">
 	    	<div class="layui-input-block">

@@ -3,13 +3,12 @@ package com.zz.HttpClient.Util;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
 
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
-import com.google.common.hash.Hashing;
+import com.zz.HttpClient.Util.HttpClient.Md5Util;
 
 /**
  * 
@@ -48,26 +47,24 @@ public class CacheKeyGenerator implements KeyGenerator {
             } else {
             	// 实体 Bean 参数 Key生成策略 :使用反射将 属性和对应值注入 Key中
             	for (Field field : param.getClass().getDeclaredFields()) {
-                     field.setAccessible(true);
-                     try {
-                    	 key.append(field.getName());
-                    	 key.append(field.get(param));
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
+                	try {
+                		field.setAccessible(true);
+                    	key.append(field.getName());
+						key.append(field.get(param));
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						Logs.error("自定义缓存key异常，" + e.getMessage());
+						throw new MyException("自定义缓存key异常，" + e.getMessage());
 					}
                 }
             }
             key.append('-');
         }
- 
-        String finalKey = key.toString();
-        long cacheKeyHash = Hashing.murmur3_128().hashString(finalKey, Charset.defaultCharset()).asLong();
+//        String finalKey = key.toString();
+//        long cacheKeyHash = Hashing.murmur3_128().hashString(finalKey, Charset.defaultCharset()).asLong();
+//        Logs.info("using cache key={} hashCode={}" + finalKey + " : " + cacheKeyHash);
         
-        Logs.info("using cache key={} hashCode={}" + finalKey + " : " + cacheKeyHash);
-        return key.toString();
+        // 使用 MD5 作为缓存 Key
+        return Md5Util.getMD5String(key.toString());
     }
-
 
 }
