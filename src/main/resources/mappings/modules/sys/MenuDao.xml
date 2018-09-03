@@ -98,7 +98,7 @@
 		SELECT DISTINCT MAX([SORT]) FROM [Message].[dbo].[SYS_MENU] WHERE [PARENT_ID] = #{parentId}
 	</select>
 	
-	<!-- 增加菜单按钮 -->
+	<!-- 增加菜单 -->
 	<insert id="insert">
 		INSERT INTO [Message].[dbo].[SYS_MENU]
 		(<include refid="menuColumns"/>)
@@ -118,5 +118,9 @@
 			#{remarks}
 		)
 	</insert>
+	
+	<delete id="delete">
+        DELETE FROM [Message].[dbo].[SYS_MENU] WHERE [ID] = #{id}
+    </delete>
 	
 </mapper>

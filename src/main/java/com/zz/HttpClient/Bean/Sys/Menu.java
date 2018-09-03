@@ -25,7 +25,7 @@ import com.zz.HttpClient.Util.annotation.validator.DataVerificat;
 public class Menu extends DataEntity<Menu> {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	@NotBlank(message = "{menu.parentId.NotBlank}")
 	@DataVerificat(service = MenuService.class, message = "{menu.parentId.DataVerificat}", groups = {First.class})
 	private String parentId; 		// 父级标识

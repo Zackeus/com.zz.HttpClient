@@ -6,10 +6,12 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import com.zz.HttpClient.Config.GlobalConfig;
+import com.zz.HttpClient.Service.sys.valid.BaseVaild;
 import com.zz.HttpClient.Util.StringUtils;
 
 /**
@@ -27,6 +29,7 @@ public abstract class BaseEntity<T> implements Serializable {
 	/**
 	 * 实体编号（唯一标识）
 	 */
+	@NotBlank(message = "{BaseEntity.id.NotBlank}", groups = {BaseVaild.class})
 	protected String id;
 	
 	/**

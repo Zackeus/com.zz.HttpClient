@@ -39,8 +39,20 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 	public Menu get(String id) {
 		return menuDao.get(id);
 	}
-
 	
+	/**
+	 * 
+	 * @Title：getMaxSortById
+	 * @Description: TODO(根据 id 查询子菜单最大最大排序值)
+	 * @see：
+	 * @param id
+	 * @return
+	 */
+	@Cacheable(value = {"sysMenuCache"}, keyGenerator = "cacheKeyGenerator")
+	public Integer getMaxSortById(String id) {
+		return menuDao.getMaxSortById(id);
+	}
+
 	/**
 	 * 
 	 * @Title：findAllList
@@ -97,20 +109,16 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 	
 	/**
 	 * 
-	 * @Title：getMaxSortById
-	 * @Description: TODO(根据 id 查询子菜单最大最大排序值)
+	 * @Title：delete
+	 * @Description: TODO(删除菜单)
 	 * @see：
-	 * @param id
+	 * @param menu
 	 * @return
 	 */
-	@Cacheable(value = {"sysMenuCache"}, keyGenerator = "cacheKeyGenerator")
-	public Integer getMaxSortById(String id) {
-		return menuDao.getMaxSortById(id);
-	}
-	
 	@CacheEvict(value = {"sysMenuCache"}, allEntries = true, beforeInvocation = true)
-	public void clearCache() {
-		Logs.info("清除菜单缓存.......");
+	@Override
+	public void delete(Menu entity) {
+		super.delete(entity);
 	}
 	
 }

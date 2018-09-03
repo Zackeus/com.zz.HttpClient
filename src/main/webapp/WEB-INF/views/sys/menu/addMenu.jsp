@@ -21,11 +21,11 @@
 			<div class="layui-input-block">
 				<div class="layui-unselect layui-form-select downpanel">
 					<div class="layui-select-title">
-						<span id="treeclass" class="layui-input layui-unselect">功能菜单</span>
-						<input id="parentId" name="parentId" type="hidden" value="1">
+						<span id="treeclass" class="layui-input layui-unselect">${menu.name}</span>
+						<input id="parentId" name="parentId" type="hidden" value="${menu.id}">
 						<i class="layui-edge"></i>
 					</div>
-					<dl class="layui-anim layui-anim-upbit">
+					<dl id="divid" class="layui-anim layui-anim-upbit">
 						<dd>
 							<ul id="classtree"></ul>
 						</dd>

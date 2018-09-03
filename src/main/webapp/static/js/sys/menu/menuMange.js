@@ -40,7 +40,7 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
 		switch (obj.event) {
 		
 		case "add":
-			console.log('增加');
+			addSublevelMenu(obj.data);
 			break;
 			
 		case "edit":
@@ -56,12 +56,18 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
 		}
     });
     
+    // 添加子级菜单
+    function addSublevelMenu(data) {
+    	openAddMenu(data.id);
+	}
+    
+    // 删除菜单
     function delMenu(data) {
         layer.msg('确定要删除此菜单?', {
         	time: 0, 
         	btn: ['确定', '取消'],
             btn1: function(index, layero) {
-            	request.delMenu(data, index, ctx + '/sys/menu/del');
+            	request.delMenu(data, index, ctx + '/sys/menu/del', menuListIns);
             },
             btn2: function(index, layero) {
             	layer.close(index);
@@ -71,6 +77,11 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
     
     // 添加菜单
     $('#btn-add').click(function () {
+    	openAddMenu('1');
+    });
+    
+    // 打开添加菜单页面
+    function openAddMenu(id) {
     	var addMenuIndex = layui.layer.open({
             type: 2,
             title: '增加菜单', 		// 不显示标题栏
@@ -83,7 +94,7 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
             maxmin: true, 			// 最大最小化
             id: 'LAY_AddMenu', 		// 用于控制弹层唯一标识
             moveType: 1,
-            content: [ctx + '/sys/menu/add/1'],
+            content: [ctx + '/sys/menu/add/' + id],
             success : function(layero, index){
                 var body = layui.layer.getChildFrame('body', index);
                 setTimeout(function(){
@@ -104,7 +115,7 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
         $(window).on("resize",function() {
         	layui.layer.full(window.sessionStorage.getItem("addMenuIndex"));
         })
-    });
+    }
 
     // 全部展开
     $('#btn-expand').click(function () {

@@ -19,11 +19,15 @@ import com.zz.HttpClient.Bean.Basic.LayuiTable;
 import com.zz.HttpClient.Bean.Sys.Menu;
 import com.zz.HttpClient.Controller.basic.BaseController;
 import com.zz.HttpClient.Service.sys.MenuService;
+import com.zz.HttpClient.Service.sys.valid.BaseVaild;
 import com.zz.HttpClient.Service.sys.valid.CreateVaild;
+import com.zz.HttpClient.Service.sys.valid.UpdateVaild;
 import com.zz.HttpClient.Util.Logs;
 import com.zz.HttpClient.Util.ObjectUtils;
 import com.zz.HttpClient.Util.UserUtils;
 import com.zz.HttpClient.Util.WebUtils;
+
+import net.sf.json.JSONObject;
 
 /**
  * 
@@ -101,11 +105,15 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = "/add/{id}")
 	public String addMenuPage(@PathVariable("id") String id, HttpServletRequest request, 
 			HttpServletResponse response, Model model) {
+		Logs.info("ID:" + id);
 		Integer sort  = menuService.getMaxSortById(id);
 		if (WebUtils.isAjaxRequest(request)) {
-			renderString(response, new AjaxResult(ObjectUtils.isEmpty(sort) ? 10 : sort + 10, "成功"));
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("sort", ObjectUtils.isEmpty(sort) ? 10 : sort + 10);
+			renderString(response, new AjaxResult(0, "成功", jsonObject));
 			return null;
 		}
+		model.addAttribute("menu", menuService.get(id));
 		model.addAttribute("sort", ObjectUtils.isEmpty(sort) ? 10 : sort + 10);
 		return "sys/menu/addMenu";
 	}
@@ -139,9 +147,9 @@ public class MenuController extends BaseController {
 	 */
 	@RequiresRoles(value = { "admin" })
 	@RequestMapping(value = "/del", produces = "application/json;charset=UTF-8")
-	public void delMenu(@RequestBody Menu menu, HttpServletRequest request, HttpServletResponse response) {
-		Logs.info("菜单：" + menu);
-		menuService.clearCache();
+	public void delMenu(@Validated({ Default.class, UpdateVaild.class, BaseVaild.class }) @RequestBody Menu menu, 
+			HttpServletRequest request, HttpServletResponse response) {
+		menuService.delete(menu);
 		renderString(response, new AjaxResult(0, "删除成功"));
 	}
 	

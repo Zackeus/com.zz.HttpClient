@@ -10,31 +10,14 @@ layui.use(['request','form','layer','laydate','table','laytpl','tree'],function(
         laytpl = layui.laytpl,
         table = layui.table,
         request = layui.request,
-        tree = layui.tree;
+        tree = layui.tree,
+    	treeSelectData;
     
-    $.ajax({
-		method: 'POST',
-		url : ctx + '/sys/menu/choseMenu',
-		dataType : 'json',
-        success: function (result) {
-            // 选择菜单下拉选
-            layui.tree({
-            	elem:'#classtree',
-            	href:'javascript:;',
-            	nodes:result,
-            	click:function(node) {
-            		var $select=$($(this)[0].elem).parents(".layui-form-select");
-            		$select.removeClass("layui-form-selected").find(".layui-select-title span").html(node.name).end().find("input:hidden[name='parentId']").val(node.id);
-            		console.log(request.getMaxMenuSort(ctx + '/sys/menu/add/' + node.id));
-            	}
-            });
-        },
-		error : function(result) {
-			layer.msg('加载菜单树形列表失败', {icon: 5,time: 2000,shift: 6}, function(){});
-		}
-    })
-    
+    // 树形菜单下拉选点击
 	$(".downpanel").on("click",".layui-select-title",function(e) {
+		if (!treeSelectData) {
+			getTreeSelect();
+		}
 		$(".layui-form-select").not($(this).parents(".layui-form-select")).removeClass("layui-form-selected");
 		$(this).parents(".downpanel").toggleClass("layui-form-selected");
 		layui.stope(e);
@@ -45,6 +28,36 @@ layui.use(['request','form','layer','laydate','table','laytpl','tree'],function(
 	$(document).on("click",function(e) {
 		$(".layui-form-select").removeClass("layui-form-selected");
 	});
+	
+	// 树形菜单 Select 渲染
+	function getTreeSelect() {
+	    $.ajax({
+			method: 'POST',
+			url : ctx + '/sys/menu/choseMenu',
+			dataType : 'json',
+	        success: function (result) {
+	            // 选择菜单下拉选
+	            layui.tree({
+	            	elem:'#classtree',
+	            	href:'javascript:;',
+	            	nodes:result,
+	            	click:function(node) {
+	            		var $select=$($(this)[0].elem).parents(".layui-form-select");
+	            		$select.removeClass("layui-form-selected").find(".layui-select-title span").html(node.name).end().find("input:hidden[name='parentId']").val(node.id);
+	            		
+	            		var sortMsg = request.getMaxMenuSort(ctx + '/sys/menu/add/' + node.id);
+	            		if (sortMsg.code == "0") {
+	            			$('#sort').val(sortMsg.customObj.sort);
+	            		}
+	            	}
+	            });
+	            treeSelectData = result;
+	        },
+			error : function(result) {
+				layer.msg('加载菜单树形列表失败', {icon: 5,time: 2000,shift: 6}, function(){});
+			}
+	    })
+	}
 	
 	// 菜单图标
     $('#choseIcon').click(function () {
