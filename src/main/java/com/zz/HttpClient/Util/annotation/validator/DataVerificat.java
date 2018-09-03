@@ -4,6 +4,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Method;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
@@ -11,6 +12,7 @@ import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
 
 import com.zz.HttpClient.Service.Basic.CrudService;
+import com.zz.HttpClient.Util.Logs;
 import com.zz.HttpClient.Util.ObjectUtils;
 import com.zz.HttpClient.Util.SpringContextUtil;
 import com.zz.HttpClient.Util.StringUtils;
@@ -37,13 +39,19 @@ public @interface DataVerificat {
 	
 	Class<? extends CrudService<?, ?>> service();
 	
+	String methodName() default "";
+	
 	public class Validator implements ConstraintValidator<DataVerificat, String> {
 		
+		// 数据校验 Service
 		private Class<? extends CrudService<?, ?>> service;
+		// 数据校验所用的方法名，如果不传此参数，则使用默认即 CrudService 的 get(String id) 方法
+		private String methodName;
 
 		@Override
 		public void initialize(DataVerificat constraintAnnotation) {
 			service = constraintAnnotation.service();
+			methodName = constraintAnnotation.methodName();
 		}
 
 		@Override
@@ -52,6 +60,18 @@ public @interface DataVerificat {
 				context.disableDefaultConstraintViolation();
 				context.buildConstraintViolationWithTemplate("{IsNotBlank}").addConstraintViolation();
 				return Boolean.FALSE;
+			}
+			
+			if (StringUtils.isNotBlank(methodName)) {
+				try {
+					Method method = service.getDeclaredMethod(methodName, String.class);
+					return !ObjectUtils.isEmpty(method.invoke(SpringContextUtil.getBeanByName(service), value));
+				} catch (Exception e) {
+					Logs.error("数据校验器异常：" + e.getMessage());
+					context.disableDefaultConstraintViolation();
+					context.buildConstraintViolationWithTemplate("数据校验器异常: " + e.getMessage()).addConstraintViolation();
+					return Boolean.FALSE;
+				}
 			}
 			
 			return !ObjectUtils.isEmpty(SpringContextUtil.getBeanByName(service).get(value));

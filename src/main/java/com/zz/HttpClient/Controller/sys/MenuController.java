@@ -2,21 +2,24 @@ package com.zz.HttpClient.Controller.sys;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.groups.Default;
 
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.zz.HttpClient.Bean.Basic.LayuiResult;
+import com.zz.HttpClient.Bean.Basic.AjaxResult;
 import com.zz.HttpClient.Bean.Basic.LayuiTable;
 import com.zz.HttpClient.Bean.Sys.Menu;
 import com.zz.HttpClient.Controller.basic.BaseController;
 import com.zz.HttpClient.Service.sys.MenuService;
+import com.zz.HttpClient.Service.sys.valid.CreateVaild;
 import com.zz.HttpClient.Util.Logs;
 import com.zz.HttpClient.Util.ObjectUtils;
 import com.zz.HttpClient.Util.UserUtils;
@@ -73,6 +76,20 @@ public class MenuController extends BaseController {
 	
 	/**
 	 * 
+	 * @Title：treeMenuList
+	 * @Description: TODO(选择菜单)
+	 * @see：
+	 * @param request
+	 * @param response
+	 */
+	@RequiresRoles(value = { "admin" })
+	@RequestMapping(value = "/choseMenu")
+	public void treeMenuList(HttpServletRequest request, HttpServletResponse response) {
+		renderString(response, menuService.getAllMenuList(new Menu(UserUtils.getPrincipal(), "1")));
+	}
+	
+	/**
+	 * 
 	 * @Title：addMenu
 	 * @Description: TODO(增加菜单页面)
 	 * @see：
@@ -85,6 +102,10 @@ public class MenuController extends BaseController {
 	public String addMenuPage(@PathVariable("id") String id, HttpServletRequest request, 
 			HttpServletResponse response, Model model) {
 		Integer sort  = menuService.getMaxSortById(id);
+		if (WebUtils.isAjaxRequest(request)) {
+			renderString(response, new AjaxResult(ObjectUtils.isEmpty(sort) ? 10 : sort + 10, "成功"));
+			return null;
+		}
 		model.addAttribute("sort", ObjectUtils.isEmpty(sort) ? 10 : sort + 10);
 		return "sys/menu/addMenu";
 	}
@@ -102,29 +123,10 @@ public class MenuController extends BaseController {
 	 */
 	@RequiresRoles(value = { "admin" })
 	@RequestMapping(value = "/add", produces = "application/json;charset=UTF-8")
-	public void addMenu(@RequestBody Menu menu, HttpServletRequest request, 
-			HttpServletResponse response) {
-		Logs.info("菜单：" + menu);
-		renderString(response, new LayuiResult(0, "添加菜单成功"));
-	}
-	
-	/**
-	 * 
-	 * @Title：choseMenu
-	 * @Description: TODO(选择菜单)
-	 * @see：
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = "/choseMenu")
-	public String choseMenu(HttpServletRequest request, HttpServletResponse response) {
-		if (WebUtils.isAjaxRequest(request)) {
-			renderString(response, menuService.getAllMenuList(new Menu(UserUtils.getPrincipal(), "53cdf74600914890a962399f0fb16df4")));
-			return null;
-		}
-		return "sys/menu/choseMenu";
+	public void addMenu(@Validated({ Default.class, CreateVaild.class }) @RequestBody Menu menu, 
+			HttpServletRequest request, HttpServletResponse response) {
+		menuService.addMenu(menu);
+		renderString(response, new AjaxResult(0, "添加菜单成功"));
 	}
 	
 	/**
@@ -140,7 +142,7 @@ public class MenuController extends BaseController {
 	public void delMenu(@RequestBody Menu menu, HttpServletRequest request, HttpServletResponse response) {
 		Logs.info("菜单：" + menu);
 		menuService.clearCache();
-		renderString(response, new LayuiResult(0, "删除成功"));
+		renderString(response, new AjaxResult(0, "删除成功"));
 	}
-
+	
 }

@@ -12,16 +12,28 @@ layui.use(['request','form','layer','laydate','table','laytpl','tree'],function(
         request = layui.request,
         tree = layui.tree;
     
-    // 选择菜单下拉选
-    layui.tree({
-    	elem:"#classtree",
-    	nodes:[{name: '常用文件夹',id: 1,alias: 'changyong',children: [{name: '所有未读',id: 11,href: 'http://www.layui.com/',alias: 'weidu'}, {name: '置顶邮件',id: 12}, {name: '标签邮件',id: 13}]}, {name: '我的邮箱',id: 2,spread: true,children: [{name: 'QQ邮箱',id: 21,spread: true,children: [{name: '收件箱',id: 211,children: [{name: '所有未读',id: 2111}, {name: '置顶邮件',id: 2112}, {name: '标签邮件',id: 2113}]}, {name: '已发出的邮件',id: 212}, {name: '垃圾邮件',id: 213}]}, {name: '阿里云邮',id: 22,children: [{name: '收件箱',id: 221}, {name: '已发出的邮件',id: 222}, {name: '垃圾邮件',id: 223}]}]}],
-    	click:function(node) {
-    		var $select=$($(this)[0].elem).parents(".layui-form-select");
-    		$select.removeClass("layui-form-selected").find(".layui-select-title span").html(node.name).end().find("input:hidden[name='parentId']").val(node.id);
-    	}
-    });
-	  
+    $.ajax({
+		method: 'POST',
+		url : ctx + '/sys/menu/choseMenu',
+		dataType : 'json',
+        success: function (result) {
+            // 选择菜单下拉选
+            layui.tree({
+            	elem:'#classtree',
+            	href:'javascript:;',
+            	nodes:result,
+            	click:function(node) {
+            		var $select=$($(this)[0].elem).parents(".layui-form-select");
+            		$select.removeClass("layui-form-selected").find(".layui-select-title span").html(node.name).end().find("input:hidden[name='parentId']").val(node.id);
+            		console.log(request.getMaxMenuSort(ctx + '/sys/menu/add/' + node.id));
+            	}
+            });
+        },
+		error : function(result) {
+			layer.msg('加载菜单树形列表失败', {icon: 5,time: 2000,shift: 6}, function(){});
+		}
+    })
+    
 	$(".downpanel").on("click",".layui-select-title",function(e) {
 		$(".layui-form-select").not($(this).parents(".layui-form-select")).removeClass("layui-form-selected");
 		$(this).parents(".downpanel").toggleClass("layui-form-selected");

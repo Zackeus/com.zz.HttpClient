@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.zz.HttpClient.Bean.Basic.LayuiResult;
+import com.zz.HttpClient.Bean.Basic.AjaxResult;
 import com.zz.HttpClient.Bean.Basic.Page;
 import com.zz.HttpClient.Bean.Sys.timer.collectionRobot.CollectionRobotTimer;
 import com.zz.HttpClient.Controller.basic.BaseTimerController;
@@ -109,7 +109,7 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 		collectionRobotTimer.setUpdateDate(new Date());
 		collectionRobotTimer.setCreateDate(collectionRobotTimer.getUpdateDate());
 		collectionRobotTimerService.addJob(collectionRobotTimer);
-		renderString(response, new LayuiResult(0, "增加任务成功"));
+		renderString(response, new AjaxResult(0, "增加任务成功"));
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 			@DataVerificat(service = CollectionRobotTimerService.class) @RequestParam(value = "jobName") String jobName,
 			HttpServletRequest request, HttpServletResponse response) {
 		collectionRobotTimerService.startJob(new CollectionRobotTimer(jobName));
-		renderString(response, new LayuiResult(0, "启动任务成功"));
+		renderString(response, new AjaxResult(0, "启动任务成功"));
 	}
 
 	/**
@@ -143,7 +143,7 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 			@DataVerificat(service = CollectionRobotTimerService.class) @RequestParam(value = "jobName") String jobName,
 			HttpServletRequest request, HttpServletResponse response) {
 		collectionRobotTimerService.stopJob(new CollectionRobotTimer(jobName));
-		renderString(response, new LayuiResult(0, "停止任务成功"));
+		renderString(response, new AjaxResult(0, "停止任务成功"));
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 		// 更新启动
 		collectionRobotTimer.setStatus(true);
 		collectionRobotTimerService.updateJob(collectionRobotTimer);
-		renderString(response, new LayuiResult(0, "更新任务成功"));
+		renderString(response, new AjaxResult(0, "更新任务成功"));
 	}
 
 	/**
@@ -180,7 +180,7 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 			@DataVerificat(service = CollectionRobotTimerService.class) @RequestParam(value = "jobName") String jobName,
 			HttpServletRequest request, HttpServletResponse response) {
 		collectionRobotTimerService.deleteJob(new CollectionRobotTimer(jobName));
-		renderString(response, new LayuiResult(0, "删除任务成功"));
+		renderString(response, new AjaxResult(0, "删除任务成功"));
 	}
 
 }

@@ -28,6 +28,21 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 	
 	/**
 	 * 
+	 * @Title：getMneuByParentId
+	 * @Description: TODO(根据Id查询菜单)
+	 * @see：
+	 * @param parentid
+	 * @return 
+	 */
+	@Cacheable(value = {"sysMenuCache"}, keyGenerator = "cacheKeyGenerator")
+	@Override
+	public Menu get(String id) {
+		return menuDao.get(id);
+	}
+
+	
+	/**
+	 * 
 	 * @Title：findAllList
 	 * @Description: TODO(获取全部菜单列表（父子菜单不嵌套）)
 	 * @see：
@@ -64,6 +79,20 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 	@Cacheable(value = {"sysMenuCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Menu> getMenuList(Menu menu) {
 		return menuDao.getMenuList(menu);
+	}
+	
+	/**
+	 * 
+	 * @Title：addMenu
+	 * @Description: TODO(增加菜单)
+	 * @see：
+	 * @param menu
+	 * @return
+	 */
+	@CacheEvict(value = {"sysMenuCache"}, allEntries = true, beforeInvocation = true)
+	public int addMenu(Menu menu) {
+		menu.preInsert();
+		return menuDao.insert(menu);
 	}
 	
 	/**

@@ -26,10 +26,6 @@ public class WebUtils extends org.apache.shiro.web.util.WebUtils {
 	 */
     public static boolean isAjaxRequest(HttpServletRequest request) {
         String requestedWith = request.getHeader(X_REQUESTED_WITH);
-        if (StringUtils.isNoneEmpty(requestedWith) && StringUtils.equals(requestedWith, XML_HTTP_REQUEST)) {
-            return true;
-        } else {
-            return false;
-        }
+        return StringUtils.isNoneEmpty(requestedWith) && StringUtils.equals(requestedWith, XML_HTTP_REQUEST);
     }
 }

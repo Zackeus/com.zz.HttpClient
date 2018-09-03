@@ -136,6 +136,22 @@ layui.define(['jquery','layer'],function(exports){
         			}
         		});
 			},
+			// 获取菜单最大排序
+			getMaxMenuSort: function (url) {
+				var returnMsg;
+        		$.ajax({
+        			async : false,
+        			method : 'POST',
+        			url : url,
+        			dataType : 'json',
+        			success : function(result) {
+        				returnMsg = result;
+        			},
+        			error : function(result) {
+        			}
+        		});
+        		return returnMsg;
+			},
 			// 添加按钮
 			addMenu: function (url, data, btn) {
         		$.ajax({

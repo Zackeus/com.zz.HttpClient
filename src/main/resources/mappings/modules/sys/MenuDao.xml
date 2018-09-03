@@ -11,7 +11,7 @@
       	M.[HREF],
       	M.[SPREAD],
       	M.[CREATE_DATE],
-      	M.[UPDATE_TIME],
+      	M.[UPDATE_DATE],
       	M.[CREATE_BY],
       	M.[UPDATE_BY],
       	M.[SYS_ID],
@@ -30,6 +30,14 @@
 		<result property="parentId" column="PARENT_ID" />
 		<collection property="children" column="ID" select="getAllMenuList"/>
 	</resultMap>
+	
+	<!-- 根据ID查询 -->
+	<select id="get" resultType="Menu">
+		SELECT
+		<include refid="menuColumns"/>
+		FROM [Message].[dbo].[SYS_MENU] M
+		WHERE M.[ID] = #{id}
+	</select>
 	
 	<!-- 获取全部菜单列表 包括功能菜单 -->
 	<select id="findAllList" resultType="Menu">
@@ -89,5 +97,26 @@
 	<select id="getMaxSortById" resultType="int">
 		SELECT DISTINCT MAX([SORT]) FROM [Message].[dbo].[SYS_MENU] WHERE [PARENT_ID] = #{parentId}
 	</select>
+	
+	<!-- 增加菜单按钮 -->
+	<insert id="insert">
+		INSERT INTO [Message].[dbo].[SYS_MENU]
+		(<include refid="menuColumns"/>)
+		VALUES (
+			#{id},
+			#{parentId},
+			#{name},
+			#{icon},
+			#{sort},
+			#{href},
+			#{spread},
+			#{createDate},
+			#{updateDate},
+			#{createBy.id},
+			#{updateBy.id},
+			#{sysId},
+			#{remarks}
+		)
+	</insert>
 	
 </mapper>

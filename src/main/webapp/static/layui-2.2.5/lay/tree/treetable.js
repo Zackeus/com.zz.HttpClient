@@ -2,6 +2,7 @@ layui.define(['layer', 'table'], function (exports) {
     var $ = layui.jquery;
     var layer = layui.layer;
     var table = layui.table;
+    var globalParam;
 
     var treetable = {
         // 渲染树形表格
@@ -18,6 +19,8 @@ layui.define(['layer', 'table'], function (exports) {
                     treetable.init(param, res.data);
                 });
             }
+            globalParam = param;
+            return this;
         },
         // 渲染表格
         init: function (param, data) {
@@ -187,6 +190,12 @@ layui.define(['layer', 'table'], function (exports) {
                     $ti.trigger('click');
                 }
             });
+        },
+        // 表格重载
+        reload: function () {
+        	// 重写参数 告知须重载表格
+        	globalParam.data = undefined;
+        	treetable.render(globalParam);
         }
     };
 

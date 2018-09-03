@@ -2,7 +2,16 @@ package com.zz.HttpClient.Bean.Sys;
 
 import java.util.List;
 
+import javax.validation.GroupSequence;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.zz.HttpClient.Bean.Basic.DataEntity;
+import com.zz.HttpClient.Service.sys.MenuService;
+import com.zz.HttpClient.Service.sys.valid.First;
+import com.zz.HttpClient.Service.sys.valid.Second;
+import com.zz.HttpClient.Util.annotation.validator.DataVerificat;
 
 /**
  * 
@@ -12,15 +21,24 @@ import com.zz.HttpClient.Bean.Basic.DataEntity;
  * @author zhou.zhang
  * @date 2018年8月10日 上午11:07:33
  */
+@GroupSequence({Menu.class, First.class, Second.class})
 public class Menu extends DataEntity<Menu> {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotBlank(message = "{menu.parentId.NotBlank}")
+	@DataVerificat(service = MenuService.class, message = "{menu.parentId.DataVerificat}", groups = {First.class})
 	private String parentId; 		// 父级标识
+	
+	@NotBlank(message = "{menu.name.NotBlank}")
 	private String name; 			// 菜单名称
 	private String icon; 			// 菜单图标
+	
+	@NotNull(message = "{menu.sort.NotNull}")
 	private Integer sort; 			// 排序
 	private String href; 			// 链接
+	
+	@NotNull(message = "{menu.spread.NotNull}")
 	private boolean spread; 		// 是否展开
 	private String sysId; 			// 系统ID
 	private List<Menu> children; 	// 子菜单

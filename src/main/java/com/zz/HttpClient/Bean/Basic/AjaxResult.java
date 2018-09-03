@@ -10,18 +10,18 @@ import java.io.Serializable;
  * @author zhou.zhang
  * @date 2018年8月16日 下午4:52:45
  */
-public class LayuiResult implements Serializable {
+public class AjaxResult implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Integer code; 	// 响应code
 	private String message; // 响应内容
 
-	public LayuiResult() {
+	public AjaxResult() {
 		super();
 	}
 
-	public LayuiResult(Integer code, String message) {
+	public AjaxResult(Integer code, String message) {
 		super();
 		this.code = code;
 		this.message = message;

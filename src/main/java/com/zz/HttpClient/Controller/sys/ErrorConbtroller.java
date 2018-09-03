@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.zz.HttpClient.Bean.Basic.LayuiResult;
+import com.zz.HttpClient.Bean.Basic.AjaxResult;
 import com.zz.HttpClient.Controller.basic.BaseController;
 import com.zz.HttpClient.Util.WebUtils;
 
@@ -34,7 +34,7 @@ public class ErrorConbtroller extends BaseController {
 	@RequestMapping(value = "/404")
 	public String pageNotExist(HttpServletRequest request, HttpServletResponse response) {
 		if (WebUtils.isAjaxRequest(request)) {
-			renderString(response, new LayuiResult(404, "访问路径不存在"));
+			renderString(response, new AjaxResult(404, "访问路径不存在"));
 			return null;
 		} 
 		return "error/404";
