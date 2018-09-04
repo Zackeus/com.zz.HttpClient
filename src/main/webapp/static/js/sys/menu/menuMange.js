@@ -44,7 +44,7 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
 			break;
 			
 		case "edit":
-			console.log('编辑');
+			editMenu(obj.data);
 			break;
 			
 		case "del":
@@ -61,9 +61,43 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
     	openAddMenu(data.id);
 	}
     
+    function editMenu(data) {
+    	var editMenuIndex = layui.layer.open({
+            type: 2,
+            title: '编辑菜单', 		// 不显示标题栏
+            closeBtn: 1,			// 关闭按钮
+            shade: 0, 				// 遮罩
+            shadeClose: false, 		// 是否点击遮罩关闭
+            anim: 0, 				// 弹出动画
+            isOutAnim: true, 		// 关闭动画
+            scrollbar: false, 		// 是否允许浏览器出现滚动条
+            maxmin: true, 			// 最大最小化
+            id: 'LAY_EditMenu', 	// 用于控制弹层唯一标识
+            moveType: 1,
+            content: [ctx + '/sys/menu/edit/' + data.id],
+            success : function(layero, index){
+                var body = layui.layer.getChildFrame('body', index);
+                setTimeout(function(){
+                    layui.layer.tips('点击此处返回菜单列表', '.layui-layer-setwin .layui-layer-close', {
+                        tips: 3
+                    });
+                },500)
+            },
+            end:function(index) {
+            	menuListIns.reload();
+           }
+    	});
+    	layui.layer.full(editMenuIndex);
+        window.sessionStorage.setItem("editMenuIndex", editMenuIndex);
+        $(window).on("resize",function() {
+        	layui.layer.full(window.sessionStorage.getItem("editMenuIndex"));
+        })
+		
+	}
+    
     // 删除菜单
     function delMenu(data) {
-        layer.msg('确定要删除此菜单及其所有的子菜单?', {
+        layer.msg('确定要删除此菜单?', {
         	time: 0, 
         	btn: ['确定', '取消'],
             btn1: function(index, layero) {

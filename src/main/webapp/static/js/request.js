@@ -178,6 +178,32 @@ layui.define(['jquery','layer'],function(exports){
         			}
         		});
 			},
+			// 编辑菜单
+			editMenu: function (url, data, btn) {
+        		$.ajax({
+        			method: 'POST',
+        			url : url,
+        			contentType : 'application/json',
+        			dataType : 'json',
+        			data : JSON.stringify(data),
+        			beforeSend: function() {
+        				btn.text("提交中...").attr("disabled","disabled").addClass("layui-disabled");
+        			},
+        			success : function(result) {
+        				if (result.code == "0") {
+        					layer.msg(result.message, {icon: 6,time: 1000});
+        					parent.layer.close(parent.layer.getFrameIndex(window.name));
+        				} else {
+							layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
+							btn.text("提交").attr("disabled",false).removeClass("layui-disabled");
+        				}
+        			},
+        			error : function(result) {
+        				layer.msg('响应失败', {icon: 5,time: 2000,shift: 6}, function(){});
+        				btn.text("提交").attr("disabled",false).removeClass("layui-disabled");
+        			}
+        		});
+			},
 			// 删除菜单
 			delMenu: function (data, index, url, tableIns) {
         		$.ajax({
@@ -193,7 +219,7 @@ layui.define(['jquery','layer'],function(exports){
         			success : function(result) {
         				layer.closeAll('loading');
         				if (result.code == "0") {
-        					layer.msg('操作成功', {icon: 6,time: 1000});
+        					layer.msg(result.message, {icon: 6,time: 1000});
         					tableIns.reload();
         				} else {
         					layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});

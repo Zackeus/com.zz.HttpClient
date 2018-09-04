@@ -119,6 +119,23 @@
 		)
 	</insert>
 	
+	<!-- 更新菜单 -->
+	<update id="update">
+		UPDATE [Message].[dbo].[SYS_MENU] SET
+			[PARENT_ID] = #{parentId},
+			[NAME] = #{name},
+			[ICON] = #{icon},
+			[SORT] = #{sort},
+			[HREF] = #{href},
+			[SPREAD] = #{spread},
+			[UPDATE_DATE] = #{updateDate},
+			[UPDATE_BY] = #{updateBy.id},
+			[SYS_ID] = #{sysId},
+			[REMARKS] = #{remarks}
+		WHERE [ID] = #{id}
+	</update>
+	
+	<!-- 删除菜单 -->
 	<delete id="delete">
         DELETE FROM [Message].[dbo].[SYS_MENU] WHERE [ID] = #{id}
     </delete>

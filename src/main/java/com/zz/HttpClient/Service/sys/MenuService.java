@@ -119,16 +119,16 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 	
 	/**
 	 * 
-	 * @Title：addMenu
-	 * @Description: TODO(增加菜单)
+	 * @Title：save
+	 * @Description: TODO(菜单添加和更新)
 	 * @see：
 	 * @param menu
 	 * @return
 	 */
 	@CacheEvict(value = {"sysMenuCache"}, allEntries = true, beforeInvocation = true)
-	public int addMenu(Menu menu) {
-		menu.preInsert();
-		return menuDao.insert(menu);
+	@Override
+	public void save(Menu entity) {
+		super.save(entity);
 	}
 	
 	/**

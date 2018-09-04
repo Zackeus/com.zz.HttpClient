@@ -21,7 +21,6 @@ import com.zz.HttpClient.Service.sys.MenuService;
 import com.zz.HttpClient.Service.sys.valid.BaseVaild;
 import com.zz.HttpClient.Service.sys.valid.CreateVaild;
 import com.zz.HttpClient.Service.sys.valid.UpdateVaild;
-import com.zz.HttpClient.Util.Logs;
 import com.zz.HttpClient.Util.ObjectUtils;
 import com.zz.HttpClient.Util.UserUtils;
 import com.zz.HttpClient.Util.WebUtils;
@@ -101,10 +100,9 @@ public class MenuController extends BaseController {
 	 * @return
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = "/add/{id}")
+	@RequestMapping(value = {"/add/{id}", "/maxMenuSort/{id}"})
 	public String addMenuPage(@PathVariable("id") String id, HttpServletRequest request, 
 			HttpServletResponse response, Model model) {
-		Logs.info("ID:" + id);
 		Integer sort  = menuService.getMaxSortById(id);
 		if (WebUtils.isAjaxRequest(request)) {
 			JSONObject jsonObject = new JSONObject();
@@ -132,14 +130,51 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = "/add", produces = "application/json;charset=UTF-8")
 	public void addMenu(@Validated({ Default.class, CreateVaild.class }) @RequestBody Menu menu, 
 			HttpServletRequest request, HttpServletResponse response) {
-		menuService.addMenu(menu);
+		menuService.save(menu);
 		renderString(response, new AjaxResult(0, "添加菜单成功"));
 	}
 	
 	/**
 	 * 
+	 * @Title：editMenuPage
+	 * @Description: TODO(编辑菜单页面)
+	 * @see：
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @param model
+	 */
+	@RequiresRoles(value = { "admin" })
+	@RequestMapping(value = "/edit/{id}")
+	public String editMenuPage(@PathVariable("id") String id, HttpServletRequest request, 
+			HttpServletResponse response, Model model) {
+		Menu menu = menuService.get(id);
+		model.addAttribute("menu", menu);
+		model.addAttribute("parentMenu", menuService.get(menu.getParentId()));
+		return "sys/menu/editMenu";
+	}
+	
+	/**
+	 * 
+	 * @Title：editMenu
+	 * @Description: TODO(编辑菜单)
+	 * @see：
+	 * @param menu
+	 * @param request
+	 * @param response
+	 */
+	@RequiresRoles(value = { "admin" })
+	@RequestMapping(value = "/edit", produces = "application/json;charset=UTF-8")
+	public void editMenu(@Validated({ Default.class, UpdateVaild.class, BaseVaild.class }) @RequestBody Menu menu, 
+			HttpServletRequest request, HttpServletResponse response) {
+		menuService.save(menu);
+		renderString(response, new AjaxResult(0, "更新菜单成功"));
+	}
+	
+	/**
+	 * 
 	 * @Title：delMenu
-	 * @Description: TODO(删除按钮)
+	 * @Description: TODO(删除菜单)
 	 * @see：
 	 * @param request
 	 * @param response
@@ -149,7 +184,7 @@ public class MenuController extends BaseController {
 	public void delMenu(@Validated({ Default.class, UpdateVaild.class, BaseVaild.class }) @RequestBody Menu menu, 
 			HttpServletRequest request, HttpServletResponse response) {
 		menuService.delete(menu);
-		renderString(response, new AjaxResult(0, "删除成功"));
+		renderString(response, new AjaxResult(0, "删除菜单成功"));
 	}
 	
 }

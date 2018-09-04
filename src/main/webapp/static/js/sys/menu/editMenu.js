@@ -91,8 +91,8 @@ layui.use(['request','form','layer','laydate','table','laytpl','tree'],function(
     	parent.layer.close(parent.layer.getFrameIndex(window.name));
     });
     
-    form.on('submit(addMenu)', function(data) {
-    	request.addMenu(ctx + '/sys/menu/add', data.field, $(this));
+    form.on('submit(editMenu)', function(data) {
+    	request.editMenu(ctx + '/sys/menu/edit', data.field, $(this));
     	return false;
     });
     
