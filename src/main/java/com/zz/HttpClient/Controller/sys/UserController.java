@@ -42,9 +42,4 @@ public class UserController extends BaseController {
 		return "redirect:" + "/sys/login";
 	}
 	
-	@RequestMapping(value = "/clearCache")
-	public void clearCache(HttpServletRequest request, HttpServletResponse response) {
-		UserUtils.clearCache();
-	}
-
 }

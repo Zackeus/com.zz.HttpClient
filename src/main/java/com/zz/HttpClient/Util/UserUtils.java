@@ -267,8 +267,4 @@ public class UserUtils {
 		getSession().removeAttribute(key);
 	}
 	
-	public static void clearCache() {
-		userUtils.roleService.clearCache();
-	}
-	
 }
