@@ -13,14 +13,6 @@ import com.zz.HttpClient.Dao.Basic.CrudDao;
  */
 public interface UserDao extends CrudDao<User> {
 	
-	/**
-	 * 
-	 * @Title：getByLoginName
-	 * @Description: TODO(根据登录名称查询用户)
-	 * @see：
-	 * @param user
-	 * @return
-	 */
 	public User getByLoginName(User user);
 
 }

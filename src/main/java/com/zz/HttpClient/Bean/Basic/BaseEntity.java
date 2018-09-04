@@ -10,9 +10,11 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
+import com.zz.HttpClient.Bean.Sys.User;
 import com.zz.HttpClient.Config.GlobalConfig;
 import com.zz.HttpClient.Service.sys.valid.BaseVaild;
 import com.zz.HttpClient.Util.StringUtils;
+import com.zz.HttpClient.Util.UserUtils;
 
 /**
  * 
@@ -31,6 +33,11 @@ public abstract class BaseEntity<T> implements Serializable {
 	 */
 	@NotBlank(message = "{BaseEntity.id.NotBlank}", groups = {BaseVaild.class})
 	protected String id;
+	
+	/**
+	 * 当前用户
+	 */
+	protected User currentUser;
 	
 	/**
 	 * 当前实体分页对象
@@ -64,6 +71,19 @@ public abstract class BaseEntity<T> implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	@JsonIgnore
+	@XmlTransient
+	public User getCurrentUser() {
+		if(currentUser == null){
+			currentUser = UserUtils.getUser();
+		}
+		return currentUser;
+	}
+	
+	public void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
 	}
 	
 	@JsonIgnore

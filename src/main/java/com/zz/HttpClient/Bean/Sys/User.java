@@ -92,7 +92,6 @@ public class User extends DataEntity<User> {
 		return id;
 	}
 
-	@JsonIgnore
 	@NotNull(message="归属公司不能为空")
 	public Office getCompany() {
 		return company;
@@ -102,7 +101,6 @@ public class User extends DataEntity<User> {
 		this.company = company;
 	}
 	
-	@JsonIgnore
 	@NotNull(message="归属部门不能为空")
 	public Office getOffice() {
 		return office;
@@ -121,6 +119,15 @@ public class User extends DataEntity<User> {
 		this.loginName = loginName;
 	}
 
+	/**
+	 * 
+	 * @Title：getPassword
+	 * @Description: TODO()
+	 * @see：
+	 * 注意使用 @JsonIgnore
+	 * 在json序列化时，将java bean中的一些属性忽略掉
+	 * @return
+	 */
 	@JsonIgnore
 	@Length(min=1, max=100, message="密码长度必须介于 1 和 100 之间")
 	public String getPassword() {

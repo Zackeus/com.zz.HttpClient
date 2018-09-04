@@ -10,9 +10,9 @@
 	<meta http-equiv="Cache-Control" content="no-cache">
 	<meta http-equiv="Cache-Control" content="no-store">
 	<script type="text/javascript">var ctx = '${ctx}', ctxStatic='${ctxStatic}';</script>
-	<link type="text/css" rel="stylesheet" href="${ctxStatic}/layui-2.2.5/css/layui.css"/>
+	<link type="text/css" rel="stylesheet" href="${ctxStatic}/layui-v2.4.3/css/layui.css"/>
 	<link type="text/css" rel="stylesheet" href="${ctxStatic}/css/public.css"/>
-	<script type="text/javascript" src="${ctxStatic}/layui-2.2.5/layui.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/layui-v2.4.3/layui.js"></script>
 	
 	
 	

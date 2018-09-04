@@ -77,4 +77,18 @@
 		WHERE a.login_name = #{loginName} AND a.del_flag = #{DEL_FLAG_NORMAL}
 	</select>
 	
+	<!-- 分页查询用户信息 -->
+	<select id="findList" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM [10.5.60.80].[jeesite-yfc].[dbo].[sys_user] a
+		<include refid="userJoins"/>
+		<if test="role != null and role.id != null and role.id != ''">
+			JOIN [10.5.60.80].[jeesite-yfc].[dbo].[sys_user_role] ur ON ur.user_id = a.id AND ur.role_id = #{role.id}
+		</if>
+		WHERE a.del_flag = '0'
+		AND a.id != '1'
+		ORDER BY c.code, o.code, a.name
+	</select>
+	
 </mapper>  

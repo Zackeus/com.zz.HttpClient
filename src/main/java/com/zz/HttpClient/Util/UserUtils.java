@@ -20,9 +20,9 @@ import com.zz.HttpClient.Bean.Sys.Menu;
 import com.zz.HttpClient.Bean.Sys.Principal;
 import com.zz.HttpClient.Bean.Sys.Role;
 import com.zz.HttpClient.Bean.Sys.User;
-import com.zz.HttpClient.Dao.sys.UserDao;
 import com.zz.HttpClient.Service.sys.MenuService;
 import com.zz.HttpClient.Service.sys.RoleService;
+import com.zz.HttpClient.Service.sys.UserService;
 
 /**
  * 
@@ -51,7 +51,7 @@ public class UserUtils {
 	private SessionDAO sessionDAO;
 	
 	@Autowired
-	private UserDao userDao;
+	private UserService userService;
 	
 	@Autowired
 	private RoleService roleService;
@@ -72,7 +72,7 @@ public class UserUtils {
 	 * @return 取不到返回null
 	 */
 	public static User get(String id){
-		User user = userUtils.userDao.get(id);
+		User user = userUtils.userService.get(id);
 		if (user == null){
 			return null;
 		}
@@ -88,7 +88,7 @@ public class UserUtils {
 	 * @return
 	 */
 	public static User getByLoginName(String loginName){
-		User user = userUtils.userDao.getByLoginName(new User(null, loginName));
+		User user = userUtils.userService.getByLoginName(new User(null, loginName));
 		if (user == null){
 			return null;
 		}
