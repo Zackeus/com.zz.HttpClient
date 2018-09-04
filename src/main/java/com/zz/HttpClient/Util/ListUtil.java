@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
 
-public class ListUtil {
+public class ListUtil extends ListUtils {
 
 	/**
 	 * 

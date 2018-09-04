@@ -22,7 +22,7 @@
 		<id property="id" column="ID" />
 		<result property="parentId" column="PARENT_ID" />
 		<result property="userId" column="USER_ID" />
-		<collection property="children" column="{parentId = ID, userId = USER_ID}" select="getMenuList"/>
+		<collection property="children" column="{id = ID, userId = USER_ID}" select="getMenuList"/>
 	</resultMap>
 	
 	<resultMap type="Menu" id="allMenuResultMap">
@@ -70,16 +70,16 @@
 		ORDER BY M.[SORT]
 	</select>
 	
-	<!-- 获取全部菜单列表 -->
+	<!-- 根据父级标识获取全部子菜单列表 -->
 	<select id="getAllMenuList" resultMap="allMenuResultMap">
 		SELECT DISTINCT
 		<include refid="menuColumns"/>
 		FROM [Message].[dbo].[SYS_MENU] M
-		WHERE M.[PARENT_ID] = #{parentId}
+		WHERE M.[PARENT_ID] = #{id}
 		ORDER BY [SORT]
 	</select>
 	
-	<!-- 通过用户权限查询左侧菜单列表 -->
+	<!-- 通过用户权限根据父级标识查询子菜单列表 -->
 	<select id="getMenuList" resultMap="menuResultMap">
 		SELECT DISTINCT
 		<include refid="menuColumns"/>,
@@ -89,7 +89,7 @@
 		JOIN [Message].[dbo].[SYS_ROLE] R ON R.[ID] = RM.[ROLE_ID]
 		JOIN [Message].[dbo].[SYS_USER_ROLE] UR ON UR.[ROLE_ID] = r.[ID]
 		JOIN [10.5.60.80].[jeesite-yfc].[dbo].[sys_user] U ON U.id = UR.[USER_ID] AND u.id = #{userId}
-		WHERE M.[PARENT_ID] = #{parentId}
+		WHERE M.[PARENT_ID] = #{id}
 		ORDER BY [SORT]
 	</select>
 	

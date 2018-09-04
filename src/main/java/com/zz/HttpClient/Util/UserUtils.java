@@ -138,12 +138,12 @@ public class UserUtils {
 	 * @see：
 	 * @return
 	 */
-	public static List<Menu> getMenuListByUser(String parentId) {
+	public static List<Menu> getMenuListByUser(String id) {
 		Principal principal = getPrincipal();
 		if (principal.isAdmin()) {
-			return userUtils.menuService.getAllMenuList(new Menu(principal, parentId));
+			return userUtils.menuService.getAllMenuList(new Menu(principal, id));
 		}
-		return userUtils.menuService.getMenuList(new Menu(principal, parentId));
+		return userUtils.menuService.getMenuList(new Menu(principal, id));
 	}
 	
 	/**

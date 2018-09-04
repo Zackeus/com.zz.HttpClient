@@ -12,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.zz.HttpClient.Bean.Basic.AjaxResult;
 import com.zz.HttpClient.Bean.Basic.LayuiTable;
@@ -47,16 +46,16 @@ public class MenuController extends BaseController {
 	/**
 	 * 
 	 * @Title：getMenuList
-	 * @Description: TODO(系统菜单) 
+	 * @Description: TODO(根据一级菜单生成左侧菜单树)
 	 * @see：
+	 * @param id 一级菜单ID
 	 * @param request
 	 * @param response
-	 * @return
 	 */
-	@RequestMapping(value = "/list")
-	public void getMenuList(@RequestParam(name = "parentId") String parentId, HttpServletRequest request,
+	@RequestMapping(value = "/list/{id}")
+	public void getMenuList(@PathVariable("id") String id, HttpServletRequest request,
 			HttpServletResponse response) {
-		renderString(response, UserUtils.getMenuListByUser(parentId));
+		renderString(response, UserUtils.getMenuListByUser(id));
 	}
 	
 	/**

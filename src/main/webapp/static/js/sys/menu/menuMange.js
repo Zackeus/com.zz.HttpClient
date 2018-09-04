@@ -63,7 +63,7 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
     
     // 删除菜单
     function delMenu(data) {
-        layer.msg('确定要删除此菜单?', {
+        layer.msg('确定要删除此菜单及其所有的子菜单?', {
         	time: 0, 
         	btn: ['确定', '取消'],
             btn1: function(index, layero) {

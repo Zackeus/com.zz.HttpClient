@@ -61,8 +61,8 @@ public class Menu extends DataEntity<Menu> {
 		this.userId = principal.getId();
 	}
 	
-	public Menu(Principal principal, String parentId) {
-		this.parentId = parentId;
+	public Menu(Principal principal, String id) {
+		super(id);
 		this.userId = principal.getId();
 	}
 	

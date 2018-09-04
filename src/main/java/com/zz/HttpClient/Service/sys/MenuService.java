@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.zz.HttpClient.Bean.Sys.Menu;
 import com.zz.HttpClient.Dao.sys.MenuDao;
 import com.zz.HttpClient.Service.Basic.CrudService;
+import com.zz.HttpClient.Util.ObjectUtils;
 
 /**
  * 
@@ -65,11 +66,27 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 		return menuDao.findAllList();
 	}
 	
+	/**
+	 * 
+	 * @Title：getAllTreeMenus
+	 * @Description: TODO(获取全部一级菜单)
+	 * @see：
+	 * @param menu
+	 * @return
+	 */
 	@Cacheable(value = {"sysMenuCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Menu> getAllTreeMenus(Menu menu) {
 		return menuDao.getAllTreeMenus(menu);
 	}
 	
+	/**
+	 * 
+	 * @Title：getTreeMenus
+	 * @Description: TODO(根据用户权限查询一级菜单)
+	 * @see：
+	 * @param menu
+	 * @return
+	 */
 	@Cacheable(value = {"sysMenuCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Menu> getTreeMenus(Menu menu) {
 		return menuDao.getTreeMenus(menu);
@@ -78,7 +95,7 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 	/**
 	 * 
 	 * @Title：getAllMenuList
-	 * @Description: TODO(获取全部菜单列表（父子菜单嵌套）)
+	 * @Description: TODO(根据父级标识获取全部子菜单列表（父子菜单嵌套）)
 	 * @see：此方法不能使用缓存，因开启了懒加载模式，开启缓存可能会使嵌套查询不执行
 	 * @param menu
 	 * @return
@@ -87,6 +104,14 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 		return menuDao.getAllMenuList(menu);
 	}
 	
+	/**
+	 * 
+	 * @Title：getMenuList
+	 * @Description: TODO(通过用户权限根据父级标识查询子菜单列表)
+	 * @see：
+	 * @param menu
+	 * @return
+	 */
 	@Cacheable(value = {"sysMenuCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Menu> getMenuList(Menu menu) {
 		return menuDao.getMenuList(menu);
@@ -117,7 +142,20 @@ public class MenuService extends CrudService<MenuDao, Menu> {
 	@CacheEvict(value = {"sysMenuCache"}, allEntries = true, beforeInvocation = true)
 	@Override
 	public void delete(Menu entity) {
+		Menu menu = get(entity.getId());
+		List<Menu> childrens = getAllMenuList(menu);
 		super.delete(entity);
+		
+		if (!ObjectUtils.isEmpty(childrens)) {
+			for (Menu childMenu : childrens) {
+	            if (ObjectUtils.isEmpty(childMenu.getChildren())) {
+	            	super.delete(childMenu);
+	            } else {
+	                //递归删除节点
+	                this.delete(childMenu);
+	            }
+	        }
+		} 
 	}
 	
 }

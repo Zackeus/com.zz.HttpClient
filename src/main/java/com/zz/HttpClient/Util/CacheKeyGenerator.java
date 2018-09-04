@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
@@ -45,8 +46,14 @@ public class CacheKeyGenerator implements KeyGenerator {
             } else if (ClassUtils.isPrimitiveOrWrapper(param.getClass()) || param instanceof String) {
                 key.append(param);
             } else {
-            	// 实体 Bean 参数 Key生成策略 :使用反射将 属性和对应值注入 Key中
-            	for (Field field : param.getClass().getDeclaredFields()) {
+            	/*
+            	 * 实体 Bean 参数 Key生成策略 :使用反射将 属性和对应值注入 Key中
+            	 * 注：
+            	 * class.getDeclaredFields()能获取所有属性（public、protected、default、private），但不包括父类属性
+            	 * 相对的class.getFields() 获取类的属性（public），包括父类；
+            	 * apache commons包下的FieldUtils.getAllFields()可以获取类和父类的所有(public、protected、default、private)属性
+            	 * */
+            	for (Field field : FieldUtils.getAllFields(param.getClass())) {
                 	try {
                 		field.setAccessible(true);
                     	key.append(field.getName());
