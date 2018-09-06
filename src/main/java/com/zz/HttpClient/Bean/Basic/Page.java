@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 /**
  * 
@@ -30,7 +31,7 @@ public class Page<T> implements Serializable {
 	private Integer total;			// 总条数，插件会回填这个值
 	private Integer totalPage; 		// 总页数，插件会回填这个值
 	private List<T> list;			// 分页实体数据
-
+	
 	public Page() {
 		super();
 	}
@@ -83,16 +84,18 @@ public class Page<T> implements Serializable {
 		// 默认数据查询成功
 		this(0, "");
 		
-		// 设置页码参数（传递repage参数，来记住页码）
-		String no = request.getParameter("page");
-		if (StringUtils.isNumeric(no)) {
-			this.setPage(Integer.parseInt(no));
+		// 设置页码参数（传递page参数，来记住页码）
+		if (StringUtils.isNumeric(request.getParameter("page"))) {
+			this.setPage(Integer.parseInt(request.getParameter("page")));
+		} else if (request.getAttribute("page") instanceof Integer) {
+			this.setPage((Integer) request.getAttribute("page"));
 		}
 		
-		// 设置页面大小参数（传递repage参数，来记住页码大小）
-		String size = request.getParameter("pageSize");
-		if (StringUtils.isNumeric(size)) {
-			this.setPageSize(Integer.parseInt(size));
+		// 设置页面大小参数（传递pageSize参数，来记住页码大小）
+		if (StringUtils.isNumeric(request.getParameter("pageSize"))) {
+			this.setPageSize(Integer.parseInt(request.getParameter("pageSize")));
+		} else if (request.getAttribute("pageSize") instanceof Integer) {
+			this.setPageSize((Integer) request.getAttribute("pageSize"));
 		}
 	}
 	
@@ -176,10 +179,8 @@ public class Page<T> implements Serializable {
 		this.list = list;
 	}
 
-	@Override
-	public String toString() {
-		return "Page [page=" + page + ", pageSize=" + pageSize + ", useFlag=" + useFlag + ", checkFlag=" + checkFlag
-				+ ", cleanOrderBy=" + cleanOrderBy + ", total=" + total + ", totalPage=" + totalPage + "]";
-	}
-	
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
+    }
 }

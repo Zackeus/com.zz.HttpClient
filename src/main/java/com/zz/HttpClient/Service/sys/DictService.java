@@ -24,6 +24,14 @@ public class DictService extends CrudService<DictDao, Dict> {
 	@Autowired
 	private DictDao dictDao;
 	
+	/**
+	 * 
+	 * @Title：findListByType
+	 * @Description: TODO(根据类型查找字典数据)
+	 * @see：
+	 * @param type
+	 * @return
+	 */
 	@Cacheable(value = {"sysDictCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Dict> findListByType(String type) {
 		return dictDao.findListByType(type);

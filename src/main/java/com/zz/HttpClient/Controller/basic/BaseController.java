@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
+import javax.ws.rs.core.MediaType;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -52,8 +53,9 @@ public abstract class BaseController {
 	
 	protected static final String ISO_ENCODING = "iso-8859-1";
 	
-	protected static final String CONTENT_TYPE = "application/json";
-
+	// 默认返回值类型和字符编码
+	protected static final String DEFAUlT_PRODUCES = MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=" + UTF_ENCODING;
+	
 	/**
 	 * 
 	 * @Title：addMessage
@@ -97,7 +99,7 @@ public abstract class BaseController {
 	 */
 	protected String renderString(HttpServletResponse response, Object object) {
 		if (response != null) {
-			return renderString(response, JsonMapper.toJsonString(object), CONTENT_TYPE);
+			return renderString(response, JsonMapper.toJsonString(object), MediaType.APPLICATION_JSON);
 		}
 		return null;
 	}

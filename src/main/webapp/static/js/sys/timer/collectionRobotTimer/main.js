@@ -23,12 +23,13 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
         text: { 									//	自定义文本
             none: '暂无相关数据' 						//	默认：无数据。注：该属性为 layui 2.2.5 开始新增
         },
-        response: { 								// 定义后端 json 格式，详细参见官方文档
-        	statusName: 'code', 					// 数据状态的字段名称，默认：code
-        	statusCode: 0, 							// 成功的状态码，默认：0
-        	msgName: 'msg', 						// 状态信息的字段名称，默认：msg
-        	countName: 'total', 					// 数据总数的字段名称，默认：count
-        	dataName: 'list' 						// 数据列表的字段名称，默认：data
+        parseData: function(res) { 					//解析成 table 组件所规定的数据 layui 2.4.0 开始新增
+        	return {
+              'code': res.code, 					//解析接口状态
+              'msg': res.msg, 						//解析提示文本
+              'count': res.total, 					//解析数据长度
+              'data': res.list 						//解析数据列表
+            };
         },
         request: {									// 定义前端 json 格式
         	  pageName: 'page', 					// 页码的参数名称，默认：page

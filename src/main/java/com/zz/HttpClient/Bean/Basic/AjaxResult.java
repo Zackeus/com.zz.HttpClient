@@ -19,7 +19,7 @@ public class AjaxResult implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer code; 					// 响应code
-	private String message; 				// 响应内容
+	private String msg; 					// 响应内容
 	private JSONObject customObj; 			// 自定义参数
 
 	public AjaxResult() {
@@ -30,10 +30,10 @@ public class AjaxResult implements Serializable {
 		this(code, message, null);
 	}
 	
-	public AjaxResult(Integer code, String message, JSONObject jsonObject) {
+	public AjaxResult(Integer code, String msg, JSONObject jsonObject) {
 		super();
 		this.code = code;
-		this.message = message;
+		this.msg = msg;
 		this.customObj = jsonObject;
 	}
 
@@ -44,16 +44,16 @@ public class AjaxResult implements Serializable {
 	public void setCode(Integer code) {
 		this.code = code;
 	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
 	
-    public JSONObject getCustomObj() {
+    public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+
+	public JSONObject getCustomObj() {
 		return customObj;
 	}
 

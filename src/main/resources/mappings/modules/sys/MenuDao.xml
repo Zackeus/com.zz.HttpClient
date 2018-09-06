@@ -135,7 +135,7 @@
 		WHERE [ID] = #{id}
 	</update>
 	
-	<!-- 删除菜单 -->
+	<!-- 删除菜单 菜单表设计了级联删除 删除菜单会删除关联表的对应内容-->
 	<delete id="delete">
         DELETE FROM [Message].[dbo].[SYS_MENU] WHERE [ID] = #{id}
     </delete>

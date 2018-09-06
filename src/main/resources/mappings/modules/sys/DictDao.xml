@@ -4,16 +4,25 @@
 
 	<sql id="dictColumns">
 		[ID],
+		[VALUE],
       	[LABEL],
       	[TYPE],
       	[DESCRIPTION],
       	[SORT],
       	[CREATE_DATE],
-      	[UPDATE_TIME],
+      	[UPDATE_DATE],
       	[CREATE_BY],
       	[UPDATE_BY],
       	[REMARKS]
 	</sql>
+	
+	<!-- 分页查询字典信息 -->
+	<select id="findList" resultType="Dict">
+		SELECT
+			<include refid="dictColumns"/>
+		FROM [Message].[dbo].[SYS_DICT]
+		ORDER BY [TYPE], [SORT], [UPDATE_DATE] DESC
+	</select>
 	
 	<!-- 根据类别查询数据字典 -->
 	<select id="findListByType" resultType="Dict">

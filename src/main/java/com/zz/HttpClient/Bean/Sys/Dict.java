@@ -14,6 +14,7 @@ public class Dict extends DataEntity<Dict> {
 
 	private static final long serialVersionUID = 1L;
 
+	private String value;			// 数据值
 	private String label;			// 标签名
 	private String type;			// 类型
 	private String description;		// 描述
@@ -33,6 +34,14 @@ public class Dict extends DataEntity<Dict> {
 		this.type = type;
 		this.description = description;
 		this.sort = sort;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	public String getLabel() {
@@ -67,9 +76,4 @@ public class Dict extends DataEntity<Dict> {
 		this.sort = sort;
 	}
 	
-	@Override
-	public String toString() {
-		return label;
-	}
-
 }

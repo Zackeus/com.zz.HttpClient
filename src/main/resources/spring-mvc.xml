@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans    
@@ -9,9 +10,29 @@
                         http://www.springframework.org/schema/context/spring-context-3.1.xsd    
                         http://www.springframework.org/schema/mvc    
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
-              
-    <!-- validator="validator"注入了校验器-->          
-    <mvc:annotation-driven validator="validator" /> 
+                        
+    <!-- 启动注解驱动的Spring MVC功能，注册请求url和注解POJO类方法的映射 validator="validator"注入了校验器 -->            
+    <mvc:annotation-driven validator="validator">
+    	<!-- 注入自定义的参数解析器 -->
+    	<mvc:argument-resolvers>
+        	<bean class="com.zz.HttpClient.Util.annotation.argumentResolver.PageRequestBody.PageRequestBodyArgumentResolver"/>
+    	</mvc:argument-resolvers>
+    	<mvc:message-converters register-defaults="true">
+    		<!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+		    	<constructor-arg value="UTF-8" />
+			</bean>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+						<!-- 注意 这是传输json格式，无论是ajax还是外部接口传输 -->
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+    	</mvc:message-converters>
+    </mvc:annotation-driven>
 	<!-- 对静态资源文件的访问， 将无法mapping到Controller的path交给default servlet handler处理 -->
 	<mvc:default-servlet-handler />
 	<!-- 静态资源映射 -->
@@ -23,27 +44,6 @@
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
 	
-	<!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
-	<bean
-		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-		<property name="messageConverters">
-			<list>
-				<ref bean="mappingJacksonHttpMessageConverter" /> <!-- JSON转换器 -->
-			</list>
-		</property>
-	</bean>
-	<!--避免IE执行AJAX时，返回JSON出现下载文件 -->
-	<bean id="mappingJacksonHttpMessageConverter"
-		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-		<property name="supportedMediaTypes">
-			<list>
-				<value>text/html;charset=UTF-8</value>
-				<!-- 注意 这是传输json格式，无论是ajax还是外部接口传输 -->
-				<value>application/json;charset=UTF-8</value>
-			</list>
-		</property>
-	</bean>
-
 	<!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">

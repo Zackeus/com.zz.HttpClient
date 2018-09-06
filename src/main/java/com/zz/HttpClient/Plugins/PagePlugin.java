@@ -283,7 +283,7 @@ public class PagePlugin extends BasePlugin {
 	private Object preparedSQL(Invocation invocation, MetaObject metaStatementHandler, BoundSql boundSql, int pageNum,
 			int pageSize) throws Exception {
 		// 分页sql编译
-		String newSql = DIALECT.getLimitString(boundSql.getSql(), pageNum, pageSize);
+		String newSql = DIALECT.getLimitString(boundSql.getSql(), (pageNum - 1) * pageSize + 1, pageSize);
 		// 修改当前需要执行的SQL
 		metaStatementHandler.setValue(DELEGATE_BOUNTSQL_SQL, newSql);
 		// 执行编译，相当于StatementHandler执行了prepared()方法

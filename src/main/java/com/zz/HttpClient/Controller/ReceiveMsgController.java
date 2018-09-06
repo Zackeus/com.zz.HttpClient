@@ -100,6 +100,6 @@ public class ReceiveMsgController extends BaseController {
 			jsonObject.put("status", "success");
 		}
 		
-		renderString(response, jsonObject.toString(), CONTENT_TYPE);
+		renderString(response, jsonObject);
 	}
 }
