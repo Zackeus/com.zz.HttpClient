@@ -42,9 +42,9 @@
         </property>
     </bean>
     <!-- 定义扩展的filter实例 -->
-	<bean id="juheFilter" class="com.zz.HttpClient.Shiro.filter.JuHeFilter" />
-	<bean id="daHanFilter" class="com.zz.HttpClient.Shiro.filter.DaHanFilter" />
-	<bean id="formAuthenticationFilter" class="com.zz.HttpClient.Shiro.filter.LoginAuthenticationFilter">
+	<bean id="juheFilter" class="com.zz.HttpClient.modules.businessData.security.JuHeFilter" />
+	<bean id="daHanFilter" class="com.zz.HttpClient.modules.businessData.security.DaHanFilter" />
+	<bean id="formAuthenticationFilter" class="com.zz.HttpClient.modules.sys.security.LoginAuthenticationFilter">
 		<!-- 自定义登录表单参数 -->
         <property name="usernameParam" value="userName"/>
         <property name="passwordParam" value="passWord"/>
@@ -92,7 +92,7 @@
     </bean>
     <!-- 会话ID生成器 -->
     <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
-    <bean id="sessionListener" class="com.zz.HttpClient.Shiro.SessionListener"/>
+    <bean id="sessionListener" class="com.zz.HttpClient.common.security.SessionListener"/>
     
     <!-- 记住我管理器， authc 的 filter 不能使用 rememberMe 功能 -->
     <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
@@ -112,7 +112,7 @@
 	</bean>
     
     <!-- 自定义域realm -->
-    <bean id="custom_Realm" class="com.zz.HttpClient.Shiro.CustomRealm">
+    <bean id="custom_Realm" class="com.zz.HttpClient.modules.sys.security.LoginCustomRealm">
     	<!-- 将上面声明的密码匹配器注入到自定义 Realm 的属性中去 -->
 		<!-- <property name="credentialsMatcher" ref="credentialsMatcher"/> -->
         <!-- 将自定义的权限匹配器注入到自定义 Realm 中 -->

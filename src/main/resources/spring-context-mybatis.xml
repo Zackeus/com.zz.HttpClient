@@ -74,16 +74,19 @@
     <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->  
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
         <property name="dataSource" ref="dataSource" />
+        <!-- 类型别名扫描包 -->
+        <property name="typeAliasesPackage" value="com.zz.HttpClient"/>
         <!-- 配置mybatis全局配置文件 -->  
         <property name="configLocation" value="classpath:mybatis-config.xml"/>  
         <!-- 自动扫描mapping.xml文件 -->  
         <property name="mapperLocations" value="classpath:mappings/**/*.xml"></property>  
     </bean>  
   
-    <!-- DAO接口所在包名，Spring会自动查找其下的类 -->  
+    <!-- 扫描basePackage下所有以@MyBatisDao注解的接口 -->  
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
-        <property name="basePackage" value="com.zz.HttpClient.Dao" />  
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>  
+        <property name="basePackage" value="com.zz.HttpClient" />  
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+        <property name="annotationClass" value="com.zz.HttpClient.common.annotation.MyBatisDao"/> 
     </bean>  
   
     <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->  
@@ -96,7 +99,7 @@
     <tx:annotation-driven transaction-manager="transactionManager" />
     
     <!-- quartz的定时任务的factorybean,配置其他config -->   
-    <bean id="jobFactory" class="com.zz.HttpClient.Util.timer.JobFactory"></bean>  
+    <bean id="jobFactory" class="com.zz.HttpClient.modules.timer.utils.JobFactory"></bean>  
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
         <property name="jobFactory" ref="jobFactory"></property>  
     </bean>

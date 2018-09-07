@@ -14,7 +14,7 @@
   <function>
     <description>获取字典对象列表</description>
     <name>getDictList</name>
-    <function-class>com.zz.HttpClient.Util.DictUtils</function-class>
+    <function-class>com.zz.HttpClient.modules.sys.utils.DictUtils</function-class>
     <function-signature>java.util.List getDictList(java.lang.String)</function-signature>
     <example>${fns:getDictList(type)}</example>  
   </function>
@@ -22,7 +22,7 @@
   <function>
     <description>获取字典对象列表</description>
     <name>getDictListJson</name>
-    <function-class>com.zz.HttpClient.Util.DictUtils</function-class>
+    <function-class>com.zz.HttpClient.modules.sys.utils.DictUtils</function-class>
     <function-signature>java.lang.String getDictListJson(java.lang.String)</function-signature>
     <example>${fns:getDictListJson(type)}</example>  
   </function>
@@ -30,7 +30,7 @@
   <function>
     <description>根据定时策略获取下一次执行时间</description>
     <name>getNextTime</name>
-    <function-class>com.zz.HttpClient.Util.TimerUtil</function-class>
+    <function-class>com.zz.HttpClient.modules.timer.utils.TimerUtil</function-class>
     <function-signature>java.lang.String getNextTime(java.lang.String)</function-signature>
     <example>${fns:getNextTime(object)}</example>  
   </function>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zz.HttpClient.modules.businessData.dao.CollectionInfoDao">
+	
+	<!-- 插入催收结果信息 -->
+    <insert id="insertCollectionResult">
+		INSERT INTO
+		[Message].[dbo].[COLLECTION_RESULT] (
+			[TASK_ID],
+	      	[TASK_Data_ID],
+	      	[CALL_TIME],
+	      	[CALL_BEGIN_TIME],
+	      	[CALL_END_TIME],
+	      	[CALL_TIME_LENGTH],
+	      	[CALL_PROC_TIME_LENGTH],
+	      	[STATUS],
+	      	[CALL_RESULT],
+	      	[RESULT],
+	      	[TELL_NUMBER],
+	      	[RECORD_FILE],
+	      	[FILE_LENGTH],
+	      	[INSERT_TIME]
+		) VALUES
+		<foreach collection = "collectionResults" index="index" item="collectionResult" separator = ",">
+            (
+      		#{collectionResult.taskId},
+      		#{collectionResult.taskDataId},
+      		#{collectionResult.callTime},
+      		#{collectionResult.callBeginTime},
+      		#{collectionResult.callEndTime},
+      		#{collectionResult.callTimeLength},
+      		#{collectionResult.callProcTimeLength},
+      		#{collectionResult.status},
+      		#{collectionResult.callResult},
+      		#{collectionResult.result},
+      		#{collectionResult.telNumber},
+      		#{collectionResult.recordFile},
+      		#{collectionResult.fileLength},
+      		CONVERT(varchar(100), GETDATE(), 20)
+      		)
+        </foreach>
+    </insert>
+    
+    <!-- 插入催收交谈信息 -->
+    <insert id="insertCollectionCallData">
+		INSERT INTO
+		[Message].[dbo].[COLLECTION_CALL_DATA] (
+			[TASK_Data_ID],
+			[INDEX],
+			[NODE_ID],
+			[NODE],
+			[ROBOT],
+			[HIT_ID],
+			[HIT_NAME],
+			[RESULT]
+		) VALUES
+		<foreach collection = "collectionCallDatas" index="index" item="collectionCallData" separator = ",">
+            (
+      		#{taskDataId},
+      		#{collectionCallData.index},
+      		#{collectionCallData.nodeId},
+      		#{collectionCallData.node},
+      		#{collectionCallData.robot},
+      		#{collectionCallData.hitId},
+      		#{collectionCallData.hitName},
+      		#{collectionCallData.result}
+      		)
+        </foreach>
+    </insert>
+
+</mapper>  

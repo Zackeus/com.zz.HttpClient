@@ -21,7 +21,7 @@
     <mvc:annotation-driven validator="validator">
     	<!-- 注入自定义的参数解析器 -->
     	<mvc:argument-resolvers>
-        	<bean class="com.zz.HttpClient.Util.annotation.argumentResolver.PageRequestBody.PageRequestBodyArgumentResolver"/>
+        	<bean class="com.zz.HttpClient.common.annotation.argumentResolver.PageRequestBody.PageRequestBodyArgumentResolver"/>
     	</mvc:argument-resolvers>
     	<mvc:message-converters register-defaults="true">
     		<!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->

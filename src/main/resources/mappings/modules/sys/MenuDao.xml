@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zz.HttpClient.Dao.sys.MenuDao">
+<mapper namespace="com.zz.HttpClient.modules.sys.dao.MenuDao">
 	
 	<sql id="menuColumns">
 		M.[ID],
