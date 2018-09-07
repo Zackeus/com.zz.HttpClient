@@ -11,6 +11,12 @@
                         http://www.springframework.org/schema/mvc    
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
                         
+    <!-- 使用Annotation自动注册Bean,只扫描@Controller -->
+	<context:component-scan base-package="com.zz.HttpClient" use-default-filters="false">
+		<!-- base-package 如果多个，用“,”分隔 -->
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+                        
     <!-- 启动注解驱动的Spring MVC功能，注册请求url和注解POJO类方法的映射 validator="validator"注入了校验器 -->            
     <mvc:annotation-driven validator="validator">
     	<!-- 注入自定义的参数解析器 -->
@@ -37,12 +43,6 @@
 	<mvc:default-servlet-handler />
 	<!-- 静态资源映射 -->
     <mvc:resources mapping="/static/**" location="/static/" cache-period="31536000"/>
-    
-	<!-- 使用Annotation自动注册Bean,只扫描@Controller -->
-	<context:component-scan base-package="com.zz.HttpClient" use-default-filters="false">
-		<!-- base-package 如果多个，用“,”分隔 -->
-		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-	</context:component-scan>
 	
 	<!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
 	<bean

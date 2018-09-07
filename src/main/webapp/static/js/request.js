@@ -16,7 +16,7 @@ layui.define(['jquery','layer'],function(exports){
 						if (result.code == "0") {
 							location.href = ctx + '/sys/area/index';
 						} else {
-							layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
+							layer.msg(result.msg, {icon: 5,time: 2000,shift: 6}, function(){});
 							loginBtn.text("登录").attr("disabled",false).removeClass("layui-disabled");
 						}
 					},
@@ -40,10 +40,10 @@ layui.define(['jquery','layer'],function(exports){
         			},
         			success : function(result) {
         				if (result.code == "0") {
-        					layer.msg(result.message, {icon: 6,time: 1000});
+        					layer.msg(result.msg, {icon: 6,time: 1000});
         					parent.layer.close(parent.layer.getFrameIndex(window.name));
         				} else {
-							layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
+							layer.msg(result.msg, {icon: 5,time: 2000,shift: 6}, function(){});
 							btn.text("提交").attr("disabled",false).removeClass("layui-disabled");
         				}
         			},
@@ -66,9 +66,9 @@ layui.define(['jquery','layer'],function(exports){
         			success : function(result) {
         				layer.closeAll('loading');
         				if (result.code == "0") {
-        					layer.msg(result.message, {icon: 6,time: 1000});
+        					layer.msg(result.msg, {icon: 6,time: 1000});
         				} else {
-        					layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
+        					layer.msg(result.msg, {icon: 5,time: 2000,shift: 6}, function(){});
                         	data.elem.checked = !data.elem.checked;
                         	form.render();
         				}
@@ -95,10 +95,10 @@ layui.define(['jquery','layer'],function(exports){
         			},
         			success : function(result) {
         				if (result.code == "0") {
-        					layer.msg(result.message, {icon: 6,time: 1000});
+        					layer.msg(result.msg, {icon: 6,time: 1000});
         					parent.layer.close(parent.layer.getFrameIndex(window.name));
         				} else {
-							layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
+							layer.msg(result.msg, {icon: 5,time: 2000,shift: 6}, function(){});
 							btn.text("提交").attr("disabled",false).removeClass("layui-disabled");
         				}
         			},
@@ -124,10 +124,10 @@ layui.define(['jquery','layer'],function(exports){
         			success : function(result) {
         				layer.closeAll('loading');
         				if (result.code == "0") {
-        					layer.msg(result.message, {icon: 6,time: 1000});
+        					layer.msg(result.msg, {icon: 6,time: 1000});
         					tableIns.reload();
         				} else {
-							layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
+							layer.msg(result.msg, {icon: 5,time: 2000,shift: 6}, function(){});
         				}
         			},
         			error : function(result) {
@@ -152,7 +152,7 @@ layui.define(['jquery','layer'],function(exports){
         		});
         		return returnMsg;
 			},
-			// 添加按钮
+			// 添加菜单
 			addMenu: function (url, data, btn) {
         		$.ajax({
         			method: 'POST',
@@ -165,10 +165,10 @@ layui.define(['jquery','layer'],function(exports){
         			},
         			success : function(result) {
         				if (result.code == "0") {
-        					layer.msg(result.message, {icon: 6,time: 1000});
+        					layer.msg(result.msg, {icon: 6,time: 1000});
         					parent.layer.close(parent.layer.getFrameIndex(window.name));
         				} else {
-							layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
+							layer.msg(result.msg, {icon: 5,time: 2000,shift: 6}, function(){});
 							btn.text("提交").attr("disabled",false).removeClass("layui-disabled");
         				}
         			},
@@ -191,10 +191,10 @@ layui.define(['jquery','layer'],function(exports){
         			},
         			success : function(result) {
         				if (result.code == "0") {
-        					layer.msg(result.message, {icon: 6,time: 1000});
+        					layer.msg(result.msg, {icon: 6,time: 1000});
         					parent.layer.close(parent.layer.getFrameIndex(window.name));
         				} else {
-							layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
+							layer.msg(result.msg, {icon: 5,time: 2000,shift: 6}, function(){});
 							btn.text("提交").attr("disabled",false).removeClass("layui-disabled");
         				}
         			},
@@ -219,10 +219,10 @@ layui.define(['jquery','layer'],function(exports){
         			success : function(result) {
         				layer.closeAll('loading');
         				if (result.code == "0") {
-        					layer.msg(result.message, {icon: 6,time: 1000});
+        					layer.msg(result.msg, {icon: 6,time: 1000});
         					tableIns.reload();
         				} else {
-        					layer.msg(result.message, {icon: 5,time: 2000,shift: 6}, function(){});
+        					layer.msg(result.msg, {icon: 5,time: 2000,shift: 6}, function(){});
         				}
         			},
         			error : function(result) {

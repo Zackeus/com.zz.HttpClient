@@ -17,8 +17,8 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
         treeSpid: 1,							// 最上级的父级id
         treeIdName: 'id',						// id字段的名称
         treePidName: 'parentId',				// pid字段的名称
-        treeDefaultClose: true,					// 是否默认折叠
-        treeLinkage: false,						// 父级展开时是否自动展开所有子级
+        treeDefaultClose: false,				// 是否默认折叠
+        treeLinkage: true,						// 父级展开时是否自动展开所有子级
         elem: '#menulist',
         url: ctx + '/sys/menu/mange',
         page: false,

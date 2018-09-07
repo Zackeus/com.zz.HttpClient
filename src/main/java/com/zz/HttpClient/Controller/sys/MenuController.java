@@ -127,7 +127,7 @@ public class MenuController extends BaseController {
 	 * @return
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = "/add", produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/add", produces = DEFAUlT_PRODUCES)
 	public void addMenu(@Validated({ Default.class, CreateVaild.class }) @RequestBody Menu menu, 
 			HttpServletRequest request, HttpServletResponse response) {
 		menuService.save(menu);
@@ -164,7 +164,7 @@ public class MenuController extends BaseController {
 	 * @param response
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = "/edit", produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/edit", produces = DEFAUlT_PRODUCES)
 	public void editMenu(@Validated({ Default.class, UpdateVaild.class, BaseVaild.class }) @RequestBody Menu menu, 
 			HttpServletRequest request, HttpServletResponse response) {
 		menuService.save(menu);
@@ -180,7 +180,7 @@ public class MenuController extends BaseController {
 	 * @param response
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = "/del", produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/del", produces = DEFAUlT_PRODUCES)
 	public void delMenu(@Validated({ Default.class, UpdateVaild.class, BaseVaild.class }) @RequestBody Menu menu, 
 			HttpServletRequest request, HttpServletResponse response) {
 		menuService.delete(menu);
