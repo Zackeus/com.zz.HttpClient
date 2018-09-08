@@ -13,9 +13,9 @@
 				<div class="layui-input-inline">
 					<select id="type" name="type" lay-verify="" lay-search>
 						<option value="">请选择字典类型</option>
- 						<option value="010">北京</option>
-						<option value="021">上海</option>
-						<option value="0571">杭州</option>
+						<c:forEach items="${typeList}" var="obj">
+							<option value="${obj}">${obj}</option>
+						</c:forEach>
 					</select>
 				</div>
 	    		<div class="layui-input-inline">
@@ -28,6 +28,12 @@
 
 	<table id="dictList" lay-filter="dictList" class="layui-hide"></table>
 		
+	<script type="text/html" id=dictListToolBar>
+ 		<div class="layui-btn-container">
+			<button class="layui-btn" type="button" lay-event="add"><i class="layui-icon">&#xe608;</i> 添加</button> -->
+  		</div>
+	</script>
+	
 	<script type="text/html" id="dictListBar">
 		<a title="修改" class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit" href="javascript:;"><i class="layui-icon">&#xe642;</i></a>
 		<a title="删除" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" href="javascript:;"><i class="layui-icon">&#xe640;</i></a>

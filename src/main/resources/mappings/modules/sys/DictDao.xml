@@ -32,6 +32,14 @@
 		ORDER BY [TYPE], [SORT], [UPDATE_DATE] DESC
 	</select>
 	
+	<!-- 查询字典类型列表 -->
+	<select id="findTypeList" resultType="string">
+		SELECT [TYPE] 
+		FROM [Message].[dbo].[SYS_DICT]
+		GROUP BY [TYPE]
+		ORDER BY [TYPE]
+	</select>
+	
 	<!-- 根据类别查询数据字典 -->
 	<select id="findListByType" resultType="Dict">
 		SELECT

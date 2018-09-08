@@ -1,15 +1,15 @@
 layui.extend({
-	request: '{/}' + ctxStatic + '/js/request'
+	layuiRequest: '{/}' + ctxStatic + '/layui/layuiRequest'
 })
 
-layui.use(['request','form','layer','laydate','table','laytpl'],function(){
+layui.use(['layuiRequest','form','layer','laydate','table','laytpl'],function(){
     var form = layui.form,
         layer = parent.layer === undefined ? layui.layer : top.layer,
         $ = layui.jquery,
         laydate = layui.laydate,
         laytpl = layui.laytpl,
         table = layui.table,
-        request = layui.request;
+        layuiRequest = layui.layuiRequest;
     
     $('#jobTime').click(function () {
     	var index = layui.layer.open({
@@ -31,7 +31,7 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
     });
     
     form.on('submit(addTimer)', function(data) {
-    	request.addTimer(ctx + '/timer/collectionRobot/addJob', data.field, $(this));
+    	layuiRequest.addTimer(ctx + '/timer/collectionRobot/addJob', data.field, $(this));
     	return false;
     });
     

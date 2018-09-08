@@ -1,15 +1,9 @@
-layui.extend({
-	request: '{/}' + ctxStatic + '/js/request'
-})
-
-layui.use(['request','form','layer','laydate','table','laytpl'],function(){
+layui.use(['form','layer','table','laytpl'],function(){
     var form = layui.form,
         layer = parent.layer === undefined ? layui.layer : top.layer,
         $ = layui.jquery,
-        laydate = layui.laydate,
         laytpl = layui.laytpl,
-        table = layui.table,
-        request = layui.request;
+        table = layui.table;
 
     layer.load();
     var userListtIns =  table.render({

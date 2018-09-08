@@ -1,12 +1,12 @@
 layui.extend({
-	request: '{/}' + ctxStatic + '/js/request'
+	layuiRequest: '{/}' + ctxStatic + '/layui/layuiRequest'
 })
 
-layui.use(['request','form','layer','jquery'],function(){
+layui.use(['layuiRequest','form','layer','jquery'],function(){
     var form = layui.form,
         layer = parent.layer === undefined ? layui.layer : top.layer,
         $ = layui.jquery,
-        request = layui.request;
+        layuiRequest = layui.layuiRequest;
 
     $(".loginBody .seraph").click(function(){
         layer.msg("这只是做个样式，至于功能，你见过哪个后台能这样登录的？还是老老实实的找管理员去注册吧",{
@@ -16,7 +16,7 @@ layui.use(['request','form','layer','jquery'],function(){
 
     //登录按钮
     form.on("submit(login)",function(data) {
-		request.login(ctx + '/sys/login', data.field, $(this));
+    	layuiRequest.login(ctx + '/sys/login', data.field, $(this));
 		// 阻止form表单submit
 		return false;
     })

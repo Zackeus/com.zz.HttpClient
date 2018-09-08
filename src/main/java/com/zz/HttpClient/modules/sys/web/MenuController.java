@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.zz.HttpClient.common.entity.AjaxResult;
 import com.zz.HttpClient.common.entity.LayuiTable;
@@ -100,7 +101,7 @@ public class MenuController extends BaseController {
 	 * @return
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = {"/add/{id}", "/maxMenuSort/{id}"})
+	@RequestMapping(value = {"/add/{id}", "/maxMenuSort/{id}"}, method = RequestMethod.GET)
 	public String addMenuPage(@PathVariable("id") String id, HttpServletRequest request, 
 			HttpServletResponse response, Model model) {
 		Integer sort  = menuService.getMaxSortById(id);
@@ -127,7 +128,7 @@ public class MenuController extends BaseController {
 	 * @return
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = "/add", produces = DEFAUlT_PRODUCES)
+	@RequestMapping(value = "/add", produces = DEFAUlT_PRODUCES, method = RequestMethod.POST)
 	public void addMenu(@Validated({ Default.class, CreateVaild.class }) @RequestBody Menu menu, 
 			HttpServletRequest request, HttpServletResponse response) {
 		menuService.save(menu);
@@ -145,7 +146,7 @@ public class MenuController extends BaseController {
 	 * @param model
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = "/edit/{id}")
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public String editMenuPage(@PathVariable("id") String id, HttpServletRequest request, 
 			HttpServletResponse response, Model model) {
 		Menu menu = menuService.get(id);
@@ -164,7 +165,7 @@ public class MenuController extends BaseController {
 	 * @param response
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = "/edit", produces = DEFAUlT_PRODUCES)
+	@RequestMapping(value = "/edit", produces = DEFAUlT_PRODUCES, method = RequestMethod.POST)
 	public void editMenu(@Validated({ Default.class, UpdateVaild.class, BaseVaild.class }) @RequestBody Menu menu, 
 			HttpServletRequest request, HttpServletResponse response) {
 		menuService.save(menu);
@@ -180,7 +181,7 @@ public class MenuController extends BaseController {
 	 * @param response
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = "/del", produces = DEFAUlT_PRODUCES)
+	@RequestMapping(value = "/del", produces = DEFAUlT_PRODUCES, method = RequestMethod.POST)
 	public void delMenu(@Validated({ Default.class, UpdateVaild.class, BaseVaild.class }) @RequestBody Menu menu, 
 			HttpServletRequest request, HttpServletResponse response) {
 		menuService.delete(menu);

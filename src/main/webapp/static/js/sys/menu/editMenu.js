@@ -1,15 +1,15 @@
 layui.extend({
-	request: '{/}' + ctxStatic + '/js/request'
+	layuiRequest: '{/}' + ctxStatic + '/layui/layuiRequest'
 })
 
-layui.use(['request','form','layer','laydate','table','laytpl','tree'],function(){
+layui.use(['layuiRequest','form','layer','laydate','table','laytpl','tree'],function(){
     var form = layui.form,
         layer = parent.layer === undefined ? layui.layer : top.layer,
         $ = layui.jquery,
         laydate = layui.laydate,
         laytpl = layui.laytpl,
         table = layui.table,
-        request = layui.request,
+        layuiRequest = layui.layuiRequest,
         tree = layui.tree,
     	treeSelectData;
     
@@ -45,7 +45,7 @@ layui.use(['request','form','layer','laydate','table','laytpl','tree'],function(
 	            		var $select=$($(this)[0].elem).parents(".layui-form-select");
 	            		$select.removeClass("layui-form-selected").find(".layui-select-title span").html(node.name).end().find("input:hidden[name='parentId']").val(node.id);
 	            		
-	            		var sortMsg = request.getMaxMenuSort(ctx + '/sys/menu/maxMenuSort/' + node.id);
+	            		var sortMsg = layuiRequest.getMaxMenuSort(ctx + '/sys/menu/maxMenuSort/' + node.id);
 	            		if (sortMsg.code == "0") {
 	            			$('#sort').val(sortMsg.customObj.sort);
 	            		}
@@ -92,7 +92,7 @@ layui.use(['request','form','layer','laydate','table','laytpl','tree'],function(
     });
     
     form.on('submit(editMenu)', function(data) {
-    	request.editMenu(ctx + '/sys/menu/edit', data.field, $(this));
+    	layuiRequest.editMenu(ctx + '/sys/menu/edit', data.field, $(this));
     	return false;
     });
     

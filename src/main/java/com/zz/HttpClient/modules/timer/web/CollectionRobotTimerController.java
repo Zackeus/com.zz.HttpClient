@@ -50,15 +50,15 @@ public class CollectionRobotTimerController extends BaseTimerController<Collecti
 	public void init() {
 		for (CollectionRobotTimer collectionRobotTimer : collectionRobotTimerService.findAllList()) {
 			if (collectionRobotTimer.isStatus()) {
-				try {
-					timerMangeService.addJob(
-							(Class<? extends Job>) (Class.forName((String) collectionRobotTimer.getJobClass())
-									.newInstance().getClass()),
-							collectionRobotTimer.getJobName(), collectionRobotTimer.getJobGroupName(),
-							collectionRobotTimer.getJobTime());
-				} catch (Exception e) {
-					Logs.error("初始化催收机器人排程异常：" + e.getMessage());
-				}
+//				try {
+//					timerMangeService.addJob(
+//							(Class<? extends Job>) (Class.forName((String) collectionRobotTimer.getJobClass())
+//									.newInstance().getClass()),
+//							collectionRobotTimer.getJobName(), collectionRobotTimer.getJobGroupName(),
+//							collectionRobotTimer.getJobTime());
+//				} catch (Exception e) {
+//					Logs.error("初始化催收机器人排程异常：" + e.getMessage());
+//				}
 			}
 		}
 	}

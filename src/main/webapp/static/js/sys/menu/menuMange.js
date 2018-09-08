@@ -1,14 +1,14 @@
 layui.extend({
-	treetable: '{/}' + ctxStatic + '/layui-2.2.5/lay/tree/treetable',
-	request: '{/}' + ctxStatic + '/js/request'
+	treetable: '{/}' + ctxStatic + '/layui/lay/tree/treetable',
+	layuiRequest: '{/}' + ctxStatic + '/layui/layuiRequest'
 });	
 	    
-layui.use(['table', 'treetable', 'request', 'layer'], function() {
+layui.use(['table', 'treetable', 'layuiRequest', 'layer'], function() {
     var $ = layui.jquery,
     	layer = parent.layer === undefined ? layui.layer : top.layer,
     	table = layui.table,
     	treetable = layui.treetable,
-    	request = layui.request;
+    	layuiRequest = layui.layuiRequest;
 
     // 渲染表格
     layer.load();
@@ -101,7 +101,7 @@ layui.use(['table', 'treetable', 'request', 'layer'], function() {
         	time: 0, 
         	btn: ['确定', '取消'],
             btn1: function(index, layero) {
-            	request.delMenu(data, index, ctx + '/sys/menu/del', menuListIns);
+            	layuiRequest.delMenu(data, index, ctx + '/sys/menu/del', menuListIns);
             },
             btn2: function(index, layero) {
             	layer.close(index);

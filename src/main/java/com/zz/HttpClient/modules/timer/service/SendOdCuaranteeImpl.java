@@ -25,7 +25,7 @@ public class SendOdCuaranteeImpl implements SendOdCuaranteeService {
 
 	@Override
 	public List<Guarantee> getOverdueGuarantee(CollectionRobotTimer collectionRobotTimer) {
-		String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.Dao.SendOdGuaranteeDao.getOverdueGuarantee")
+		String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.modules.timer.dao.SendOdGuaranteeDao.getOverdueGuarantee")
 				.getBoundSql(null).getSql();
 		sqlcode = sqlcode.replace("{START_DAY}", collectionRobotTimer.getStartDay().toString());
 		sqlcode = sqlcode.replace("{END_DAY}", collectionRobotTimer.getEndDay().toString());
@@ -52,7 +52,7 @@ public class SendOdCuaranteeImpl implements SendOdCuaranteeService {
 
 	@Override
 	public List<Guarantee> getReplayGuarantee(String sendBatch, CollectionRobotTimer collectionRobotTimer) {
-		String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.Dao.SendOdGuaranteeDao.getReplayGuarantee")
+		String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.modules.timer.dao.SendOdGuaranteeDao.getReplayGuarantee")
 				.getBoundSql(null).getSql();
 		sqlcode = sqlcode.replace("{START_DAY}", collectionRobotTimer.getStartDay().toString());
 		sqlcode = sqlcode.replace("{END_DAY}", collectionRobotTimer.getEndDay().toString());

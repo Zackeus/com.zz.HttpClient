@@ -1,14 +1,9 @@
-layui.extend({
-	request: '{/}' + ctxStatic + '/js/request'
-})
-
-layui.use(['request','form','layer','table','laytpl'],function(){
+layui.use(['form','layer','table','laytpl'],function(){
     var form = layui.form,
         layer = parent.layer === undefined ? layui.layer : top.layer,
         $ = layui.jquery,
         laytpl = layui.laytpl,
-        table = layui.table,
-        request = layui.request;
+        table = layui.table;
 
     layer.load();
     var dictListtIns =  table.render({
@@ -16,6 +11,7 @@ layui.use(['request','form','layer','table','laytpl'],function(){
         title: '字典表',								//  定义 table 的大标题（在文件导出等地方会用到）layui 2.4.0 新增
         method : 'post',							// 	接口http请求类型，默认：get
         url : ctx + '/sys/dict/list',
+        toolbar: '#dictListToolBar',
         contentType: 'application/json',			// 	发送到服务端的内容编码类型
         cellMinWidth : 50, 							//	（layui 2.2.1 新增）全局定义所有常规单元格的最小宽度（默认：60），一般用于列宽自动分配的情况。其优先级低于表头参数中的 minWidth
         loading : true, 							//	是否显示加载条
@@ -58,6 +54,53 @@ layui.use(['request','form','layer','table','laytpl'],function(){
     	});
     	return false;
     });
+    
+    //头工具栏事件
+    table.on('toolbar(dictList)', function(obj) {
+      switch(obj.event) {
+      
+        case 'add':
+        	addDict(obj);
+        break;
+      };
+    });
+    
+    // 添加字典
+    function addDict(obj) {
+    	var addDictIndex = layui.layer.open({
+            type: 2,
+            title: '添加字典', 		// 不显示标题栏
+            closeBtn: 1,			// 关闭按钮
+            shade: 0, 				// 遮罩
+            shadeClose: false, 		// 是否点击遮罩关闭
+            anim: 0, 				// 弹出动画
+            isOutAnim: true, 		// 关闭动画
+            scrollbar: false, 		// 是否允许浏览器出现滚动条
+            maxmin: true, 			// 最大最小化
+            id: 'LAY_AddDict', 		// 用于控制弹层唯一标识
+            moveType: 1,
+            content: [ctx + '/sys/dict/add'],
+            success : function(layero, index){
+                var body = layui.layer.getChildFrame('body', index);
+                setTimeout(function(){
+                    layui.layer.tips('点击此处返回字典列表', '.layui-layer-setwin .layui-layer-close', {
+                        tips: 3
+                    });
+                },500)
+            },
+            cancel: function(index, layero) {
+            },
+            end:function(index) {
+            	dictListtIns.reload();
+           }
+    	});
+    	layui.layer.full(addDictIndex);
+        window.sessionStorage.setItem("addDictIndex", addDictIndex);
+        //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+        $(window).on("resize",function() {
+        	layui.layer.full(window.sessionStorage.getItem("addDictIndex"));
+        })
+	}
     
     //控制表格编辑时文本的位置【跟随渲染时的位置】
     $("body").on("click",".layui-table-body.layui-table-main tbody tr td",function() {

@@ -26,6 +26,18 @@ public class DictService extends CrudService<DictDao, Dict> {
 	
 	/**
 	 * 
+	 * @Title：findTypeList
+	 * @Description: TODO(查询字典类型列表)
+	 * @see：
+	 * @return
+	 */
+	@Cacheable(value = {"sysDictCache"}, keyGenerator = "cacheKeyGenerator")
+	public List<String> findTypeList(){
+		return dao.findTypeList();
+	}
+	
+	/**
+	 * 
 	 * @Title：findListByType
 	 * @Description: TODO(根据类型查找字典数据)
 	 * @see：

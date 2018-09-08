@@ -26,7 +26,7 @@ public class SendOdCustomerImpl implements SendOdCustomerService {
 	private SendOdCustomerDao sendOdCustomerDao;
 	
 	public List<Customer> getOverdueCustomer(CollectionRobotTimer collectionRobotTimer) {
-		String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.Dao.SendOdCustomerDao.getOverdueCustomer")
+		String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.modules.timer.dao.SendOdCustomerDao.getOverdueCustomer")
 				.getBoundSql(null).getSql();
 		sqlcode = sqlcode.replace("{START_DAY}", collectionRobotTimer.getStartDay().toString());
 		sqlcode = sqlcode.replace("{END_DAY}", collectionRobotTimer.getEndDay().toString());
@@ -65,7 +65,7 @@ public class SendOdCustomerImpl implements SendOdCustomerService {
 	}
 
 	public List<Customer> getReplayCustomer(String sendBatch, CollectionRobotTimer collectionRobotTimer) {
-		String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.Dao.SendOdCustomerDao.getReplayCustomer")
+		String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.modules.timer.dao.SendOdCustomerDao.getReplayCustomer")
 				.getBoundSql(null).getSql();
 		sqlcode = sqlcode.replace("{START_DAY}", collectionRobotTimer.getStartDay().toString());
 		sqlcode = sqlcode.replace("{END_DAY}", collectionRobotTimer.getEndDay().toString());

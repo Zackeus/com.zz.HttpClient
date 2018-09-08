@@ -7,11 +7,17 @@ import javax.ws.rs.core.MediaType;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.zz.HttpClient.common.annotation.argumentResolver.PageRequestBody;
+import com.zz.HttpClient.common.entity.AjaxResult;
 import com.zz.HttpClient.common.entity.Page;
 import com.zz.HttpClient.common.utils.Logs;
+import com.zz.HttpClient.common.utils.StringUtils;
 import com.zz.HttpClient.common.web.BaseController;
 import com.zz.HttpClient.modules.sys.entity.Dict;
 import com.zz.HttpClient.modules.sys.service.DictService;
@@ -41,8 +47,9 @@ public class DictController extends BaseController {
 	 * @return
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = "/manage")
-	public String dictManage(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/manage", method = RequestMethod.GET)
+	public String dictManage(HttpServletRequest request, HttpServletResponse response, Model model) {
+		model.addAttribute("typeList", dictService.findTypeList());
 		return "/sys/dict/dictManage";
 	}
 	
@@ -55,11 +62,47 @@ public class DictController extends BaseController {
 	 * @param response
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = "/list", consumes = MediaType.APPLICATION_JSON, produces = DEFAUlT_PRODUCES)
+	@RequestMapping(value = "/list", consumes = MediaType.APPLICATION_JSON, 
+		produces = DEFAUlT_PRODUCES, method = RequestMethod.POST)
 	public void dictList(@PageRequestBody Dict dict, HttpServletRequest request, HttpServletResponse response) {
-		Logs.info("字典信息：" + dict);
-		Logs.info("分页信息：:" + request.getAttribute("page") + " , " + request.getAttribute("pageSize"));
 		renderString(response, dictService.findPage(new Page<>(request), dict));
+	}
+	
+	/**
+	 * 
+	 * @Title：addDict
+	 * @Description: TODO(添加字典页面)
+	 * @see：
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequiresRoles(value = { "admin" })
+	@RequestMapping(value = {"/add", "/add/{id}"}, method = RequestMethod.GET)
+	public String addDictPage(@PathVariable(value = "id", required = false) String id, 
+			HttpServletRequest request, HttpServletResponse response) {
+		if (StringUtils.isBlank(id)) {
+			return "/sys/dict/addDict";
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @Title：addDict
+	 * @Description: TODO(添加字典)
+	 * @see：
+	 * @param dict
+	 * @param request
+	 * @param response
+	 */
+	@RequiresRoles(value = { "admin" })
+	@RequestMapping(value = {"/add"}, consumes = MediaType.APPLICATION_JSON, 
+		produces = DEFAUlT_PRODUCES, method = RequestMethod.POST)
+	public void addDict(@RequestBody Dict dict, HttpServletRequest request, HttpServletResponse response) {
+		Logs.info(dict);
+		renderString(response, new AjaxResult(0, "添加字典成功"));
 	}
 
 }

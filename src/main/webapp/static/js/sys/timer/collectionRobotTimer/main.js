@@ -1,15 +1,15 @@
 layui.extend({
-	request: '{/}' + ctxStatic + '/js/request'
+	layuiRequest: '{/}' + ctxStatic + '/layui/layuiRequest'
 })
 
-layui.use(['request','form','layer','laydate','table','laytpl'],function(){
+layui.use(['layuiRequest','form','layer','laydate','table','laytpl'],function(){
     var form = layui.form,
         layer = parent.layer === undefined ? layui.layer : top.layer,
         $ = layui.jquery,
         laydate = layui.laydate,
         laytpl = layui.laytpl,
         table = layui.table,
-        request = layui.request;
+        layuiRequest = layui.layuiRequest;
 
     var collectionRobotListIns =  table.render({
         elem: '#collectionRobotTimerList',
@@ -61,7 +61,7 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
         	btn: ['确定', '取消'],
             btn1: function(index, layero) {
             	// 启用/禁用定时任务
-            	request.operatTimer(form, data, index, url);
+            	layuiRequest.operatTimer(form, data, index, url);
             },
             btn2: function(index, layero) {
             	// 取消
@@ -132,7 +132,7 @@ layui.use(['request','form','layer','laydate','table','laytpl'],function(){
         	time: 0, 
         	btn: ['确定', '取消'],
             btn1: function(index, layero) {
-            	request.delTimer(ctx + '/timer/collectionRobot/deleteJob', data, index, collectionRobotListIns);
+            	layuiRequest.delTimer(ctx + '/timer/collectionRobot/deleteJob', data, index, collectionRobotListIns);
             },
             btn2: function(index, layero) {
             	layer.close(index);
