@@ -101,7 +101,7 @@ public class MenuController extends BaseController {
 	 * @return
 	 */
 	@RequiresRoles(value = { "admin" })
-	@RequestMapping(value = {"/add/{id}", "/maxMenuSort/{id}"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/add/{id}", "/maxMenuSort/{id}"})
 	public String addMenuPage(@PathVariable("id") String id, HttpServletRequest request, 
 			HttpServletResponse response, Model model) {
 		Integer sort  = menuService.getMaxSortById(id);

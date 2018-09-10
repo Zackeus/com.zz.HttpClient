@@ -46,19 +46,52 @@ layui.define(["element","jquery"],function(exports){
                 ulHtml += '</a>';
                 ulHtml += '<dl class="layui-nav-child">';
                 for(var j=0;j<data[i].children.length;j++){
-                    if(data[i].children[j].target == "_blank"){
-                        ulHtml += '<dd><a data-url="' + ctx + data[i].children[j].href + '" target="'+data[i].children[j].target+'">';
-                    }else{
-                        ulHtml += '<dd><a data-url="' + ctx + data[i].children[j].href + '">';
-                    }
-                    if(data[i].children[j].icon != undefined && data[i].children[j].icon != ''){
-                        if(data[i].children[j].icon.indexOf("icon-") != -1){
-                            ulHtml += '<i class="layui-icon seraph ' + data[i].children[j].icon + '"></i>';
-                        }else{
-                            ulHtml += '<i class="layui-icon ' + data[i].children[j].icon + '"></i>';
+                	// 三级标签
+                    if(data[i].children[j].children != undefined && data[i].children[j].children.length > 0){
+                        ulHtml += '<a>';
+                        if(data[i].children[j].icon != undefined && data[i].children[j].icon != ''){
+                            if(data[i].children[j].icon.indexOf("icon-") != -1){
+                                ulHtml += '<i class="layui-icon seraph ' + data[i].children[j].icon + '"></i>';
+                            }else{
+                                ulHtml += '<i class="layui-icon ' + data[i].children[j].icon + '"></i>';
+                            }
                         }
+                        ulHtml += '<cite>' + data[i].children[j].name + '</cite>';
+                        ulHtml += '<span class="layui-nav-more"></span>';
+                        ulHtml += '</a>';
+                        ulHtml += '<dl class="layui-nav-child layui-nav-child3">';
+                        for(var z=0;z<data[i].children[j].children.length;z++){
+                            if(data[i].children[j].children[z].target == "_blank"){
+                                ulHtml += '<dd><a data-url="' + ctx + data[i].children[j].children[z].href + '" target="'+data[i].children[j].children[z].target+'">';
+                            }else{
+                                ulHtml += '<dd><a data-url="' + ctx + data[i].children[j].children[z].href + '">';
+                            }
+                            if(data[i].children[j].children[z].icon != undefined && data[i].children[j].children[z].icon != ''){
+                                if(data[i].children[j].children[z].icon.indexOf("icon-") != -1){
+                                    ulHtml += '<i class="layui-icon seraph ' + data[i].children[j].children[z].icon + '"></i>';
+                                }else{
+                                    ulHtml += '<i class="layui-icon ' + data[i].children[j].children[z].icon + '"></i>';
+                                }
+                            }
+                            ulHtml += '<cite>'+data[i].children[j].children[z].name+'</cite></a></dd>';
+                        }
+                        ulHtml += "</dl>";
+                    } else {
+                    	/*********************************/
+                        if(data[i].children[j].target == "_blank"){
+                            ulHtml += '<dd><a data-url="' + ctx + data[i].children[j].href + '" target="'+data[i].children[j].target+'">';
+                        }else{
+                            ulHtml += '<dd><a data-url="' + ctx + data[i].children[j].href + '">';
+                        }
+                        if(data[i].children[j].icon != undefined && data[i].children[j].icon != ''){
+                            if(data[i].children[j].icon.indexOf("icon-") != -1){
+                                ulHtml += '<i class="layui-icon seraph ' + data[i].children[j].icon + '"></i>';
+                            }else{
+                                ulHtml += '<i class="layui-icon ' + data[i].children[j].icon + '"></i>';
+                            }
+                        }
+                        ulHtml += '<cite>'+data[i].children[j].name+'</cite></a></dd>';
                     }
-                    ulHtml += '<cite>'+data[i].children[j].name+'</cite></a></dd>';
                 }
                 ulHtml += "</dl>";
             }else{
