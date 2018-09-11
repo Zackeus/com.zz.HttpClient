@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.zz.HttpClient.common.annotation.validator.Hour;
 import com.zz.HttpClient.common.annotation.validator.StatisticsSearchParametersValidator;
 import com.zz.HttpClient.common.service.valid.First;
 import com.zz.HttpClient.common.service.valid.Second;
@@ -32,32 +31,56 @@ public class StatisticsSearchParameters implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotBlank(message = "{searchParameters.type.NotNull}")
+	@Value("${statisticsSearchParameters.type}")
+	private String type;		// 报表类型
+	
+	private String typeName; 	// 报表名
+	
 	@NotNull(message = "{searchParameters.startDay.NotNull}")
 	private Date startDay; 		// 起始天数
 	
-	@NotNull(message = "{searchParameters.endDay.NotNull}")
+	@NotNull(message = "{{searchParameters.endDay.NotNull}}")
 	private Date endDay; 		// 结束天数
 	
-	@NotBlank(message = "{searchParameters.startHour.NotBlank}")
-	@Hour
 	@Value("${statisticsSearchParameters.startHour}")
 	private String startHour; 	// 起始小时
 	
-	@NotBlank(message = "{searchParameters.endHour.NotBlank}")
-	@Hour
 	@Value("${statisticsSearchParameters.endHour}")
 	private String endHour; 	// 结束小时
+	
+	// 催收接通率统计图(时间)
+	public static final String CONNECTION_RATE_STATISTICS_TIME = "connection_rate_statistics_time";
 
 	public StatisticsSearchParameters() {
 		super();
 	}
 
-	public StatisticsSearchParameters(Date startDay, Date endDay, String startHour, String endHour) {
+	public StatisticsSearchParameters(String type, String typeName, Date startDay, Date endDay, String startHour,
+			String endHour) {
 		super();
+		this.type = type;
+		this.typeName = typeName;
 		this.startDay = startDay;
 		this.endDay = endDay;
 		this.startHour = startHour;
 		this.endHour = endHour;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 
 	@JsonFormat(pattern = "yyyy-MM-dd")

@@ -18,7 +18,7 @@ public class Grid implements Serializable {
 
 	private boolean show = Boolean.TRUE;			// 是否显示直角坐标系网格
 	private Object left = "5%";						// grid 组件离容器左侧的距离
-	private Object top = "18%";						// grid 组件离容器上侧的距离
+	private Object top = "20%";						// grid 组件离容器上侧的距离
 	private Object right = "5%";					// grid 组件离容器右侧的距离
 	private Object bottom = "3%";					// grid 组件离容器下侧的距离
 	private boolean containLabel = Boolean.TRUE;	// grid 区域是否包含坐标轴的刻度标签

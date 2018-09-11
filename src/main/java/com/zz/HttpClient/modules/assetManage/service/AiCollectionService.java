@@ -74,7 +74,7 @@ public class AiCollectionService extends CrudService<AiCollectionDao, AiCollecti
 			series.setData(seriesData);
 			optionSeries.add(series);
 		}
-		return new Option(new Title("催收接通率统计图(时间)"),new Tooltip(), new Legend(legendData), 
+		return new Option(new Title(searchParameters.getTypeName()),new Tooltip(), new Legend(legendData), 
 				new Grid(), new Toolbox(), new XAxis("时间段(h)", xAxisData), new YAxis("接通率(%)"), optionSeries);
 	}
 

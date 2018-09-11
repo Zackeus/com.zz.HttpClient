@@ -18,6 +18,7 @@ public class Legend implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String type = "scroll"; 	// 图例的类型 'scroll'：可滚动翻页的图例
+	private Object top = "8%";			// 图例组件离容器上侧的距离
 	private List<Object> data; 			// 图例的数据数组
 
 	public Legend() {
@@ -29,9 +30,10 @@ public class Legend implements Serializable {
 		this.data = data;
 	}
 	
-	public Legend(String type, List<Object> data) {
+	public Legend(String type, Object top, List<Object> data) {
 		super();
 		this.type = type;
+		this.top = top;
 		this.data = data;
 	}
 
@@ -41,6 +43,14 @@ public class Legend implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public Object getTop() {
+		return top;
+	}
+
+	public void setTop(Object top) {
+		this.top = top;
 	}
 
 	public List<Object> getData() {

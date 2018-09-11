@@ -11,6 +11,7 @@ import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
 
 import com.zz.HttpClient.common.utils.DateUtils;
+import com.zz.HttpClient.common.utils.StringUtils;
 import com.zz.HttpClient.modules.assetManage.entity.StatisticsSearchParameters;
 
 /**
@@ -42,30 +43,53 @@ public @interface StatisticsSearchParametersValidator {
 
 		@Override
 		public boolean isValid(StatisticsSearchParameters value, ConstraintValidatorContext context) {
-			if (!DateUtils.timeCompareOfTwoDate(value.getStartDay(), value.getEndDay())) {
-				context.disableDefaultConstraintViolation();
-				context.buildConstraintViolationWithTemplate("{searchParameters.startDay.TooBig}").addConstraintViolation();
-				return Boolean.FALSE;
+			switch (value.getType()) {
+			case StatisticsSearchParameters.CONNECTION_RATE_STATISTICS_TIME:
+				// 催收接通率统计图(时间)
+				if (StringUtils.isBlank(value.getStartHour())) {
+					return sendErrorMsg(context, "{searchParameters.startHour.NotBlank}");
+				}
+				
+				if (!value.getStartHour().matches("(0\\d{1}|1\\d{1}|2[0-4])")) {
+					return sendErrorMsg(context, "不是小时格式");
+				}
+				
+				if (StringUtils.isBlank(value.getEndHour())) {
+					return sendErrorMsg(context, "{searchParameters.endHour.NotBlank}");
+				}
+				
+				if (!value.getEndHour().matches("(0\\d{1}|1\\d{1}|2[0-4])")) {
+					return sendErrorMsg(context, "不是小时格式");
+				}
+				break;
+
+			default:
+				return sendErrorMsg(context, "{searchParameters.type.Unknown}");
 			}
 			
-			if (DateUtils.getDistanceOfTwoDate(value.getStartDay(), value.getEndDay()) > 5) {
-				context.disableDefaultConstraintViolation();
-				context.buildConstraintViolationWithTemplate("{searchParameters.distanceDay.TooBig}").addConstraintViolation();
-				return Boolean.FALSE;
+
+			if (!DateUtils.timeCompareOfTwoDate(value.getStartDay(), value.getEndDay())) {
+				return sendErrorMsg(context, "{searchParameters.startDay.TooBig}");
+			}
+			
+			if (DateUtils.getDistanceOfTwoDate(value.getStartDay(), value.getEndDay()) > 20) {
+				return sendErrorMsg(context, "{searchParameters.distanceDay.TooBig}");
 			}
 			
 			if (Integer.valueOf(value.getStartHour()) > Integer.valueOf(value.getEndHour())) {
-				context.disableDefaultConstraintViolation();
-				context.buildConstraintViolationWithTemplate("{searchParameters.startHour.TooBig}").addConstraintViolation();
-				return Boolean.FALSE;
+				return sendErrorMsg(context, "{searchParameters.startHour.TooBig}");
 			}
 			
 			if (Integer.valueOf(value.getEndHour()) - Integer.valueOf(value.getStartHour()) > 13) {
-				context.disableDefaultConstraintViolation();
-				context.buildConstraintViolationWithTemplate("{searchParameters.distanceHour.TooBig}").addConstraintViolation();
-				return Boolean.FALSE;
+				return sendErrorMsg(context, "{searchParameters.distanceHour.TooBig}");
 			}
 			return Boolean.TRUE;
+		}
+		
+		public boolean sendErrorMsg(ConstraintValidatorContext context, String msg) {
+			context.disableDefaultConstraintViolation();
+			context.buildConstraintViolationWithTemplate(msg).addConstraintViolation();
+			return Boolean.FALSE;
 		}
 	}
 

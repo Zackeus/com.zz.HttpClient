@@ -43,18 +43,50 @@ layui.use(['layuiRequest','form','layer','laytpl','laydate','echarts','customerF
 		}
     });
     
-	var foldLineEcharts = echarts.init($('#reportForm')[0]);
+	var myEcharts = echarts.init($('#reportForm')[0]);
+	var echartsData = customerFrom.serializeJson($("#sesarchForm"));
+	echartsData.typeName = $('#type option:selected').text();
 	// 初始化报表视图
-	layuiRequest.loadEcharts(ctx + '/assetManage/aiCollection/reportForm', customerFrom.serializeJson($("#sesarchForm")), foldLineEcharts);
+	layuiRequest.loadEcharts(ctx + '/assetManage/aiCollection/reportForm', echartsData, myEcharts);
+	
+	// 统计图类型选择
+	form.on('select(type)', function(data) {
+		// 隐藏
+		for(var i=0; i < $("#type option").length; i++) {
+			$('#' + data.elem.options[i].value).css('display','none');
+		}
+		// 显示选中
+		$('#' + data.value).css('display','initial');
+	});
 	
     // 条件搜索
     form.on('submit(search)', function(data) {
-    	layuiRequest.loadEcharts(ctx + '/assetManage/aiCollection/reportForm', data.field, foldLineEcharts);
+    	data.field.typeName = $('#type option:selected').text();
+    	layuiRequest.loadEcharts(ctx + '/assetManage/aiCollection/reportForm', data.field, myEcharts);
     	return false;
     });
 	
     // 自适应屏幕
 	$(window).on("resize",function() {
-		foldLineEcharts.resize(); 
+		myEcharts.resize(); 
     })
+    
+    // 自定义校验
+    form.verify({
+    	customRequired: function(value, item) {
+    		// 父级div 是否隐藏
+    		if($(item).parent().parent().is(":visible")) {
+        		if(value.trim().length == 0) {
+        			return '必填项不能为空';
+        		}
+    		}
+    	},
+    	customNumber: function(value, item) {
+    		if($(item).parent().parent().is(":visible")) {
+        		if(!/^[-+]?\d*$/.test(value.trim())) {
+        			return '只能填写数字';
+        		}
+    		}
+    	}
+    });  
 })
