@@ -3,6 +3,7 @@ package com.zz.HttpClient.modules.sys.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,19 @@ public class DictService extends CrudService<DictDao, Dict> {
 	
 	@Autowired
 	private DictDao dictDao;
+
+	/**
+	 * 
+	 * @Title：get
+	 * @Description: TODO(根据ID查询字典)
+	 * @see：
+	 * @return
+	 */
+	@Cacheable(value = {"sysDictCache"}, keyGenerator = "cacheKeyGenerator")
+	@Override
+	public Dict get(String id) {
+		return super.get(id);
+	}
 	
 	/**
 	 * 
@@ -47,6 +61,19 @@ public class DictService extends CrudService<DictDao, Dict> {
 	@Cacheable(value = {"sysDictCache"}, keyGenerator = "cacheKeyGenerator")
 	public List<Dict> findListByType(String type) {
 		return dictDao.findListByType(type);
+	}
+	
+	/**
+	 * 
+	 * @Title：save
+	 * @Description: TODO(字典保存更新)
+	 * @see：
+	 * @return
+	 */
+	@CacheEvict(value = {"sysDictCache"}, allEntries = true, beforeInvocation = true)
+	@Override
+	public void save(Dict entity) {
+		super.save(entity);
 	}
 
 }

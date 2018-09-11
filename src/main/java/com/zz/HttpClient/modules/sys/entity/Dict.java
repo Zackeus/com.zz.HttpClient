@@ -1,5 +1,9 @@
 package com.zz.HttpClient.modules.sys.entity;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.zz.HttpClient.common.entity.DataEntity;
 
 /**
@@ -14,11 +18,19 @@ public class Dict extends DataEntity<Dict> {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotBlank(message = "{dict.value.NotBlank}")
 	private String value;			// 数据值
+	
+	@NotBlank(message = "{dict.label.NotBlank}")
 	private String label;			// 标签名
+	
+	@NotBlank(message = "{dict.type.NotBlank}")
 	private String type;			// 类型
+	
 	private String description;		// 描述
-	private Integer sort;			// 排序
+	
+	@NotNull(message = "{dict.sort.NotNull}")
+	private Integer sort = 10;			// 排序
 
 	public Dict() {
 		super();

@@ -8,6 +8,7 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.zz.HttpClient.common.annotation.argumentResolver.PageRequestBody;
 import com.zz.HttpClient.common.entity.AjaxResult;
 import com.zz.HttpClient.common.entity.Page;
-import com.zz.HttpClient.common.utils.Logs;
+import com.zz.HttpClient.common.utils.ObjectUtils;
 import com.zz.HttpClient.common.utils.StringUtils;
 import com.zz.HttpClient.common.web.BaseController;
 import com.zz.HttpClient.modules.sys.entity.Dict;
@@ -81,11 +82,15 @@ public class DictController extends BaseController {
 	@RequiresRoles(value = { "admin" })
 	@RequestMapping(value = {"/add", "/add/{id}"}, method = RequestMethod.GET)
 	public String addDictPage(@PathVariable(value = "id", required = false) String id, 
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response, Model model) {
 		if (StringUtils.isBlank(id)) {
-			return "/sys/dict/addDict";
+			model.addAttribute("dict", new Dict());
+		} else {
+			Dict dict = dictService.get(id);
+			dict.setSort(ObjectUtils.isEmpty(dict.getSort()) ? 10 : dict.getSort() + 10);
+			model.addAttribute("dict", dict);
 		}
-		return null;
+		return "/sys/dict/addDict";
 	}
 	
 	/**
@@ -100,8 +105,8 @@ public class DictController extends BaseController {
 	@RequiresRoles(value = { "admin" })
 	@RequestMapping(value = {"/add"}, consumes = MediaType.APPLICATION_JSON, 
 		produces = DEFAUlT_PRODUCES, method = RequestMethod.POST)
-	public void addDict(@RequestBody Dict dict, HttpServletRequest request, HttpServletResponse response) {
-		Logs.info(dict);
+	public void addDict(@Validated @RequestBody Dict dict, HttpServletRequest request, HttpServletResponse response) {
+		dictService.save(dict);
 		renderString(response, new AjaxResult(0, "添加字典成功"));
 	}
 

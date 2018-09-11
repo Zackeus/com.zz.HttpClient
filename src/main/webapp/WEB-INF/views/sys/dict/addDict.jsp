@@ -24,25 +24,25 @@
 		<div class="layui-form-item layui-row layui-col-xs12">
 			<label class="layui-form-label">字典类型</label>
 			<div class="layui-input-block">
-				<input id="type" name="type" type="text" class="layui-input" lay-verify="required" placeholder="请输入字典类型">
+				<input id="type" name="type" type="text" class="layui-input" lay-verify="required" placeholder="请输入字典类型" value="${dict.type}">
 			</div>
 		</div>
 		<div class="layui-form-item layui-row layui-col-xs12">
 			<label class="layui-form-label">字典描述</label>
 			<div class="layui-input-block">
-				<input id="description" name="description" type="text" class="layui-input" lay-verify="required" placeholder="请输入字典描述">
+				<input id="description" name="description" type="text" class="layui-input" lay-verify="required" placeholder="请输入字典描述" value="${dict.description}">
 			</div>
 		</div>
 		<div class="layui-form-item layui-row layui-col-xs12">
 			<label class="layui-form-label">字典排序</label>
 			<div class="layui-input-block">
-				<input id="sort" name="sort" type="text" class="layui-input" lay-verify="required|number" placeholder="请输入字典排序">
+				<input id="sort" name="sort" type="text" class="layui-input" lay-verify="required|number" placeholder="请输入字典排序" value="${dict.sort}">
 			</div>
 		</div>
 		<div class="layui-form-item layui-form-text">
 			<label class="layui-form-label">备注</label>
 		    <div class="layui-input-block">
-		    	<textarea id="remarks" name="remarks" class="layui-textarea" placeholder="请输入内容"></textarea>
+		    	<textarea id="remarks" name="remarks" class="layui-textarea" placeholder="请输入内容">${dict.remarks}</textarea>
 		    </div>
 		</div>
 		<div class="layui-form-item">

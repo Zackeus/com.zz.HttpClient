@@ -60,13 +60,34 @@ layui.use(['form','layer','table','laytpl'],function(){
       switch(obj.event) {
       
         case 'add':
-        	addDict(obj);
+        	addDict();
         break;
       };
     });
     
+    //列表操作
+    table.on('tool(dictList)', function(obj){
+		switch (obj.event) {
+		
+		case "add":
+			addDict(obj.data.id);
+			break;
+			
+		case "edit":
+			break;
+			
+		case "del":
+			break;
+			
+		default:
+			break;
+		}
+    });
+    
     // 添加字典
-    function addDict(obj) {
+    function addDict(data) {
+    	var url = data == "" || data == null || data == undefined ? (ctx + '/sys/dict/add') : (ctx + '/sys/dict/add/' + data);
+    	
     	var addDictIndex = layui.layer.open({
             type: 2,
             title: '添加字典', 		// 不显示标题栏
@@ -79,7 +100,7 @@ layui.use(['form','layer','table','laytpl'],function(){
             maxmin: true, 			// 最大最小化
             id: 'LAY_AddDict', 		// 用于控制弹层唯一标识
             moveType: 1,
-            content: [ctx + '/sys/dict/add'],
+            content: [url],
             success : function(layero, index){
                 var body = layui.layer.getChildFrame('body', index);
                 setTimeout(function(){

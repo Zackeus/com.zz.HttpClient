@@ -18,7 +18,6 @@
     <function-signature>java.util.List getDictList(java.lang.String)</function-signature>
     <example>${fns:getDictList(type)}</example>  
   </function>
-  
   <function>
     <description>获取字典对象列表</description>
     <name>getDictListJson</name>
@@ -26,7 +25,15 @@
     <function-signature>java.lang.String getDictListJson(java.lang.String)</function-signature>
     <example>${fns:getDictListJson(type)}</example>  
   </function>
-
+  
+  <function>
+    <description>日期格式字符</description>
+    <name>formatDate</name>
+    <function-class>com.zz.HttpClient.common.utils.DateUtils</function-class>
+    <function-signature>java.util.Date formatDate(date)</function-signature>
+    <example>${fns:formatDate(date)}</example>  
+  </function>
+  
   <function>
     <description>根据定时策略获取下一次执行时间</description>
     <name>getNextTime</name>

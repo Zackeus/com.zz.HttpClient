@@ -16,6 +16,14 @@
       	[REMARKS]
 	</sql>
 	
+	<!-- 根据类别查询数据字典 -->
+	<select id="get" resultType="Dict">
+		SELECT
+		<include refid="dictColumns"/>
+		FROM [Message].[dbo].[SYS_DICT]
+		WHERE [ID] = #{id}
+	</select>
+	
 	<!-- 分页查询字典信息 -->
 	<select id="findList" resultType="Dict">
 		SELECT
@@ -48,5 +56,24 @@
 		WHERE [TYPE] = #{type}
 		ORDER BY [SORT] 
 	</select>
+	
+	<!-- 增加字典 -->
+	<insert id="insert">
+		INSERT INTO [Message].[dbo].[SYS_DICT]
+		(<include refid="dictColumns"/>)
+		VALUES (
+			#{id},
+			#{value},
+			#{label},
+			#{type},
+			#{description},
+			#{sort},
+			#{createDate},
+			#{updateDate},
+			#{createBy.id},
+			#{updateBy.id},
+			#{remarks}
+		)
+	</insert>
 
 </mapper>
