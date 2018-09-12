@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zz.HttpClient.modules.assetManage.dao.AiCollectionDao">
+	
+	<!-- 接通率统计(时间) -->
+	<select id="collectionRateStatisticsByTime" resultType="AiCollectionResult">
+		SELECT 
+			TOT.TOTAL,
+			SUC.SUC_NUM
+		FROM 
+		(SELECT COUNT(*) AS TOTAL 
+			FROM [Message].[dbo].[COLLECTION_RESULT] 
+			WHERE DATEDIFF(DD,INSERT_TIME,#{date}) = 0 AND DATEPART(hh,INSERT_TIME) = #{hour}) TOT,
+		(SELECT COUNT(*) AS SUC_NUM
+			FROM [Message].[dbo].[COLLECTION_RESULT]
+			WHERE DATEDIFF(DD,INSERT_TIME,#{date}) = 0 AND DATEPART(hh,INSERT_TIME) = #{hour} AND RESULT IN (0,15,16)) SUC
+	</select>
+	
+	<!-- 接通率统计(年龄) -->
+	<select id="collectionRateStatisticsByAge" resultType="AiCollectionResult">
+		SELECT 
+			TOT.TOTAL,
+			SUC.SUC_NUM
+		FROM 
+		(SELECT COUNT(*) AS TOTAL
+	  		FROM [Message].[dbo].[COLLECTION_RESULT] CR
+	  		JOIN [Message].[dbo].[COLLECTION_INFO] CI ON CI.TASK_ID = CR.TASK_ID AND CI.PHONE_NUM = CR.TELL_NUMBER
+	  		JOIN [FinanceCopy].[dbo].[MIS_CONTRACT_DETAIL] MCTD ON CI.CONTRACT_NUM = MCTD.EXTERNAL_CONTRACT_NBR
+	  		JOIN [FinanceCopy].[dbo].[MIS_CUSTOMER_DETAIL] MCRD ON MCTD.PROPOSAL_NBR = MCRD.APPLICATION_NUMBER 
+	  		WHERE DATEDIFF(DD,CI.REQUEST_DATETIME,#{date}) = 0 AND MCRD.AGE BETWEEN #{startAge} AND #{endAge}) TOT,
+	  	(SELECT COUNT(*) AS SUC_NUM
+	  		FROM [Message].[dbo].[COLLECTION_RESULT] CR
+	  		JOIN [Message].[dbo].[COLLECTION_INFO] CI ON CI.TASK_ID = CR.TASK_ID AND CI.PHONE_NUM = CR.TELL_NUMBER
+	  		JOIN [FinanceCopy].[dbo].[MIS_CONTRACT_DETAIL] MCTD ON CI.CONTRACT_NUM = MCTD.EXTERNAL_CONTRACT_NBR
+	  		JOIN [FinanceCopy].[dbo].[MIS_CUSTOMER_DETAIL] MCRD ON MCTD.PROPOSAL_NBR = MCRD.APPLICATION_NUMBER 
+	  		WHERE DATEDIFF(DD,CI.REQUEST_DATETIME,#{date}) = 0 
+	  		AND MCRD.AGE BETWEEN #{startAge} AND #{endAge}
+	  		AND CR.RESULT IN (0,15,16)) SUC
+	</select>
+	
+</mapper>

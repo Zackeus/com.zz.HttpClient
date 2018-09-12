@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zz.HttpClient.common.dao.IpWhileDao">
+
+	<!-- 查询接口白名单 -->
+	<select id="getIpWhileLists" resultType="java.lang.String">
+		SELECT [IP]
+		FROM
+		[Message].[dbo].[IP_WHILE_LISTS]
+		WHERE [CO_ID] = #{coId}
+	</select>
+	
+</mapper>  
