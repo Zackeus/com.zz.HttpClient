@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.zz.HttpClient.common.entity.AjaxResult;
 import com.zz.HttpClient.common.utils.DateUtils;
+import com.zz.HttpClient.common.utils.Logs;
+import com.zz.HttpClient.common.utils.WebUtils;
 import com.zz.HttpClient.common.web.BaseController;
 import com.zz.HttpClient.modules.assetManage.entity.StatisticsSearchParameters;
 import com.zz.HttpClient.modules.assetManage.service.AiCollectionService;
@@ -74,6 +76,7 @@ public class AiCollectionController extends BaseController {
 			produces = DEFAUlT_PRODUCES, method = RequestMethod.POST)
 	public void reportForm(@Validated @RequestBody StatisticsSearchParameters searchParameters, 
 			HttpServletRequest request, HttpServletResponse response, Model model) {
+		Logs.info(WebUtils.getIpAddress(request));
 		renderString(response, new AjaxResult(0, "加载数据成功", 
 				new JSONObject().fromObject(aiCollectionService.connectionRateStatisticsByTime(searchParameters))));
 	}

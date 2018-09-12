@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 
 import org.apache.shiro.web.servlet.AdviceFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,6 @@ public abstract class BaseFilter extends AdviceFilter {
 	@Autowired
 	protected MsgConfig msgConfig;
 	
-	protected static final String ENCODING = "UTF-8";
-	
-	protected static final String CONTENT_TYPE = "application/json";
-	
 	/**
 	 * 
 	 * @Title：handleIp
@@ -45,10 +42,10 @@ public abstract class BaseFilter extends AdviceFilter {
 		for (String ip : ipLists) {
 			if (ip.trim().equals(requestIp)) {
 				// ip校验符合
-				return true;
+				return Boolean.TRUE;
 			}
 		}
-		return false;
+		return Boolean.FALSE;
 	}
 	
 	/**
@@ -75,8 +72,8 @@ public abstract class BaseFilter extends AdviceFilter {
 				return;
 			}
 		}
-		httpServletResponse.setCharacterEncoding(ENCODING);
-		httpServletResponse.setContentType(CONTENT_TYPE);
+		httpServletResponse.setCharacterEncoding(WebUtils.UTF_ENCODING);
+		httpServletResponse.setContentType(MediaType.APPLICATION_JSON);
 		httpServletResponse.getWriter().write(msg);
 	}
 

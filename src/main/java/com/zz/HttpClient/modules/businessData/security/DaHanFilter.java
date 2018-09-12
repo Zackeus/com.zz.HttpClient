@@ -6,11 +6,9 @@ import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.apache.shiro.web.util.WebUtils;
-
 import com.zz.HttpClient.common.security.BaseFilter;
 import com.zz.HttpClient.common.utils.Logs;
-import com.zz.HttpClient.common.utils.NetworkUtil;
+import com.zz.HttpClient.common.utils.WebUtils;
 
 import net.sf.json.JSONObject;
 
@@ -30,7 +28,7 @@ public class DaHanFilter extends BaseFilter {
 	@Override
 	protected boolean preHandle(ServletRequest request, ServletResponse response) {
     	try {
-    		String requestIp = NetworkUtil.getIpAddress(WebUtils.toHttp(request)).trim();
+    		String requestIp = WebUtils.getIpAddress(WebUtils.toHttp(request)).trim();
     		if (handleIp(requestIp, ipWhileListByDaHan)) {
     			return true;
 			}

@@ -1,6 +1,3 @@
-/**
- * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
- */
 package com.zz.HttpClient.common.utils;
 
 import java.io.UnsupportedEncodingException;
@@ -15,69 +12,87 @@ import org.apache.commons.lang3.BooleanUtils;
 import com.google.common.collect.Lists;
 
 /**
- * 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
- * @author ThinkGem
- * @version 2013-05-22
+ * 
+ * @Title:StringUtils
+ * @Description:TODO(字符串工具类, 继承org.apache.commons.lang3.StringUtils类)
+ * @Company: 
+ * @author zhou.zhang
+ * @date 2018年9月12日 上午8:58:00
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	
-    private static final char SEPARATOR = '_';
-    private static final String CHARSET_NAME = "UTF-8";
+    public static final char SEPARATOR = '_';
+    
+    public static final String UNKNOWN = "unknown";
     
     /**
-     * 转换为字节数组
+     * 
+     * @Title：getBytes
+     * @Description: TODO(转换为字节数组)
+     * @see：
      * @param str
      * @return
      */
     public static byte[] getBytes(String str){
-    	if (str != null){
+    	if (str != null) {
     		try {
-				return str.getBytes(CHARSET_NAME);
+				return str.getBytes(WebUtils.UTF_ENCODING);
 			} catch (UnsupportedEncodingException e) {
-				return null;
+				Logs.error("转换为字节数组异常：" + e.getMessage());
 			}
-    	}else{
-    		return null;
     	}
+    	return null;
     }
     
     /**
-	 * 转换为Boolean类型
-	 * 'true', 'on', 'y', 't', 'yes' or '1' (case insensitive) will return true. Otherwise, false is returned.
-	 */
+     * 
+     * @Title：toBoolean
+     * @Description: TODO(转换为Boolean类型)
+     * @see：'true', 'on', 'y', 't', 'yes' or '1' (case insensitive) will return true. Otherwise, false is returned.
+     * @param val
+     * @return
+     */
 	public static Boolean toBoolean(final Object val){
 		if (val == null){
-			return false;
+			return Boolean.FALSE;
 		}
 		return BooleanUtils.toBoolean(val.toString()) || "1".equals(val.toString());
 	}
 	
-    /**
-     * 转换为字节数组
-     * @param str
-     * @return
-     */
+	/**
+	 * 
+	 * @Title：toString
+	 * @Description: TODO(转换为字节数组)
+	 * @see：
+	 * @param bytes
+	 * @return
+	 */
     public static String toString(byte[] bytes){
     	try {
-			return new String(bytes, CHARSET_NAME);
+			return new String(bytes, WebUtils.UTF_ENCODING);
 		} catch (UnsupportedEncodingException e) {
 			return EMPTY;
 		}
     }
     
     /**
-	 * 如果对象为空，则使用defaultVal值 
-	 * 	see: ObjectUtils.toString(obj, defaultVal)
-	 * @param obj
-	 * @param defaultVal
-	 * @return
-	 */
+     * 
+     * @Title：toString
+     * @Description: TODO(如果对象为空，则使用defaultVal值 )
+     * @see：ObjectUtils.toString(obj, defaultVal)
+     * @param obj
+     * @param defaultVal
+     * @return
+     */
     public static String toString(final Object obj, final String defaultVal) {
     	 return obj == null ? defaultVal : obj.toString();
     }
     
     /**
-     * 是否包含字符串
+     * 
+     * @Title：inString
+     * @Description: TODO(是否包含字符串)
+     * @see：
      * @param str 验证字符串
      * @param strs 字符串组
      * @return 包含返回true
@@ -86,19 +101,24 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     	if (str != null){
         	for (String s : strs){
         		if (str.equals(trim(s))){
-        			return true;
+        			return Boolean.TRUE;
         		}
         	}
     	}
-    	return false;
+    	return Boolean.FALSE;
     }
     
-	/**
-	 * 替换掉HTML标签方法
-	 */
+    /**
+     * 
+     * @Title：replaceHtml
+     * @Description: TODO(替换掉HTML标签方法)
+     * @see：
+     * @param html
+     * @return
+     */
 	public static String replaceHtml(String html) {
 		if (isBlank(html)){
-			return "";
+			return EMPTY;
 		}
 		String regEx = "<.+?>";
 		Pattern p = Pattern.compile(regEx);
@@ -113,15 +133,12 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @return
 	 */
 	public static String replaceMobileHtml(String html){
-		if (html == null){
-			return "";
-		}
-		return html.replaceAll("<([a-z]+?)\\s+?.*?>", "<$1>");
+		return isEmpty(html) ? EMPTY : html.replaceAll("<([a-z]+?)\\s+?.*?>", "<$1>");
 	}
 	
 	public static String abbr2(String param, int length) {
-		if (param == null) {
-			return "";
+		if (isEmpty(param)) {
+			return EMPTY;
 		}
 		StringBuffer result = new StringBuffer();
 		int n = 0;
@@ -131,18 +148,18 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		for (int i = 0; i < param.length(); i++) {
 			temp = param.charAt(i);
 			if (temp == '<') {
-				isCode = true;
+				isCode = Boolean.TRUE;
 			} else if (temp == '&') {
-				isHTML = true;
+				isHTML = Boolean.TRUE;
 			} else if (temp == '>' && isCode) {
 				n = n - 1;
-				isCode = false;
+				isCode = Boolean.FALSE;
 			} else if (temp == ';' && isHTML) {
-				isHTML = false;
+				isHTML = Boolean.FALSE;
 			}
 			try {
 				if (!isCode && !isHTML) {
-					n += String.valueOf(temp).getBytes("GBK").length;
+					n += String.valueOf(temp).getBytes(WebUtils.GBK_ENCODING).length;
 				}
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();

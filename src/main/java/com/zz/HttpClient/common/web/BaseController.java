@@ -49,12 +49,8 @@ import net.sf.json.JSONObject;
 @SuppressWarnings("deprecation")
 public abstract class BaseController {
 	
-	protected static final String UTF_ENCODING = "UTF-8";
-	
-	protected static final String ISO_ENCODING = "iso-8859-1";
-	
 	// 默认返回值类型和字符编码
-	protected static final String DEFAUlT_PRODUCES = MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=" + UTF_ENCODING;
+	protected static final String DEFAUlT_PRODUCES = MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=" + WebUtils.UTF_ENCODING;
 	
 	/**
 	 * 
@@ -118,7 +114,7 @@ public abstract class BaseController {
 		try {
 			response.reset();
 	        response.setContentType(type);
-	        response.setCharacterEncoding(UTF_ENCODING);
+	        response.setCharacterEncoding(WebUtils.UTF_ENCODING);
 			response.getWriter().print(string);
 			return null;
 		} catch (IOException e) {

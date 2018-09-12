@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zz.HttpClient.common.utils.WebUtils;
 import com.zz.HttpClient.common.web.BaseController;
 import com.zz.HttpClient.modules.businessData.entity.CollectionCallData;
 import com.zz.HttpClient.modules.businessData.entity.CollectionResult;
@@ -87,7 +88,8 @@ public class ReceiveMsgController extends BaseController {
 	 */
 	@RequestMapping(value = "/daHanMsg")
 	public void daHanMsg(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		JSONObject parms = JSONObject.fromObject(new String(request.getParameter("report").getBytes(ISO_ENCODING), UTF_ENCODING));
+		JSONObject parms = JSONObject.fromObject(new String(request.getParameter("report").
+				getBytes(WebUtils.DEFAULT_CHARACTER_ENCODING), WebUtils.UTF_ENCODING));
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Class<?>> classMap = new HashMap<String, Class<?>>();
 		classMap.put("reports", DetaileReport.class);
