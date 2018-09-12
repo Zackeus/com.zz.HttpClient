@@ -67,6 +67,26 @@
 					</select>
 	    		</div>
 	    	</div>
+	    	<!-- 催收接通率统计图(年龄) -->
+	    	<div class="layui-inline" id="connection_rate_statistics_age" style="display: none;">
+	    		<div class="layui-input-inline" style="width: 100px;">
+	    			<select id="startAge" name="startAge" lay-verify="customRequired|customNumber">
+	    				<option value="">起始年龄</option>
+						<c:forEach items="${fns:getDictList('age_range')}" var="obj">
+							<option value="${obj.value}">${obj.label}</option>
+						</c:forEach>
+					</select>
+	    		</div>
+	    			-
+	    		<div class="layui-input-inline" style="width: 100px;">
+	    			<select id="endAge" name="endAge" lay-verify="customRequired|customNumber">
+	    				<option value="">结束年龄</option>
+						<c:forEach items="${fns:getDictList('age_range')}" var="obj">
+							<option value="${obj.value}">${obj.label}</option>							
+						</c:forEach>
+					</select>
+	    		</div>
+	    	</div>
 	    	<button class="layui-btn" lay-submit lay-filter="search"><i class="layui-icon layui-icon-search"></i></button>
 		</blockquote>
 	</form>

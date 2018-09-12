@@ -54,7 +54,7 @@ public class ReceiveMsgController extends BaseController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/juheMsg", produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/juheMsg", produces = DEFAUlT_PRODUCES)
 	@ResponseBody
 	public String erpRequest(@RequestBody Object parms, HttpServletRequest request, HttpServletResponse response) {
 		

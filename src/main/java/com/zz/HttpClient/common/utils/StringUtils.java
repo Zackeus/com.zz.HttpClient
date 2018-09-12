@@ -23,6 +23,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	
     public static final char SEPARATOR = '_';
     
+    public static final char SEPARATOR_SECOND = ';';
+    
     public static final String UNKNOWN = "unknown";
     
     /**
@@ -200,7 +202,12 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	}
 	
 	/**
-	 * 转换为Double类型
+	 * 
+	 * @Title：toDouble
+	 * @Description: TODO(转换为Double类型)
+	 * @see：
+	 * @param val
+	 * @return
 	 */
 	public static Double toDouble(Object val){
 		if (val == null){
@@ -214,28 +221,48 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	}
 
 	/**
-	 * 转换为Float类型
+	 * 
+	 * @Title：toFloat
+	 * @Description: TODO(转换为Float类型)
+	 * @see：
+	 * @param val
+	 * @return
 	 */
 	public static Float toFloat(Object val){
 		return toDouble(val).floatValue();
 	}
 
 	/**
-	 * 转换为Long类型
+	 * 
+	 * @Title：toLong
+	 * @Description: TODO(转换为Long类型)
+	 * @see：
+	 * @param val
+	 * @return
 	 */
 	public static Long toLong(Object val){
 		return toDouble(val).longValue();
 	}
 
 	/**
-	 * 转换为Integer类型
+	 * 
+	 * @Title：toInteger
+	 * @Description: TODO(转换为Integer类型)
+	 * @see：
+	 * @param val
+	 * @return
 	 */
 	public static Integer toInteger(Object val){
 		return toLong(val).intValue();
 	}
 	
 	/**
-	 * 获得用户远程地址
+	 * 
+	 * @Title：getRemoteAddr
+	 * @Description: TODO(获得用户远程地址)
+	 * @see：
+	 * @param request
+	 * @return
 	 */
 	public static String getRemoteAddr(HttpServletRequest request){
 		String remoteAddr = request.getHeader("X-Real-IP");
@@ -250,24 +277,25 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	}
 
 	/**
-	 * 驼峰命名法工具
+	 * 
+	 * @Title：toCamelCase
+	 * @Description: TODO(驼峰命名法工具)
+	 * @see：
+	 * toCamelCase("hello_world") == "helloWorld" 
+	 * toCapitalizeCamelCase("hello_world") == "HelloWorld"
+	 * toUnderScoreCase("helloWorld") = "hello_world"
+	 * @param s
 	 * @return
-	 * 		toCamelCase("hello_world") == "helloWorld" 
-	 * 		toCapitalizeCamelCase("hello_world") == "HelloWorld"
-	 * 		toUnderScoreCase("helloWorld") = "hello_world"
 	 */
     public static String toCamelCase(String s) {
         if (s == null) {
             return null;
         }
-
         s = s.toLowerCase();
-
         StringBuilder sb = new StringBuilder(s.length());
         boolean upperCase = false;
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-
             if (c == SEPARATOR) {
                 upperCase = true;
             } else if (upperCase) {
@@ -277,17 +305,20 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
                 sb.append(c);
             }
         }
-
         return sb.toString();
     }
 
     /**
-	 * 驼峰命名法工具
-	 * @return
-	 * 		toCamelCase("hello_world") == "helloWorld" 
-	 * 		toCapitalizeCamelCase("hello_world") == "HelloWorld"
-	 * 		toUnderScoreCase("helloWorld") = "hello_world"
-	 */
+     * 
+     * @Title：toCapitalizeCamelCase
+     * @Description: TODO(驼峰命名法工具)
+     * @see：
+     *  toCamelCase("hello_world") == "helloWorld" 
+     * 	toCapitalizeCamelCase("hello_world") == "HelloWorld"
+     * 	toUnderScoreCase("helloWorld") = "hello_world"
+     * @param s
+     * @return
+     */
     public static String toCapitalizeCamelCase(String s) {
         if (s == null) {
             return null;
@@ -297,28 +328,28 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
     
     /**
-	 * 驼峰命名法工具
-	 * @return
-	 * 		toCamelCase("hello_world") == "helloWorld" 
-	 * 		toCapitalizeCamelCase("hello_world") == "HelloWorld"
-	 * 		toUnderScoreCase("helloWorld") = "hello_world"
-	 */
+     * 
+     * @Title：toUnderScoreCase
+     * @Description: TODO(驼峰命名法工具)
+     * @see：
+     * 	toCamelCase("hello_world") == "helloWorld" 
+     * 	toCapitalizeCamelCase("hello_world") == "HelloWorld"
+     * 	toUnderScoreCase("helloWorld") = "hello_world"
+     * @param s
+     * @return
+     */
     public static String toUnderScoreCase(String s) {
         if (s == null) {
             return null;
         }
-
         StringBuilder sb = new StringBuilder();
         boolean upperCase = false;
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-
             boolean nextUpperCase = true;
-
             if (i < (s.length() - 1)) {
                 nextUpperCase = Character.isUpperCase(s.charAt(i + 1));
             }
-
             if ((i > 0) && Character.isUpperCase(c)) {
                 if (!upperCase || !nextUpperCase) {
                     sb.append(SEPARATOR);
@@ -327,18 +358,18 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             } else {
                 upperCase = false;
             }
-
             sb.append(Character.toLowerCase(c));
         }
-
         return sb.toString();
     }
  
     /**
-     * 转换为JS获取对象值，生成三目运算返回结果
+     * 
+     * @Title：jsGetVal
+     * @Description: TODO(转换为JS获取对象值，生成三目运算返回结果)
+     * @see：例如：row.user.id 返回：!row?'':!row.user?'':!row.user.id?'':row.user.id
      * @param objectString 对象串
-     *   例如：row.user.id
-     *   返回：!row?'':!row.user?'':!row.user.id?'':row.user.id
+     * @return
      */
     public static String jsGetVal(String objectString){
     	StringBuilder result = new StringBuilder();
@@ -351,5 +382,19 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     	result.append(val.substring(1));
     	return result.toString();
     }
+    
+    /**
+     * 
+     * @Title：main
+     * @Description: TODO(测试)
+     * @see：
+     * @param args
+     */
+    public static void main(String[] args) {
+		String text = "1;2;3";
+		for(String num : split(text, SEPARATOR_SECOND)) {
+			System.out.println(num);
+		}
+	}
     
 }

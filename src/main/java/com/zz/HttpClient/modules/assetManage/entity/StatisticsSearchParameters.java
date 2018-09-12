@@ -49,15 +49,20 @@ public class StatisticsSearchParameters implements Serializable {
 	@Value("${statisticsSearchParameters.endHour}")
 	private String endHour; 	// 结束小时
 	
+	private Integer startAge;	// 起始年龄
+	private Integer endAge;		// 结束年龄
+	
 	// 催收接通率统计图(时间)
 	public static final String CONNECTION_RATE_STATISTICS_TIME = "connection_rate_statistics_time";
+	// 催收接通率统计图(年龄)
+	public static final String CONNECTION_RATE_STATISTICS_AGE = "connection_rate_statistics_age";
 
 	public StatisticsSearchParameters() {
 		super();
 	}
-
+	
 	public StatisticsSearchParameters(String type, String typeName, Date startDay, Date endDay, String startHour,
-			String endHour) {
+			String endHour, Integer startAge, Integer endAge) {
 		super();
 		this.type = type;
 		this.typeName = typeName;
@@ -65,6 +70,8 @@ public class StatisticsSearchParameters implements Serializable {
 		this.endDay = endDay;
 		this.startHour = startHour;
 		this.endHour = endHour;
+		this.startAge = startAge;
+		this.endAge = endAge;
 	}
 
 	public String getType() {
@@ -115,6 +122,22 @@ public class StatisticsSearchParameters implements Serializable {
 
 	public void setEndHour(String endHour) {
 		this.endHour = endHour;
+	}
+	
+	public Integer getStartAge() {
+		return startAge;
+	}
+
+	public void setStartAge(Integer startAge) {
+		this.startAge = startAge;
+	}
+
+	public Integer getEndAge() {
+		return endAge;
+	}
+
+	public void setEndAge(Integer endAge) {
+		this.endAge = endAge;
 	}
 
 	@Override

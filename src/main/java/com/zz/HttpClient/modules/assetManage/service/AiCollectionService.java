@@ -47,19 +47,19 @@ public class AiCollectionService extends CrudService<AiCollectionDao, AiCollecti
 	 * @return
 	 */
 	@Cacheable(value = {"echartsCache"}, keyGenerator = "cacheKeyGenerator")
-	public Option connectionRateStatisticsByTime(StatisticsSearchParameters searchParameters) {
+	public Option collectionRateStatisticsByTime(StatisticsSearchParameters searchParameters) {
 		// 图例组件 数据
 		List<Object> legendData = new ArrayList<>();
-		
+		// y轴数据
+		List<Series> optionSeries = new ArrayList<>();
 		// x轴
 		List<Object> xAxisData = new ArrayList<>();
+		
 		for(int i = Integer.valueOf(searchParameters.getStartHour()); 
 				i <= Integer.valueOf(searchParameters.getEndHour()); i++) {
 			xAxisData.add(i);
 		}
 		
-		// y轴数据
-		List<Series> optionSeries = new ArrayList<>();
 		for(Date date : DateUtils.getBetweenDates(searchParameters.getStartDay(), searchParameters.getEndDay())) {
 			legendData.add(DateUtils.formatDate(date));
 			Series series = new Series(DateUtils.formatDate(date));
@@ -67,7 +67,7 @@ public class AiCollectionService extends CrudService<AiCollectionDao, AiCollecti
 			List<Object> seriesData = new ArrayList<>();
 			for(int i = Integer.valueOf(searchParameters.getStartHour()); 
 					i <= Integer.valueOf(searchParameters.getEndHour()); i++) {
-				AiCollectionResult aiCollectionResult =  aiCollectionDao.connectionRateStatisticsByTime(date, i);
+				AiCollectionResult aiCollectionResult =  aiCollectionDao.collectionRateStatisticsByTime(date, i);
 				seriesData.add(aiCollectionResult.getTotal() == 0 ? 0 : 
 					(float) aiCollectionResult.getSucNum() / (float) aiCollectionResult.getTotal() * 100);
 			}
@@ -77,5 +77,38 @@ public class AiCollectionService extends CrudService<AiCollectionDao, AiCollecti
 		return new Option(new Title(searchParameters.getTypeName()),new Tooltip(), new Legend(legendData), 
 				new Grid(), new Toolbox(), new XAxis("时间段(h)", xAxisData), new YAxis("接通率(%)"), optionSeries);
 	}
-
+	
+	/**
+	 * 
+	 * @Title：collectionRateStatisticsByAge
+	 * @Description: TODO(接通率统计(年龄))
+	 * @see：
+	 * @param searchParameters
+	 * @return
+	 */
+	@Cacheable(value = {"echartsCache"}, keyGenerator = "cacheKeyGenerator")
+	public Option collectionRateStatisticsByAge(StatisticsSearchParameters searchParameters) {
+		List<Object> legendData = new ArrayList<>();
+		List<Object> xAxisData = new ArrayList<>();
+		List<Series> optionSeries = new ArrayList<>();
+		
+		for(int i = searchParameters.getStartAge(); i < searchParameters.getEndAge(); i += 5) {
+			xAxisData.add((i + 1) + "-" + (i + 5));
+		}
+		
+		for(Date date : DateUtils.getBetweenDates(searchParameters.getStartDay(), searchParameters.getEndDay())) {
+			legendData.add(DateUtils.formatDate(date));
+			Series series = new Series(DateUtils.formatDate(date));
+			List<Object> seriesData = new ArrayList<>();
+			for(int i = searchParameters.getStartAge(); i < searchParameters.getEndAge(); i += 5) {
+				AiCollectionResult aiCollectionResult =  aiCollectionDao.collectionRateStatisticsByAge(date, i + 1, i + 5);
+				seriesData.add(aiCollectionResult.getTotal() == 0 ? 0 : 
+					(float) aiCollectionResult.getSucNum() / (float) aiCollectionResult.getTotal() * 100);
+			}
+			series.setData(seriesData);
+			optionSeries.add(series);
+		}
+		return new Option(new Title(searchParameters.getTypeName()),new Tooltip(), new Legend(legendData), 
+				new Grid(), new Toolbox(), new XAxis("年龄段(s)", xAxisData), new YAxis("接通率(%)"), optionSeries);
+	}
 }

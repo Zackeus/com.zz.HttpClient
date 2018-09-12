@@ -6,12 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
-import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
 
 import com.zz.HttpClient.common.utils.DateUtils;
+import com.zz.HttpClient.common.utils.ObjectUtils;
 import com.zz.HttpClient.common.utils.StringUtils;
+import com.zz.HttpClient.common.utils.basic.BasicValidator;
 import com.zz.HttpClient.modules.assetManage.entity.StatisticsSearchParameters;
 
 /**
@@ -34,7 +35,7 @@ public @interface StatisticsSearchParametersValidator {
 
 	Class<? extends Payload>[] payload() default {};
 	
-	public class Validator implements ConstraintValidator<StatisticsSearchParametersValidator, StatisticsSearchParameters> {
+	public class Validator extends BasicValidator<StatisticsSearchParametersValidator, StatisticsSearchParameters> {
 
 		@Override
 		public void initialize(StatisticsSearchParametersValidator constraintAnnotation) {
@@ -62,6 +63,17 @@ public @interface StatisticsSearchParametersValidator {
 					return sendErrorMsg(context, "不是小时格式");
 				}
 				break;
+				
+			case StatisticsSearchParameters.CONNECTION_RATE_STATISTICS_AGE:
+				// 催收接通率统计图(年龄)
+				if (ObjectUtils.isEmpty(value.getStartAge())) {
+					return sendErrorMsg(context, "{searchParameters.startAge.NotNull}");
+				}
+				
+				if (ObjectUtils.isEmpty(value.getEndAge())) {
+					return sendErrorMsg(context, "{searchParameters.endAge.NotNull}");
+				}
+				break;
 
 			default:
 				return sendErrorMsg(context, "{searchParameters.type.Unknown}");
@@ -72,7 +84,7 @@ public @interface StatisticsSearchParametersValidator {
 				return sendErrorMsg(context, "{searchParameters.startDay.TooBig}");
 			}
 			
-			if (DateUtils.getDistanceOfTwoDate(value.getStartDay(), value.getEndDay()) > 20) {
+			if (DateUtils.getDistanceOfTwoDate(value.getStartDay(), value.getEndDay()) > 32) {
 				return sendErrorMsg(context, "{searchParameters.distanceDay.TooBig}");
 			}
 			
@@ -84,12 +96,6 @@ public @interface StatisticsSearchParametersValidator {
 				return sendErrorMsg(context, "{searchParameters.distanceHour.TooBig}");
 			}
 			return Boolean.TRUE;
-		}
-		
-		public boolean sendErrorMsg(ConstraintValidatorContext context, String msg) {
-			context.disableDefaultConstraintViolation();
-			context.buildConstraintViolationWithTemplate(msg).addConstraintViolation();
-			return Boolean.FALSE;
 		}
 	}
 

@@ -20,6 +20,8 @@ import com.zz.HttpClient.modules.assetManage.entity.AiCollectionResult;
 @MyBatisDao
 public interface AiCollectionDao extends CrudDao<AiCollectionInfo> {
 	
-	public AiCollectionResult connectionRateStatisticsByTime(@Param("date") Date date, @Param("hour") Integer hour);
+	public AiCollectionResult collectionRateStatisticsByTime(@Param("date") Date date, @Param("hour") Integer hour);
+	
+	public AiCollectionResult collectionRateStatisticsByAge(@Param("date") Date date, @Param("startAge") Integer startAge, @Param("endAge") Integer endAge);
 
 }

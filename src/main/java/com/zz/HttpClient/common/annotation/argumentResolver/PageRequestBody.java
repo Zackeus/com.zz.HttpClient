@@ -22,7 +22,7 @@ import com.zz.HttpClient.common.utils.basic.BasicArgumentResolver;
 
 /**
  * 
- * @Title:MyRequestBody
+ * @Title:PageRequestBody
  * @Description:TODO(分页参数解析器 实体属性直接注入 分页参数注入 HttpServletRequest 中)
  * @Company: 
  * @author zhou.zhang

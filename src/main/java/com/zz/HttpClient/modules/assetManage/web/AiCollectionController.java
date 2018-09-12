@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.zz.HttpClient.common.entity.AjaxResult;
 import com.zz.HttpClient.common.utils.DateUtils;
-import com.zz.HttpClient.common.utils.Logs;
-import com.zz.HttpClient.common.utils.WebUtils;
 import com.zz.HttpClient.common.web.BaseController;
 import com.zz.HttpClient.modules.assetManage.entity.StatisticsSearchParameters;
 import com.zz.HttpClient.modules.assetManage.service.AiCollectionService;
@@ -76,9 +74,23 @@ public class AiCollectionController extends BaseController {
 			produces = DEFAUlT_PRODUCES, method = RequestMethod.POST)
 	public void reportForm(@Validated @RequestBody StatisticsSearchParameters searchParameters, 
 			HttpServletRequest request, HttpServletResponse response, Model model) {
-		Logs.info(WebUtils.getIpAddress(request));
-		renderString(response, new AjaxResult(0, "加载数据成功", 
-				new JSONObject().fromObject(aiCollectionService.connectionRateStatisticsByTime(searchParameters))));
-	}
+		
+		switch (searchParameters.getType()) {
+		
+		case StatisticsSearchParameters.CONNECTION_RATE_STATISTICS_TIME:
+			// 催收接通率统计图(时间)
+			renderString(response, new AjaxResult(0, "加载数据成功", 
+					new JSONObject().fromObject(aiCollectionService.collectionRateStatisticsByTime(searchParameters))));
+			break;
+		case StatisticsSearchParameters.CONNECTION_RATE_STATISTICS_AGE:
+			// 催收接通率统计图(年龄)
+			renderString(response, new AjaxResult(0, "加载数据成功", 
+					new JSONObject().fromObject(aiCollectionService.collectionRateStatisticsByAge(searchParameters))));
+			break;
 
+		default:
+			renderString(response, new AjaxResult(1000, "未知的图表类型"));
+			break;
+		}
+	}
 }
