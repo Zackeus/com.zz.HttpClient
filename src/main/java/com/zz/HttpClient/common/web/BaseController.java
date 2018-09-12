@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.http.HttpStatus;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -159,7 +160,7 @@ public abstract class BaseController {
 	public String handleMissingServletRequestParameterException(HttpServletRequest request, HttpServletResponse response,
 			MissingServletRequestParameterException e) {
         if (WebUtils.isAjaxRequest(request)) {
-            renderString(response, new AjaxResult(400, "缺少请求参数：" + e.getMessage()));
+            renderString(response, new AjaxResult(HttpStatus.SC_BAD_REQUEST, "缺少请求参数：" + e.getMessage()));
             return null;
         } else {
             return "sys/400";
@@ -180,7 +181,7 @@ public abstract class BaseController {
 	public String handleHttpMessageNotReadableException(HttpServletRequest request, HttpServletResponse response,
 			HttpMessageNotReadableException e) {
         if (WebUtils.isAjaxRequest(request)) {
-            renderString(response, new AjaxResult(400, "参数解析失败：" + e.getMessage()));
+            renderString(response, new AjaxResult(HttpStatus.SC_BAD_REQUEST, "参数解析失败：" + e.getMessage()));
             return null;
         } else {
             return "sys/400";
@@ -202,7 +203,7 @@ public abstract class BaseController {
     		MethodArgumentNotValidException e) {
 		if (WebUtils.isAjaxRequest(request)) {
 	    	String errorMesssage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-	        renderString(response, new AjaxResult(400, "参数校验异常：" + errorMesssage));
+	        renderString(response, new AjaxResult(HttpStatus.SC_BAD_REQUEST, "参数校验异常：" + errorMesssage));
 	        return null;
 		} else {
 			return "sys/400";
@@ -224,7 +225,7 @@ public abstract class BaseController {
     		BindException e) {
 		if (WebUtils.isAjaxRequest(request)) {
 	    	String errorMesssage = e.getBindingResult().getFieldError().getField();
-	        renderString(response, new AjaxResult(400, "参数绑定失败：" + errorMesssage));
+	        renderString(response, new AjaxResult(HttpStatus.SC_BAD_REQUEST, "参数绑定失败：" + errorMesssage));
 	        return null;
 		} else {
 			return "sys/400";
@@ -248,7 +249,7 @@ public abstract class BaseController {
 	    ConstraintViolation<?> violation = violations.iterator().next();
 	    String message = violation.getMessage();
         if (WebUtils.isAjaxRequest(request)) {
-            renderString(response, new AjaxResult(400, "参数校验异常:" + message));
+            renderString(response, new AjaxResult(HttpStatus.SC_BAD_REQUEST, "参数校验异常:" + message));
             return null;
         } else {
             return "sys/400";
@@ -269,7 +270,7 @@ public abstract class BaseController {
     public String handleValidationException(HttpServletRequest request, HttpServletResponse response, 
     		ValidationException e) {
         if (WebUtils.isAjaxRequest(request)) {
-            renderString(response, new AjaxResult(400, "参数验证失败：" + e.getMessage()));
+            renderString(response, new AjaxResult(HttpStatus.SC_BAD_REQUEST, "参数验证失败：" + e.getMessage()));
             return null;
         } else {
             return "sys/400";
@@ -290,7 +291,7 @@ public abstract class BaseController {
     public String handleIllegalArgumentException(HttpServletRequest request, HttpServletResponse response, 
     		IllegalArgumentException e) {
         if (WebUtils.isAjaxRequest(request)) {
-            renderString(response, new AjaxResult(400, "参数不合法：" + e.getMessage()));
+            renderString(response, new AjaxResult(HttpStatus.SC_BAD_REQUEST, "参数不合法：" + e.getMessage()));
             return null;
         } else {
             return "sys/400";
@@ -311,7 +312,7 @@ public abstract class BaseController {
     public String handleIllegalAccessException(HttpServletRequest request, HttpServletResponse response, 
     		IllegalAccessException e) {
         if (WebUtils.isAjaxRequest(request)) {
-            renderString(response, new AjaxResult(400, "安全权限异常：" + e.getMessage()));
+            renderString(response, new AjaxResult(HttpStatus.SC_BAD_REQUEST, "安全权限异常：" + e.getMessage()));
             return null;
         } else {
             return "sys/400";
@@ -332,7 +333,7 @@ public abstract class BaseController {
     public String handleHttpRequestMethodNotSupportedException(HttpServletRequest request, HttpServletResponse response, 
     		HttpRequestMethodNotSupportedException e) {
         if (WebUtils.isAjaxRequest(request)) {
-            renderString(response, new AjaxResult(405, "不支持当前请求方法：" + e.getMessage()));
+            renderString(response, new AjaxResult(HttpStatus.SC_METHOD_NOT_ALLOWED, "不支持当前请求方法：" + e.getMessage()));
             return null;
         } else {
             return "sys/405";
@@ -353,7 +354,7 @@ public abstract class BaseController {
 	public String handleHttpMediaTypeNotSupportedException(HttpServletRequest request, HttpServletResponse response,
 			HttpMediaTypeNotSupportedException e) {
         if (WebUtils.isAjaxRequest(request)) {
-            renderString(response, new AjaxResult(415, "不支持当前媒体类型：" + e.getMessage()));
+            renderString(response, new AjaxResult(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, "不支持当前媒体类型：" + e.getMessage()));
             return null;
         } else {
             return "sys/415";
@@ -372,7 +373,7 @@ public abstract class BaseController {
     @ExceptionHandler({ UnauthorizedException.class, AuthorizationException.class })
     public String authorizationException(HttpServletRequest request, HttpServletResponse response) {
         if (WebUtils.isAjaxRequest(request)) {
-            renderString(response, new AjaxResult(403, "当前账号无权进行此操作!!!"));
+            renderString(response, new AjaxResult(HttpStatus.SC_FORBIDDEN, "当前账号无权进行此操作!!!"));
             return null;
         } else {
             return "sys/403";
@@ -392,7 +393,7 @@ public abstract class BaseController {
     @ExceptionHandler(ServiceException.class)
     public String handleServiceException(HttpServletRequest request, HttpServletResponse response, ServiceException e) {
         if (WebUtils.isAjaxRequest(request)) {
-            renderString(response, new AjaxResult(500, "业务逻辑异常：" + e.getMessage()));
+            renderString(response, new AjaxResult(HttpStatus.SC_INTERNAL_SERVER_ERROR, "业务逻辑异常：" + e.getMessage()));
             return null;
         } else {
             return "sys/500";
