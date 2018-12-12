@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zz.HttpClient.modules.timer.dao.CommonTimerDao">
+
+	<sql id="commonTimerColumns">
+      	[JOB_NAME],
+      	[JOB_GROUP_NAME],
+      	[NAME],
+      	[JOB_TIME],
+      	[STATUS],
+      	[JOB_CLASS],
+      	[CREATE_DATE],
+      	[UPDATE_DATE],
+      	[CREATE_BY],
+      	[UPDATE_BY],
+      	[REMARKS],
+      	[RESULT],
+      	[RES_DATE]
+	</sql>
+	
+	<!-- 获取单条定时任务信息 -->
+	<select id="get" resultType="CommonTimer">
+		SELECT
+		<include refid="commonTimerColumns"/>
+		FROM [Message].[dbo].[SYS_COMMON_TIMER]
+		WHERE [JOB_NAME] = #{jobName}
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="findList" resultType="CommonTimer">
+		SELECT
+		<include refid="commonTimerColumns"/>
+		FROM [Message].[dbo].[SYS_COMMON_TIMER]
+		ORDER BY [CREATE_DATE] 
+	</select>
+	
+	<!-- 查询全部数据 -->
+	<select id="findAllList" resultType="CommonTimer">
+		SELECT
+		<include refid="commonTimerColumns"/>
+		FROM [Message].[dbo].[SYS_COMMON_TIMER]
+	</select>
+	
+	<!-- 插入单笔数据 -->
+	<insert id="insert">
+		INSERT INTO
+		[Message].[dbo].[SYS_COMMON_TIMER]
+		(<include refid="commonTimerColumns"/>)
+		VALUES (
+			#{jobName},
+			#{jobGroupName},
+			#{name},
+			#{jobTime},
+			#{status},
+			#{jobClass},
+			#{createDate},
+			#{updateDate},
+			#{createBy.id},
+			#{updateBy.id},
+			#{remarks},
+			#{result},
+			#{resDate})
+	</insert>
+	
+	<!-- 根据 jobName 更新任务当前状态 -->
+	<update id="updateStatusByJobName">
+		UPDATE
+		[Message].[dbo].[SYS_COMMON_TIMER]
+		SET [STATUS] = #{status}
+		WHERE [JOB_NAME] = #{commonTimer.jobName}
+	</update>
+	
+	<!-- 更新单笔数据 -->
+	<update id="update">
+		UPDATE
+		[Message].[dbo].[SYS_COMMON_TIMER]
+		SET
+		[NAME] = #{name},
+		[JOB_TIME] = #{jobTime},
+		[STATUS] = #{status},
+		[UPDATE_DATE] = #{updateDate},
+		[UPDATE_BY] = #{updateBy.id},
+		[REMARKS] = #{remarks}
+		WHERE [JOB_NAME] = #{jobName}
+	</update>
+	
+	<!-- 删除单笔数据 -->
+	<delete id="delete">
+		DELETE
+		[Message].[dbo].[SYS_COMMON_TIMER]
+		WHERE [JOB_NAME] = #{jobName}
+	</delete>
+
+</mapper>
