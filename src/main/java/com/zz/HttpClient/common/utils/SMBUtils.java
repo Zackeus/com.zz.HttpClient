@@ -8,6 +8,7 @@ import java.io.OutputStream;
 
 import org.apache.commons.io.IOUtils;
 
+import com.zz.HttpClient.common.config.SMBConfig;
 import com.zz.HttpClient.common.utils.exception.MyException;
 import com.zz.HttpClient.common.utils.httpClient.HttpStatus;
 
@@ -35,9 +36,11 @@ public class SMBUtils {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static void smbGet(String remoteUrl, NtlmPasswordAuthentication auth, String localFilePath) throws Exception {
+	public static void smbGet(String remoteUrl, String localFilePath, SMBConfig smbConfig) throws Exception {
 		byte[] bytes = {};
 		try {
+			NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(smbConfig.getIp(), smbConfig.getUserName(), 
+					smbConfig.getPassWord());
 			SmbFile remoteFile = new SmbFile(remoteUrl, auth);
 			if (ObjectUtils.isEmpty(remoteFile))
 				throw new MyException(String.valueOf(HttpStatus.SC_INTERNAL_SERVER_ERROR), "无此文件");
@@ -60,9 +63,11 @@ public class SMBUtils {
 	 * @param auth
 	 * @return
 	 */
-	public static void smbPut(String remoteUrl, String localFilePath, NtlmPasswordAuthentication auth) {
+	public static void smbPut(String remoteUrl, String localFilePath, SMBConfig smbConfig) {
 		FileInputStream fis = null;
 		try {
+			NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(smbConfig.getIp(), smbConfig.getUserName(), 
+					smbConfig.getPassWord());
 			File localFile = new File(localFilePath);
 			localFile.setReadOnly();
 			String fileName = localFile.getName();
@@ -90,8 +95,10 @@ public class SMBUtils {
 	 * @param remoteUrl 共享目录上的文件路径
 	 * @param auth
 	 */
-	public static void smbDel(String remoteUrl, NtlmPasswordAuthentication auth) {
+	public static void smbDel(String remoteUrl, SMBConfig smbConfig) {
 		try {
+			NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(smbConfig.getIp(), smbConfig.getUserName(), 
+					smbConfig.getPassWord());
 			SmbFile remoteFile = new SmbFile(remoteUrl, auth);
 			if (remoteFile.exists())
 				remoteFile.delete();
@@ -103,21 +110,14 @@ public class SMBUtils {
 	
 	public static void main(String[] args) throws IOException {
 		// smb:域名;用户名:密码@目的IP/文件夹/文件名.xxx
-        // test.smbGet("smb://szpcg;jiang.t:xxx@192.168.193.13/Jake/test.txt",
-        // "c://") ;
 		// 先登录验证
-		NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication("10.5.61.6", "YULON-FINANCE\\it01", "bnm,./789"); 
-		// SmbFile fp = new SmbFile(remoteurl+"//"+dir,auth);
-		// test.smbPut("smb://10.12.91.156/smp_shared", "C:\\contract1659.pdf", auth);
-		// test.smbGet("smb://10.12.91.156/smp_shared/contractvayiVyjK.pdf",
-		// "C://asd.pdf", auth);
+//		NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication("10.5.61.6", "YULON-FINANCE\\it01", "bnm,./789");
+		SMBConfig smbConfig = new SMBConfig();
+		smbConfig.setIp("10.5.61.6");
+		smbConfig.setUserName("YULON-FINANCE\\it01");
+		smbConfig.setPassWord("bnm,./789");
 		String url = "smb://10.5.61.6/shares/征信报告存档文件夹/OA附件";
-		smbPut(url, "D:/test.xls", auth);
-		
-//		OutputStream os = new FileOutputStream("D:/test.xls");
-//		IOUtils.write(smbGet(url, auth), os);
-		
-//        smbDel(url, auth);
+		smbPut(url, "D:/test.xlsx", smbConfig);
 	}
 }
 
