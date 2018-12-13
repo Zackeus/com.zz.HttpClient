@@ -17,11 +17,25 @@ public class ReportFormConfig {
 	
 	@Value("${reportFormConfig.filePath}")
 	private String filePath;	// 报表目录
-
+	@Value("${reportFormConfig.smbPath}")
+	private String smbPath;		// 远程报表目录
+	
 	public String getFilePath() {
 		return filePath;
 	}
-	
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public String getSmbPath() {
+		return smbPath;
+	}
+
+	public void setSmbPath(String smbPath) {
+		this.smbPath = smbPath;
+	}
+
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this);

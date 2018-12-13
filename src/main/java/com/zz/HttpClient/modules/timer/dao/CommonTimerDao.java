@@ -19,5 +19,7 @@ public interface CommonTimerDao extends CrudDao<CommonTimer> {
 	
 	public int updateStatusByJobName(@Param("commonTimer") CommonTimer commonTimer, 
 			@Param("status") boolean status);
-
+	
+	public int updateRes(CommonTimer commonTimer);
+	
 }

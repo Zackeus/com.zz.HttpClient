@@ -33,6 +33,12 @@
 	      		<input id="status" name="status" type="checkbox" lay-skin="switch" lay-text="启用|禁用" value="true">
 	    	</div>
 		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">异常重启</label>
+	    	<div class="layui-input-block">
+	      		<input id="restart" name="restart" type="checkbox" lay-skin="switch" lay-text="启用|禁用" value="true">
+	    	</div>
+		</div>
 		<div class="layui-form-item layui-form-text">
 			<label class="layui-form-label">备注</label>
 		    <div class="layui-input-block">

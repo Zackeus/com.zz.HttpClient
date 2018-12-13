@@ -1,9 +1,13 @@
 package com.zz.HttpClient.modules.timer.service;
 
+import java.util.Date;
+
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.zz.HttpClient.common.utils.DateUtils;
+import com.zz.HttpClient.common.utils.ObjectUtils;
 import com.zz.HttpClient.common.utils.exception.MyException;
 import com.zz.HttpClient.modules.timer.dao.CommonTimerDao;
 import com.zz.HttpClient.modules.timer.entity.CommonTimer;
@@ -101,6 +105,36 @@ public class CommonTimerService extends BaseTimerService<CommonTimerDao, CommonT
 		} catch (Exception e) {
 			throw new MyException("删除任务失败：" + e.getMessage());
 		}
+	}
+	
+	/**
+	 * 
+	 * @Title：isSuccess
+	 * @Description: TODO(查看本天最近运行是否成功)
+	 * @see：
+	 * @param jobName
+	 * @return
+	 */
+	public boolean isSuccess(String jobName) {
+		CommonTimer commonTimer = get(jobName);
+		if (ObjectUtils.isEmpty(commonTimer) || ObjectUtils.isEmpty(commonTimer.getResDate()) ||
+				!DateUtils.isToDay(commonTimer.getResDate()))
+			return Boolean.FALSE;
+		return commonTimer.isResult();
+	}
+	
+	/**
+	 * 
+	 * @Title：updateRes
+	 * @Description: TODO(更新执行结果)
+	 * @see：
+	 */
+	@CacheEvict(value = { "sysTimerCache" }, allEntries = true)
+	public int updateRes(String jobName, boolean res) {
+		CommonTimer commonTimer = get(jobName);
+		commonTimer.setResDate(new Date());
+		commonTimer.setResult(res);
+		return dao.updateRes(commonTimer);
 	}
 
 }

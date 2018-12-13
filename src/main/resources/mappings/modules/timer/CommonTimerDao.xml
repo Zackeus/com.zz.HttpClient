@@ -15,7 +15,8 @@
       	[UPDATE_BY],
       	[REMARKS],
       	[RESULT],
-      	[RES_DATE]
+      	[RES_DATE],
+      	[RESTART]
 	</sql>
 	
 	<!-- 获取单条定时任务信息 -->
@@ -59,7 +60,8 @@
 			#{updateBy.id},
 			#{remarks},
 			#{result},
-			#{resDate})
+			#{resDate},
+			#{restart})
 	</insert>
 	
 	<!-- 根据 jobName 更新任务当前状态 -->
@@ -80,7 +82,8 @@
 		[STATUS] = #{status},
 		[UPDATE_DATE] = #{updateDate},
 		[UPDATE_BY] = #{updateBy.id},
-		[REMARKS] = #{remarks}
+		[REMARKS] = #{remarks},
+		[RESTART] = #{restart}
 		WHERE [JOB_NAME] = #{jobName}
 	</update>
 	
@@ -90,5 +93,15 @@
 		[Message].[dbo].[SYS_COMMON_TIMER]
 		WHERE [JOB_NAME] = #{jobName}
 	</delete>
+	
+	<!-- 更新执行结果 -->
+	<update id="updateRes">
+		UPDATE
+		[Message].[dbo].[SYS_COMMON_TIMER]
+		SET
+		[RESULT] = #{result},
+		[RES_DATE] = #{resDate}
+		WHERE [JOB_NAME] = #{jobName}
+	</update>
 
 </mapper>

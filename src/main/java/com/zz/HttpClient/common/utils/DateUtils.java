@@ -339,6 +339,19 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	
 	/**
 	 * 
+	 * @Title：isToDay
+	 * @Description: TODO(判断是否今天)
+	 * @see：
+	 * @param date
+	 * @return
+	 */
+	public static boolean isToDay(Date date) {
+		String toDay = formatDate(new Date());
+		return StringUtils.equals(toDay, formatDate(date));
+	}
+	
+	/**
+	 * 
 	 * @Title：getTimesnight
 	 * @Description: TODO((获取当天24点时间戳)
 	 * @see：
