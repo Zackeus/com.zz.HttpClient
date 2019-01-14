@@ -1,5 +1,6 @@
 package com.zz.HttpClient.modules.timer.entity;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.GroupSequence;
@@ -11,6 +12,8 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.zz.HttpClient.common.annotation.validator.DialTestTimerValidator;
 import com.zz.HttpClient.common.service.valid.First;
 import com.zz.HttpClient.common.service.valid.Second;
+import com.zz.HttpClient.common.utils.ObjectUtils;
+import com.zz.HttpClient.common.utils.StringUtils;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.CustomerStyle;
 
 /**
@@ -36,6 +39,7 @@ public class DialTestTimer extends TimerJob<DialTestTimer> {
 	private CustomerStyle customerStyle; 	// 客户类型
 	
 	private List<String> mobileLabels;		// 手机标签
+	private String mobileLabelsStr;			// 手机标签字符(以';'拼接，存储时使用)
 	
 	@NotNull(message = "{collectionRobotTimer.status.NotNull}")
 	private boolean status; 				// 当前状态(true：启用；false：禁用)
@@ -60,12 +64,13 @@ public class DialTestTimer extends TimerJob<DialTestTimer> {
 	}
 
 	public DialTestTimer(Integer startDay, Integer endDay, CustomerStyle customerStyle, List<String> mobileLabels,
-			boolean status, String customerStyleId) {
+			String mobileLabelsStr, boolean status, String customerStyleId) {
 		super();
 		this.startDay = startDay;
 		this.endDay = endDay;
 		this.customerStyle = customerStyle;
 		this.mobileLabels = mobileLabels;
+		this.mobileLabelsStr = mobileLabelsStr;
 		this.status = status;
 		this.customerStyleId = customerStyleId;
 	}
@@ -101,6 +106,14 @@ public class DialTestTimer extends TimerJob<DialTestTimer> {
 	public void setMobileLabels(List<String> mobileLabels) {
 		this.mobileLabels = mobileLabels;
 	}
+	
+	public String getMobileLabelsStr() {
+		return mobileLabelsStr;
+	}
+
+	public void setMobileLabelsStr(String mobileLabelsStr) {
+		this.mobileLabelsStr = mobileLabelsStr;
+	}
 
 	public boolean isStatus() {
 		return status;
@@ -116,6 +129,30 @@ public class DialTestTimer extends TimerJob<DialTestTimer> {
 
 	public void setCustomerStyleId(String customerStyleId) {
 		this.customerStyleId = customerStyleId;
+	}
+	
+	/**
+	 * 
+	 * @Title：initMobileLabels
+	 * @Description: TODO(标签字符转列表)
+	 * @see：
+	 */
+	public void initMobileLabels() {
+		if (StringUtils.isNotBlank(this.mobileLabelsStr)) {
+			this.mobileLabels =  Arrays.asList(StringUtils.split(this.mobileLabelsStr, StringUtils.SEPARATOR_SECOND));
+		}
+	}
+	
+	/**
+	 * 
+	 * @Title：initMobileLabelsStr
+	 * @Description: TODO(标签列表转字符)
+	 * @see：
+	 */
+	public void initMobileLabelsStr() {
+		if (ObjectUtils.isNotEmpty(this.mobileLabels)) {
+			this.mobileLabelsStr =  StringUtils.join(this.mobileLabels, StringUtils.SEPARATOR_SECOND);
+		}
 	}
 	
 }

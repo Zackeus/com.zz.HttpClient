@@ -3,6 +3,8 @@ package com.zz.HttpClient.modules.timer.jobClass;
 import org.quartz.DisallowConcurrentExecution;
 import org.springframework.stereotype.Component;
 
+import com.zz.HttpClient.common.utils.Logs;
+
 /**
  * 
  * @Title:DialTestJob
@@ -28,7 +30,7 @@ public class DialTestJob extends BaseJob {
 	 */
 	@Override
 	protected void executeJob(String jobName) {
-		super.executeJob(jobName);
+		Logs.info("拨号测试任务执行*********************");
 	}
 
 	/**
