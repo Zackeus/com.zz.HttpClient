@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zz.HttpClient.modules.timer.dao.SendDialTestDao">
+	
+	<resultMap id="overdueCustomerResult" type="Customer">
+		<result column="EXTERNAL_CONTRACT_NBR" property="contractNum"/>
+		<result column="OD_NAME" property="odName"/>
+		<result column="CUSTOME_NAME" property="customeName"/>
+		<result column="RTYPE" property="rtype"/>
+		<result column="PHONE_NUMBER" property="phoneNum"/>
+		<result column="OD_DAYS" property="odDays"/>
+		<result column="OD_AMOUNT" property="odAmount"/>
+		<result column="ADDRESS_TYPE" property="addressType"/>
+	</resultMap>
+	
+	<!-- 查询指定逾期 天数的借款人名单 -->
+	<select id="getDialTestCustomer" resultMap="overdueCustomerResult">
+		SELECT  
+			DISTINCT
+			A.[EXTERNAL_CONTRACT_NBR],
+			A.[OD_NAME],
+			A.[CUSTOME_NAME],
+			A.RTYPE,
+			A.PHONE_NUMBER,
+			A.[OD_DAYS],
+			A.[OD_AMOUNT],
+			A.[ADDRESS_TYPE]
+		FROM OPENQUERY(YFC_PROD,'
+			SELECT * from (
+			SELECT 
+				C.EXTERNAL_CONTRACT_NBR, 
+				AD.FIRST_THI_NME OD_NAME,
+				AD.FIRST_THI_NME AS CUSTOME_NAME,
+				PHO.RTYPE，
+				PHO.PHONE_NUMBER,
+				MAX(CASE WHEN P.CMP_RECEIVABLE_AMT = 0 THEN 0 ELSE P.OD_DAYS END) OD_DAYS,
+				SUM(P.CMP_RECEIVABLE_AMT) + SUM(NVL(O.NET_OVERDUE_AMT,0)) OD_AMOUNT,
+				PHO.ADDRESS_TYPE
+			        FROM YFC_RETAIL_PROD.REPAYMENT_PLAN P 
+					INNER JOIN CONTRACT C ON C.CONTRACT_ID = P.CONTRACT_ID AND C.LIVE_STS = ''L''
+					LEFT JOIN YFC_RETAIL_PROD.RENTAL_OVERDUE O ON O.CONTRACT_ID = P.CONTRACT_ID AND O.RENTAL_ID = P.RENTAL_ID AND P.AGREEMENT_SEQ = P.AGREEMENT_SEQ
+					LEFT JOIN APPLICANT_DETAIL AD ON AD.APPLICATION_NUMBER = C.PROPOSAL_NBR AND AD.IDENTIFICATION_CODE = 1
+					LEFT JOIN COMPANY_DETAIL CD ON CD.APPLICATION_NUMBER = C.PROPOSAL_NBR AND CD.IDENTIFICATION_CODE = 1
+					LEFT JOIN 
+					(	SELECT EXTERNAL_CONTRACT_NBR,RTYPE,PHONE_NUMBER,ADDRESS_TYPE FROM (
+						SELECT DISTINCT C.EXTERNAL_CONTRACT_NBR,
+							CASE WHEN AT.APPLICANT_TYPE = ''I'' THEN AT.NAME
+									WHEN AT.APPLICANT_TYPE = ''C'' THEN (SELECT isnull (comdet.company_thi_nme)
+																		FROM company_detail comdet 
+																		WHERE  C.PROPOSAL_NBR = comdet.application_number AND comdet.identification_code = AT.identification_code) 
+									ELSE AT.NAME END BNAME,
+							CASE WHEN AT.MAIN_APPLICANT = ''Y'' THEN ''借款人'' 
+									WHEN AT.MAIN_APPLICANT IS NULL AND AT.GUARANTOR_TYPE IS NULL THEN ''共同借款人'' 
+									WHEN AT.GUARANTOR_TYPE = ''I'' THEN ''担保人'' 
+									END RTYPE,
+							PTC.PHONE_TYPE_DSC,BP.PHONE_NBR PHONE_NUMBER,
+							CASE WHEN ADS.DEFAULT_ADDRESS = ''Y'' AND ADS.HUKOU_ADDRESS = ''Y'' THEN ''户籍邮寄地''
+									WHEN ADS.DEFAULT_ADDRESS = ''N'' AND ADS.HUKOU_ADDRESS = ''N'' THEN ''现居地''
+									WHEN ADS.DEFAULT_ADDRESS = ''Y'' AND ADS.HUKOU_ADDRESS = ''N'' THEN ''邮寄地''
+									WHEN ADS.DEFAULT_ADDRESS = ''N'' AND ADS.HUKOU_ADDRESS = ''Y'' THEN ''户籍地''
+									END ADDRESS_TYPE,
+							SC.STATE_NME||CC.CITY_NME||ADS.UNIT_NO ADDRESS_STR,
+							'''' COMPANY_NAME,
+							CASE WHEN BI.GENDER_STS = ''M'' THEN ''男''
+									WHEN BI.GENDER_STS = ''F'' THEN ''女'' ELSE BI.GENDER_STS
+									END GENDER_STS
+							FROM CONTRACT C
+									LEFT JOIN APPLICANT_TYPE AT ON C.PROPOSAL_NBR = AT.APPLICATION_NUMBER AND AT.MAIN_APPLICANT = ''Y''
+									LEFT JOIN BP_INDIVIDUAL BI ON AT.BUSINESS_PARTNER_ID = BI.BUSINESS_PARTNER_ID
+									LEFT JOIN BP_PHONE BP ON AT.BUSINESS_PARTNER_ID = BP.BUSINESS_PARTNER_ID
+									LEFT JOIN PHONE_TYPE_CODE PTC ON PTC.PHONE_TYPE_CDE = BP.PHONE_TYPE_CDE
+									LEFT JOIN ADDRESS ADS ON AT.APPLICATION_NUMBER = ADS.APPLICATION_NUMBER AND ADS.IDENTIFICATION_CODE = AT.IDENTIFICATION_CODE
+									LEFT JOIN CITY_CODE CC ON CC.CITY_CDE = ADS.CITY_CDE
+									LEFT JOIN STATE_CODE SC ON SC.STATE_CDE = ADS.STATE_CDE
+									WHERE AT.IS_INACTIVE_IND <![CDATA[<> ]]> ''T'' OR AT.IS_INACTIVE_IND IS NULL
+									UNION 
+									SELECT DISTINCT
+									C.EXTERNAL_CONTRACT_NBR,
+									CASE WHEN ATE.APPLICANT_TYPE = ''I'' THEN ATE.NAME
+											WHEN ATE.APPLICANT_TYPE = ''C'' THEN (SELECT isnull (comdet.company_thi_nme) FROM company_detail comdet 
+																															WHERE  C.PROPOSAL_NBR = comdet.application_number AND comdet.identification_code = ATE.identification_code) 
+											ELSE ATE.NAME END BNAME,
+									CASE WHEN ATE.MAIN_APPLICANT = ''Y'' THEN ''借款人'' 
+											WHEN ATE.MAIN_APPLICANT IS NULL AND ATE.GUARANTOR_TYPE IS NULL THEN ''共同借款人'' 
+											WHEN ATE.GUARANTOR_TYPE = ''I'' THEN ''担保人'' 
+											END RTYPE,
+									''工作地电话'' PHONE_TYPE_DSC, 
+									ISNULL(EMR.PHONE,''无'') PHONE_NUMBER,
+									''工作地址'' ADDRESS_TYPE,
+									SC.state_nme||cc.city_nme||ISNULL(EMR.ADDRESS_ONE_2,'''') ADDRESS_STR,
+									ISNULL(EMR.NAME_2,''无'') COMPANY_NAME,
+									CASE WHEN BI.GENDER_STS = ''M'' THEN ''男''
+											WHEN BI.GENDER_STS = ''F'' THEN ''女'' ELSE BI.GENDER_STS
+											END GENDER_STS
+									FROM CONTRACT C 
+									LEFT JOIN APPLICANT_TYPE ATE ON C.PROPOSAL_NBR = ATE.APPLICATION_NUMBER AND ATE.MAIN_APPLICANT = ''Y''
+									LEFT JOIN BP_INDIVIDUAL BI ON ATE.BUSINESS_PARTNER_ID = BI.BUSINESS_PARTNER_ID
+									LEFT JOIN EMPLOYER EMR ON C.PROPOSAL_NBR = EMR.APPLICATION_NUMBER AND EMR.IDENTIFICATION_CODE = ATE.IDENTIFICATION_CODE
+									LEFT JOIN city_code CC ON CC.city_cde = emr.city_cde
+									LEFT JOIN state_code SC ON SC.state_cde = emr.state_cde
+					) WHERE PHONE_TYPE_DSC = ''手机'' AND RTYPE = ''借款人'') PHO ON C.EXTERNAL_CONTRACT_NBR = PHO.EXTERNAL_CONTRACT_NBR
+			        WHERE P.AGREEMENT_SEQ = 1 and sysdate <![CDATA[>= ]]> DUE_DTE AND (P.SETTLE_AMT is null OR P.SETTLE_AMT &lt; P.RENTAL_AMT OR O.NET_OVERDUE_AMT &gt; 0)
+					GROUP BY P.CONTRACT_ID,C.EXTERNAL_CONTRACT_NBR ,AD.FIRST_THI_NME,PHO.PHONE_NUMBER,PHO.RTYPE,PHO.ADDRESS_TYPE,CD.COMPANY_THI_NME					 
+			) A WHERE PHONE_NUMBER IS NOT NULL AND PHONE_NUMBER <![CDATA[<> ]]> ''0'' AND ISNUMERIC(PHONE_NUMBER) &gt; 0 AND OD_NAME IS NOT NULL 
+			AND A.OD_DAYS BETWEEN ''{START_DAY}'' AND ''{END_DAY}''
+		')  A
+		LEFT JOIN [10.5.60.80].[jeesite-yfc].[dbo].[COL_COLLECTION_RECORD] B ON A.[EXTERNAL_CONTRACT_NBR] = B.[EXTERNAL_CONTRACT_NBR] AND A.[PHONE_NUMBER] = B.[PHONE]
+		LEFT JOIN [10.5.60.80].[jeesite-yfc].[dbo].[COL_PHONE_VALID_RECORD] C ON A.[PHONE_NUMBER] = C.[PHONE_NUMBER]
+		WHERE (C.[DEL_FLAG] IS NULL OR C.[DEL_FLAG] = 1) 
+		AND B.[COL_RECORD_LABEL] IN (${mobileLabelsStr})
+	</select>
+	
+	<select id="getDialTestCustomerParameter" resultMap="overdueCustomerResult" parameterType="java.lang.String">
+        ${_parameter}        
+	</select>
+	
+	<!-- 插入催收拨号测试记录 -->
+    <insert id="insertInfo">
+		INSERT INTO
+		[Message].[dbo].[COLLECTION_INFO] (
+			[TASK_ID],
+		    [CONTRACT_NUM],
+		    [OD_NAME],
+		    [CUSTOME_NAME],
+		    [RTYPE],
+		    [PHONE_NUM],
+		    [OD_DAYS],
+		    [OD_AMOUNT],
+		    [ADDRESS_TYPE],
+		    [REQUEST_EMPNO],
+		    [REQUEST_DATETIME],
+		    [REMARK],
+		    [SEND_BATCH],
+		    [JOB_NAME]
+		) VALUES
+		<foreach collection = "customers" index="index" item="customer" separator = ",">
+            (
+      		#{taskId},
+      		#{customer.contractNum},
+      		#{customer.odName},
+      		#{customer.customeName},
+      		#{customer.rtype},
+      		#{customer.phoneNum},
+      		#{customer.odDays},
+      		${customer.odAmount},
+      		#{customer.addressType},
+      		#{empno},
+      		CONVERT(varchar(100), GETDATE(), 20),
+      		'T',
+      		#{sendBatch},
+      		#{dialTestTimer.jobName}
+      		)
+        </foreach>
+    </insert>
+</mapper>  

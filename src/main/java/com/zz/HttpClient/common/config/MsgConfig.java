@@ -28,6 +28,9 @@ public class MsgConfig {
 
 	@Value("${msg.collectAgentId}")
 	private String collectAgentId;
+	
+	@Value("${msg.timerAgentId}")
+	private String timerAgentId;
 
 	@Value("${msg.ItDpId}")
 	private String itDpId;
@@ -73,6 +76,14 @@ public class MsgConfig {
 
 	public void setCollectAgentId(String collectAgentId) {
 		this.collectAgentId = collectAgentId;
+	}
+	
+	public String getTimerAgentId() {
+		return timerAgentId;
+	}
+
+	public void setTimerAgentId(String timerAgentId) {
+		this.timerAgentId = timerAgentId;
 	}
 
 	public String getItDpId() {

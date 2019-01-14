@@ -25,6 +25,12 @@ import com.zz.HttpClient.modules.timer.service.CommonTimerService;
  * @date 2018年12月13日 上午9:53:49
  */
 public abstract class BaseJob implements Job {
+	
+	// 定时任务名
+	protected String jobFunction = "未定义";
+	
+	// 是否需要更新结果
+	protected boolean isUpdateRes = Boolean.TRUE;
 
 	@Autowired
 	protected CommonTimerService commonTimerService;
@@ -37,6 +43,7 @@ public abstract class BaseJob implements Job {
 		String jobName = context.getJobDetail().getKey().getName();
 		Exception exception = null;
 		try {
+			initParameter();
 			boolean continueChain = preHandle(jobName);
 			if (continueChain)
 				executeJob(jobName);
@@ -46,6 +53,16 @@ public abstract class BaseJob implements Job {
 		} finally {
 			cleanup(jobName, exception);
 		}
+	}
+	
+	/**
+	 * 
+	 * @Title：initParameter
+	 * @Description: TODO(初始化参数)
+	 * @see：
+	 */
+	protected void initParameter() {
+		
 	}
 
 	/**
@@ -79,7 +96,9 @@ public abstract class BaseJob implements Job {
 	 * @Description: TODO(后置操作) @see：
 	 */
 	protected void afterHandle(String jobName) {
-		commonTimerService.updateRes(jobName, Boolean.TRUE);
+		if (isUpdateRes) {
+			commonTimerService.updateRes(jobName, Boolean.TRUE);
+		}
 	}
 
 	/**
@@ -93,12 +112,17 @@ public abstract class BaseJob implements Job {
 	protected void cleanup(String jobName, Exception e) throws JobExecutionException {
 		if (ObjectUtils.isNotEmpty(e)) {
 			Logs.error(jobName + " :定时任务异常：" + Logs.toLog(e));
-			commonTimerService.updateRes(jobName, Boolean.FALSE);
+			
+			if (isUpdateRes) {
+				commonTimerService.updateRes(jobName, Boolean.FALSE);
+			}
+			
 			WeiXinMsg weiXinErrorMsg = new WeiXinMsg(GlobalConfig.requestErrorSys, GlobalConfig.requestUser,
-					GlobalConfig.receiverName, "【裕隆汽车金融】 定时任务【" + jobName + "】执行异常：" + e.getMessage(),
+					GlobalConfig.receiverName, "【裕隆汽车金融】 定时任务【" + jobName + "】【" + 
+							jobFunction + "】执行异常：" + e.getMessage(),
 					GlobalConfig.receiverCompany, GlobalConfig.receiverRole, null, GlobalConfig.repeatTimes,
 					GlobalConfig.repeatInterval, null, null, null, null, msgConfig.getItDpId(),
-					msgConfig.getErrorAgentId());
+					msgConfig.getTimerAgentId());
 			try {
 				sendErrorMsg(weiXinErrorMsg);
 			} catch (Exception e1) {
@@ -115,7 +139,7 @@ public abstract class BaseJob implements Job {
 	 * @param weiXinErrorMsg
 	 * @throws Exception
 	 */
-	protected void sendErrorMsg(WeiXinMsg weiXinErrorMsg) throws Exception {
+	protected void sendErrorMsg(WeiXinMsg weiXinErrorMsg) {
 		try {
 			SendMsgUtil.sendWX(msgConfig.getWxUrl(), weiXinErrorMsg);
 		} catch (Exception e) {
