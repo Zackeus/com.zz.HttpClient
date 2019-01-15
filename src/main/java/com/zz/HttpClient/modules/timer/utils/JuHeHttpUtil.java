@@ -355,7 +355,14 @@ public class JuHeHttpUtil {
 //		System.out.println("结束");
 		
 		/********* 删除任务 ***********/
-		System.out.println(HttpClientUtil.doPostJson("https://ptah.kxjlcc.com/yungo-outbound/api/v1/outbound/task/2940/manageTask", 
-				JSONObject.fromObject(new Task(3, new Long("59804"), 1, null))));
+//		System.out.println(HttpClientUtil.doPostJson("https://ptah.kxjlcc.com/yungo-outbound/api/v1/outbound/task/2940/manageTask", 
+//				JSONObject.fromObject(new Task(3, new Long("59804"), 1, null))));
+		
+		
+		/********** 查询任务集合  ****************/
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("taskId", new Long("738560151849024"));
+		System.out.println(HttpClientUtil.doPostJson("https://www.xfyeta.com/yungo-outbound/api/v1/outbound/task/2940/searchTaskList", jsonObject));
+		
 	}
 }
