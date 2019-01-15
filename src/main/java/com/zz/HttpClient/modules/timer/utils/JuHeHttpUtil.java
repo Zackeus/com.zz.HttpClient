@@ -201,11 +201,47 @@ public class JuHeHttpUtil {
 		jsonObject.put("taskId", taskId);
 		return HttpClientUtil.doPostJson(juHeHttpUtil.juHeConfig.getSearchTaskList(), jsonObject);
 	}
+	
+	/**
+	 * 
+	 * @Title：createTask
+	 * @Description: TODO(创建任务)
+	 * @see：
+	 * @param list 待提交数据
+	 * @param cls 数据类型
+	 * @param taskConfig 任务配置类
+	 * @return
+	 * @throws Exception
+	 */
+	public static <T> HttpClientResult createTask(List<T> list, Class<T> cls, TaskConfig taskConfig) throws Exception {
+		// 创建文件目录
+		String orgFileName = OrderNoUtil.getDetailOrderNo() + ".xls";
+		String orgFilePath = GlobalConfig.filePath + DateUtils.getDate(DateUtils.parsePatterns[0]) + "/" + orgFileName;
+		FileUtil.makeDirectory(orgFilePath);
+		
+		// 生成上传的xls
+		HSSFWorkbook firstWb = (HSSFWorkbook) ExcelUtil.exportExcel(list, cls, null, ExcelUtil.EXCEL_FILE_2003);
+		firstWb.write(new FileOutputStream(orgFilePath));
+		
+		// 获取上传数据的文件名
+		String fileName = JSONObject
+				.fromObject(uploadExcelDataExcel(orgFilePath, juHeHttpUtil.juHeConfig.getSpeechSkillId()).getContent())
+				.getJSONObject("result").getJSONArray("rows").getJSONObject(0).getString("fileName");
+		
+		// 创建 taskConfig
+		taskConfig.setFileName(fileName);
+		taskConfig.setOrgFileName(orgFileName);
+		
+		// 创建 task
+		Task task = new Task(1, new Long(OrderNoUtil.getRandNum(6)), 1, taskConfig);
+		
+		return manageTask(task);
+	}
 
 	/**
 	 * 
 	 * @Title:createTask
-	 * @Description: TODO(创建任务)
+	 * @Description: TODO(创建催收人任务)
 	 * @param customers
 	 * @return
 	 * @throws Exception
@@ -227,7 +263,7 @@ public class JuHeHttpUtil {
 				.getJSONObject("result").getJSONArray("rows").getJSONObject(0).getString("fileName");
 
 		// 创建 taskConfig
-		TaskConfig taskConfig = createTaskConfig(fileName, orgFileName, taskDataConfig);
+		TaskConfig taskConfig = createCustomerTaskConfig(fileName, orgFileName, taskDataConfig);
 
 		// 创建 task
 		Task task = new Task(1, new Long(OrderNoUtil.getRandNum(6)), 1, taskConfig);
@@ -270,13 +306,15 @@ public class JuHeHttpUtil {
 
 	/**
 	 * 
-	 * @Title:createTaskConfig
-	 * @Description: TODO(创建 taskConfig)
+	 * @Title：createCustomerTaskConfig
+	 * @Description: TODO(创建 借款人taskConfig)
+	 * @see：
 	 * @param fileName
 	 * @param orgFileName
+	 * @param taskDataConfig
 	 * @return
 	 */
-	public static TaskConfig createTaskConfig(String fileName, String orgFileName, TaskConfig taskDataConfig) {
+	public static TaskConfig createCustomerTaskConfig(String fileName, String orgFileName, TaskConfig taskDataConfig) {
 		return new TaskConfig(fileName, orgFileName, taskDataConfig.getName(), System.currentTimeMillis(),
 				DateUtils.getTimesnight(21), juHeHttpUtil.juHeConfig.getSpeechSkillId(),
 				juHeHttpUtil.juHeConfig.getRobotVoiceId(), 80, 0, null, taskDataConfig.getTelNum(),

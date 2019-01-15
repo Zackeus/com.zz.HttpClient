@@ -37,6 +37,9 @@ public class JuHeConfig {
 	@Value("${juhe.telGuaranteeNum}")
 	private String telGuaranteeNum;			// 64000272
 	
+	@Value("${juhe.telNumThird}")
+	private String telNumThird;				// 64000273
+	
 	@Value("${juhe.sysType}")
 	private Integer sysType;				// 系统标签 0 晓曼 1ptah 2yeta
 	
@@ -124,6 +127,14 @@ public class JuHeConfig {
 
 	public void setTelGuaranteeNum(String telGuaranteeNum) {
 		this.telGuaranteeNum = telGuaranteeNum;
+	}
+	
+	public String getTelNumThird() {
+		return telNumThird;
+	}
+
+	public void setTelNumThird(String telNumThird) {
+		this.telNumThird = telNumThird;
 	}
 
 	public Integer getSysType() {
