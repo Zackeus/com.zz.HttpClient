@@ -210,7 +210,7 @@ public class JuHeHttpUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static HttpClientResult createTask(List<Customer> customers, TaskConfig taskDataConfig) throws Exception {
+	public static HttpClientResult createCustomerTask(List<Customer> customers, TaskConfig taskDataConfig) throws Exception {
 		// 创建文件目录
 		String orgFileName = OrderNoUtil.getDetailOrderNo() + ".xls";
 		String orgFilePath = GlobalConfig.filePath + DateUtils.getDate(DateUtils.parsePatterns[0]) + "/" + orgFileName;

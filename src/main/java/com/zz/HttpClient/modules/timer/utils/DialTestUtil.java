@@ -43,7 +43,7 @@ public class DialTestUtil {
 				null, null, null, null, juHeConfig.getTelGuaranteeNum(), null, null, null, 0, 60, null);
 		
 		try {
-			HttpClientResult httpClientResult = JuHeHttpUtil.createTask(customers, taskConfig);
+			HttpClientResult httpClientResult = JuHeHttpUtil.createCustomerTask(customers, taskConfig);
 			
 			if (JSONObject.fromObject(httpClientResult.getContent()).getInt("code") == 0) {
 				// 任务创建成功 数据写入数据库
