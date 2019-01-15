@@ -153,6 +153,26 @@ public class JuHeHttpUtil {
 		}
 		return new ArrayList<CollectionTel>();
 	}
+	
+	/**
+	 * 
+	 * @Title：searchTelOne
+	 * @Description: TODO(查询指定企业外呼号码)
+	 * @see：
+	 * @param telNum 待查询企业外呼号
+	 * @return
+	 * @throws Exception 
+	 */
+	public static CollectionTel searchTelOne(String telNum) throws Exception {
+		String token = JuHeHttpUtil.getToken(juHeHttpUtil.juHeConfig.getUsername(), juHeHttpUtil.juHeConfig.getPassword());
+		List<CollectionTel> collectionTels = JuHeHttpUtil.searchTel(token);
+		for (CollectionTel collectionTel : collectionTels) {
+			if (telNum.equals(collectionTel.getTelNumber())) {
+				return collectionTel;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * 
@@ -347,6 +367,7 @@ public class JuHeHttpUtil {
 	 * @param args
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception {
 //		@SuppressWarnings("resource")
 //		ApplicationContext context = new ClassPathXmlApplicationContext("classpath*:/spring-*.xml");
@@ -398,9 +419,35 @@ public class JuHeHttpUtil {
 		
 		
 		/********** 查询任务集合  ****************/
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("taskId", new Long("738560151849024"));
-		System.out.println(HttpClientUtil.doPostJson("https://www.xfyeta.com/yungo-outbound/api/v1/outbound/task/2940/searchTaskList", jsonObject));
+//		JSONObject jsonObject = new JSONObject();
+//		jsonObject.put("taskId", new Long("738560151849024"));
+//		System.out.println(HttpClientUtil.doPostJson("https://www.xfyeta.com/yungo-outbound/api/v1/outbound/task/2940/searchTaskList", jsonObject));
 		
+		/**************** 查询指定外显号码 ********************/
+		Map<String, String> map = new HashMap<>();
+		map.put("username", "18667917579");
+		map.put("password", "ylqcjr123");
+		map.put("grant_type", "password");
+		map.put("client_type", "8");
+
+		HttpClientResult httpClientResult = HttpClientUtil.doGet("https://ptah.kxjlcc.com/kxjl-oauth-api/api/oauth/account/authorize", map);
+		if (JSONObject.fromObject(httpClientResult.getContent()).getInt("code") == 0) {
+			String token = JSONObject.fromObject(httpClientResult.getContent()).getJSONObject("result")
+					.getJSONArray("rows").getJSONObject(0).getString("access_token");
+			
+			httpClientResult = HttpClientUtil.doPost("https://ptah.kxjlcc.com/yungo-bm-api/api/v1/business/2940/searchTel?token=" + token);
+			if (JSONObject.fromObject(httpClientResult.getContent()).getInt("code") == 0) {
+				List<CollectionTel> collectionTels = JSONArray.toList(
+						JSONObject.fromObject(httpClientResult.getContent()).getJSONObject("result").getJSONArray("rows"),
+						new CollectionTel(), new JsonConfig());
+				
+				for (CollectionTel collectionTel : collectionTels) {
+					if ("64000272".equals(collectionTel.getTelNumber())) {
+						System.out.println(JSONObject.fromObject(collectionTel).toString(2));
+					}
+				}
+			}
+
+		}
 	}
 }
