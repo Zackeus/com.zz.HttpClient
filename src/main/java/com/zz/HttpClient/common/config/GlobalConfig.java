@@ -95,6 +95,9 @@ public class GlobalConfig {
 	
 	public static final String fouthGime = "G-4";
 	
+	// 催收拨号测试标签
+	public static final String dialTestbatch = "DT-";
+	
 	// 据合速驰上传文件路径
 	public static String filePath = "D:/JuHe/";
 	

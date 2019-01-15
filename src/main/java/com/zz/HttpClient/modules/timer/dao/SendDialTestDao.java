@@ -24,7 +24,13 @@ public interface SendDialTestDao extends CrudDao<DialTestTimer> {
 	
 	List<Customer> getDialTestCustomerParameter(String sql);
 	
+	List<Customer> getReplayDialTestCustomer(@Param("sendBatch") String sendBatch, @Param("dialTestTimer") DialTestTimer dialTestTimer);
+	
+	List<Customer> getReplayDialTestCustomerParameter(String sql);
+	
 	int insertInfo(@Param("taskId") String taskId, @Param("empno") String empno, @Param("sendBatch") String sendBatch, 
 			@Param("customers") List<Customer> customers, @Param("dialTestTimer") DialTestTimer dialTestTimer);
+	
+	String getSendBeanch(String batch);
 
 }

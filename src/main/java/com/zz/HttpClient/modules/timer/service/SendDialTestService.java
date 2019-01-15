@@ -1,11 +1,14 @@
 package com.zz.HttpClient.modules.timer.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zz.HttpClient.common.config.GlobalConfig;
 import com.zz.HttpClient.common.utils.ListUtil;
 import com.zz.HttpClient.common.utils.StringUtils;
 import com.zz.HttpClient.modules.timer.dao.SendDialTestDao;
@@ -35,15 +38,28 @@ public class SendDialTestService extends BaseTimerService<SendDialTestDao, DialT
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Customer> getDialTestCustomer(DialTestTimer dialTestTimer) {
-		dialTestTimer.setMobileLabelsStr("'" + StringUtils.join(dialTestTimer.getMobileLabels(), "','") + "'");
-		String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.modules.timer.dao.SendDialTestDao.getDialTestCustomer")
-				.getBoundSql(dialTestTimer).getSql();
-		sqlcode = sqlcode.replace("{START_DAY}", dialTestTimer.getStartDay().toString());
-		sqlcode = sqlcode.replace("{END_DAY}", dialTestTimer.getEndDay().toString());
-		List<Customer> customers = dao.getDialTestCustomerParameter(sqlcode);
-		// 数据去重
-		return (List<Customer>) ListUtil.getSplitList(customers).get("list");
+	public List<Customer> getDialTestCustomer(String sendBatch, DialTestTimer dialTestTimer) {
+		if (StringUtils.equals(GlobalConfig.dialTestbatch + 1, sendBatch)) {
+			// 第一次抓数据
+			dialTestTimer.setMobileLabelsStr("'" + StringUtils.join(dialTestTimer.getMobileLabels(), "','") + "'");
+			String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.modules.timer.dao.SendDialTestDao.getDialTestCustomer")
+					.getBoundSql(dialTestTimer).getSql();
+			sqlcode = sqlcode.replace("{START_DAY}", dialTestTimer.getStartDay().toString());
+			sqlcode = sqlcode.replace("{END_DAY}", dialTestTimer.getEndDay().toString());
+			List<Customer> customers = dao.getDialTestCustomerParameter(sqlcode);
+			// 数据去重
+			return (List<Customer>) ListUtil.getSplitList(customers).get("list");
+		} else {
+			// 不是第一次 抓取上一批次未接通的数据
+			Map<String, Object> paramMaps = new HashMap<>();
+			paramMaps.put("sendBatch", GlobalConfig.dialTestbatch + (Integer.valueOf(StringUtils.split(sendBatch, "-")[1]) - 1));
+			paramMaps.put("dialTestTimer", dialTestTimer);
+			String sqlcode = sqlSessionFactory .getConfiguration().getMappedStatement("com.zz.HttpClient.modules.timer.dao.SendDialTestDao.getReplayDialTestCustomer")
+					.getBoundSql(paramMaps).getSql();
+			sqlcode = sqlcode.replace("{START_DAY}", dialTestTimer.getStartDay().toString());
+			sqlcode = sqlcode.replace("{END_DAY}", dialTestTimer.getEndDay().toString());
+			return dao.getReplayDialTestCustomerParameter(sqlcode);
+		}
 	}
 	
 	/**
@@ -66,6 +82,18 @@ public class SendDialTestService extends BaseTimerService<SendDialTestDao, DialT
 		} else {
 			dao.insertInfo(taskId, empno, sendBatch, customers, dialTestTimer);
 		}
+	}
+	
+	/**
+	 * 
+	 * @Title：getSendBeanch
+	 * @Description: TODO(查询最近的发送标签)
+	 * @see：
+	 * @param batch
+	 * @return
+	 */
+	public String getSendBeanch(String batch) {
+		return dao.getSendBeanch(batch);
 	}
 
 }

@@ -1,18 +1,20 @@
 package com.zz.HttpClient.modules.timer.utils;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.zz.HttpClient.common.config.GlobalConfig;
 import com.zz.HttpClient.common.config.JuHeConfig;
 import com.zz.HttpClient.common.entity.HttpClientResult;
 import com.zz.HttpClient.common.utils.DateUtils;
 import com.zz.HttpClient.common.utils.Logs;
+import com.zz.HttpClient.common.utils.ObjectUtils;
+import com.zz.HttpClient.common.utils.StringUtils;
 import com.zz.HttpClient.common.utils.exception.MyException;
 import com.zz.HttpClient.modules.timer.entity.DialTestTimer;
+import com.zz.HttpClient.modules.timer.entity.collectionRobot.CollectionTel;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.Customer;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.TaskConfig;
 import com.zz.HttpClient.modules.timer.service.SendDialTestService;
@@ -38,14 +40,20 @@ public class DialTestUtil {
 	
 	public void createTask(DialTestTimer dialTestTimer) {
 		// 发送标签
-		String sendBeanch = "DT-1";
+		String sendBeanch = getSendBanch();
+		if (StringUtils.isBlank(sendBeanch)) {
+			// 外显被占用   结束任务
+			return;
+		}
 		
 		// 待呼叫数据
-//		List<Customer> customers = sendDialTestService.getDialTestCustomer(dialTestTimer);
-		List<Customer> customers = new ArrayList<>();
-		Customer customer = new Customer(null, "HP116175", "张舟", "借款人", new Long("15058041631"), 
-				new Long("24"), new BigDecimal("2536.4"), "邮寄地", "17037", null, null, null, null);
-		customers.add(customer);
+		List<Customer> customers = sendDialTestService.getDialTestCustomer(sendBeanch, dialTestTimer);
+		if (ObjectUtils.isEmpty(customers)) {
+			// 待呼叫数据为空
+			Logs.info("【裕隆汽车金融】 定时任务【" + dialTestTimer.getJobName() + "】【" + dialTestTimer.getName() + "】【" +
+					sendBeanch + "】任务数据为空");
+			return;
+		}
 		
 		// 创建任务配置
 		TaskConfig taskConfig = createTaskConfig(sendBeanch);
@@ -58,6 +66,7 @@ public class DialTestUtil {
 				String taskId = JSONObject.fromObject(httpClientResult.getContent()).getJSONObject("result")
 						.getJSONArray("rows").getJSONObject(0).getString("taskId");
 				sendDialTestService.insertInfo(taskId, "17037", sendBeanch, customers, dialTestTimer);
+				Logs.info("任务：" + sendBeanch + "创建成功");
 			} else {
 				// 任务创建失败
 				throw new MyException("【裕隆汽车金融】 定时任务【" + dialTestTimer.getJobName() + "】【" + 
@@ -95,6 +104,35 @@ public class DialTestUtil {
 				0, 																			// 最大重复外呼次数
 				60, 																		// 重复外呼等待时间
 				juHeConfig.getRecallStatus());												// 重复外呼状态
+	}
+	
+	/**
+	 * 
+	 * @Title：getSendBanch
+	 * @Description: TODO(生成发送标签)
+	 * @see：
+	 * @return
+	 */
+	private String getSendBanch() {
+		try {
+			CollectionTel collectionTel = JuHeHttpUtil.searchTelOne(juHeConfig.getTelNumThird());
+			
+			if (ObjectUtils.isEmpty(collectionTel)) {
+				throw new MyException("查无此外显号：【" + juHeConfig.getTelNumThird() + "】");
+			}
+			if (collectionTel.getUsed() == 1) {
+				// 此外显已被占用
+				return null;
+			}
+			
+			String sendBatchLately = sendDialTestService.getSendBeanch(GlobalConfig.dialTestbatch);
+			if (StringUtils.isBlank(sendBatchLately)) {
+				return GlobalConfig.dialTestbatch + 1;
+			}
+			return GlobalConfig.dialTestbatch + (Integer.valueOf(StringUtils.split(sendBatchLately, "-")[1]) + 1);
+		} catch (Exception e) {
+			throw new MyException(Logs.toLog(e));
+		}
 	}
 
 }
