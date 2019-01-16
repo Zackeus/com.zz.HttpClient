@@ -442,7 +442,8 @@ public class JuHeHttpUtil {
 						new CollectionTel(), new JsonConfig());
 				
 				for (CollectionTel collectionTel : collectionTels) {
-					if ("64000272".equals(collectionTel.getTelNumber())) {
+					System.out.println(JSONObject.fromObject(collectionTel).toString(2));
+					if ("64000793".equals(collectionTel.getTelNumber())) {
 						System.out.println(JSONObject.fromObject(collectionTel).toString(2));
 					}
 				}
