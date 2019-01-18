@@ -27,6 +27,7 @@ import com.zz.HttpClient.common.utils.OrderNoUtil;
 import com.zz.HttpClient.common.utils.httpClient.HttpClientUtil;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.CollectionTel;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.Customer;
+import com.zz.HttpClient.modules.timer.entity.collectionRobot.ExplicitNum;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.Guarantee;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.Task;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.TaskConfig;
@@ -84,6 +85,33 @@ public class JuHeHttpUtil {
 		if (JSONObject.fromObject(httpClientResult.getContent()).getInt("code") == 0) {
 			String token = JSONObject.fromObject(httpClientResult.getContent()).getJSONObject("result")
 					.getJSONArray("rows").getJSONObject(0).getString("access_token");
+			return token;
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @Title：getTokenYeta
+	 * @Description: TODO(获取鉴权(yeta))
+	 * @see：
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getTokenYeta(String username, String password) throws Exception {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("phone", username);
+		jsonObject.put("password", password);
+		jsonObject.put("contextPath", "yeta");
+		
+		HttpClientResult httpClientResult = HttpClientUtil.doPostJson(juHeHttpUtil.juHeConfig.getGetTokenYeta(), 
+				jsonObject);
+		
+		if (JSONObject.fromObject(httpClientResult.getContent()).getInt("code") == 0) {
+			String token = JSONObject.fromObject(httpClientResult.getContent()).getJSONObject("result")
+					.getJSONArray("rows").getJSONObject(0).getJSONObject("token").getString("access_token");
 			return token;
 		}
 		return null;
@@ -156,6 +184,27 @@ public class JuHeHttpUtil {
 	
 	/**
 	 * 
+	 * @Title：searchTelYeta
+	 * @Description: TODO(查询外显(yeta))
+	 * @see：
+	 * @param token
+	 * @return
+	 * @throws Exception 
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<ExplicitNum> searchTelYeta(String token) throws Exception {
+		HttpClientResult httpClientResult = HttpClientUtil.doPost(juHeHttpUtil.juHeConfig.getSearchTelYeta() + token);
+		if (JSONObject.fromObject(httpClientResult.getContent()).getInt("code") == 0) {
+			List<ExplicitNum> explicitNums = JSONArray.toList(
+					JSONObject.fromObject(httpClientResult.getContent()).getJSONObject("result").getJSONArray("rows"),
+					new ExplicitNum(), new JsonConfig());
+			return explicitNums;
+		}
+		return new ArrayList<ExplicitNum>();
+	}
+	
+	/**
+	 * 
 	 * @Title：searchTelOne
 	 * @Description: TODO(查询指定企业外呼号码)
 	 * @see：
@@ -169,6 +218,27 @@ public class JuHeHttpUtil {
 		for (CollectionTel collectionTel : collectionTels) {
 			if (telNum.equals(collectionTel.getTelNumber())) {
 				return collectionTel;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @Title：searchTelOneYeta
+	 * @Description: TODO(查询指定外显(yeta))
+	 * @see：
+	 * @param telNum
+	 * @return
+	 * @throws Exception
+	 */
+	public static ExplicitNum searchTelOneYeta(String cpnCode) throws Exception {
+		String token = JuHeHttpUtil.getTokenYeta(juHeHttpUtil.juHeConfig.getUsername(), 
+				juHeHttpUtil.juHeConfig.getPassword());
+		List<ExplicitNum> explicitNums = JuHeHttpUtil.searchTelYeta(token);
+		for (ExplicitNum explicitNum : explicitNums) {
+			if (cpnCode.equals(explicitNum.getCpnCode())) {
+				return explicitNum;
 			}
 		}
 		return null;
@@ -424,28 +494,38 @@ public class JuHeHttpUtil {
 //		System.out.println(HttpClientUtil.doPostJson("https://www.xfyeta.com/yungo-outbound/api/v1/outbound/task/2940/searchTaskList", jsonObject));
 		
 		/**************** 查询指定外显号码 ********************/
+		// xpath 接口
+//		Map<String, String> map = new HashMap<>();
+//		map.put("username", "18667917579");
+//		map.put("password", "ylqcjr123");
+//		map.put("grant_type", "password");
+//		map.put("client_type", "8");
+//
+//		HttpClientResult httpClientResult = HttpClientUtil.doGet("https://ptah.kxjlcc.com/kxjl-oauth-api/api/oauth/account/authorize", map);
+		
+		// yeta 接口
 		Map<String, String> map = new HashMap<>();
-		map.put("username", "18667917579");
+		map.put("phone", "18667917579");
 		map.put("password", "ylqcjr123");
-		map.put("grant_type", "password");
-		map.put("client_type", "8");
-
-		HttpClientResult httpClientResult = HttpClientUtil.doGet("https://ptah.kxjlcc.com/kxjl-oauth-api/api/oauth/account/authorize", map);
+		map.put("contextPath", "yeta");
+		
+		HttpClientResult httpClientResult = HttpClientUtil.doPostJson("https://www.xfyeta.com/crm/api/v1/account/login", JSONObject.fromObject(map));
+		
 		if (JSONObject.fromObject(httpClientResult.getContent()).getInt("code") == 0) {
 			String token = JSONObject.fromObject(httpClientResult.getContent()).getJSONObject("result")
-					.getJSONArray("rows").getJSONObject(0).getString("access_token");
+					.getJSONArray("rows").getJSONObject(0).getJSONObject("token").getString("access_token");
 			
-			httpClientResult = HttpClientUtil.doPost("https://ptah.kxjlcc.com/yungo-bm-api/api/v1/business/2940/searchTel?token=" + token);
+			httpClientResult = HttpClientUtil.doPost("https://www.xfyeta.com/yungo-outbound/api/v1/outbound/taskmanage/2940/searchTel?token=" + token);
 			if (JSONObject.fromObject(httpClientResult.getContent()).getInt("code") == 0) {
-				List<CollectionTel> collectionTels = JSONArray.toList(
+				List<ExplicitNum> explicitNums = JSONArray.toList(
 						JSONObject.fromObject(httpClientResult.getContent()).getJSONObject("result").getJSONArray("rows"),
-						new CollectionTel(), new JsonConfig());
+						new ExplicitNum(), new JsonConfig());
 				
-				for (CollectionTel collectionTel : collectionTels) {
-					System.out.println(JSONObject.fromObject(collectionTel).toString(2));
-					if ("64000793".equals(collectionTel.getTelNumber())) {
-						System.out.println(JSONObject.fromObject(collectionTel).toString(2));
-					}
+				for (ExplicitNum explicitNum : explicitNums) {
+					System.out.println(JSONObject.fromObject(explicitNum).toString(2));
+//					if ("64000793".equals(collectionTel.getTelNumber())) {
+//						System.out.println(JSONObject.fromObject(collectionTel).toString(2));
+//					}
 				}
 			}
 

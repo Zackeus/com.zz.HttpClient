@@ -52,6 +52,9 @@ public class JuHeConfig {
 	@Value("${juhe.getToken}")
 	private String getToken;				// 鉴权接口
 	
+	@Value("${yeta.getToken}")
+	private String getTokenYeta;			// 鉴权接口(yeta)
+	
 	@Value("${juhe.searchVoice}")
 	private String searchVoice;				// 查询发音人列表
 	
@@ -60,6 +63,9 @@ public class JuHeConfig {
 	
 	@Value("${juhe.searchTel}")
 	private String searchTel;				// 查询企业外呼号码
+	
+	@Value("${yeta.searchTel}")
+	private String searchTelYeta;			// 查询外显(yeta)
 	
 	@Value("${juhe.uploadExcelDataExcel}")
 	private String uploadExcelDataExcel;	// 数据上传
@@ -168,6 +174,14 @@ public class JuHeConfig {
 	public void setGetToken(String getToken) {
 		this.getToken = getToken;
 	}
+	
+	public String getGetTokenYeta() {
+		return getTokenYeta;
+	}
+
+	public void setGetTokenYeta(String getTokenYeta) {
+		this.getTokenYeta = getTokenYeta;
+	}
 
 	public String getSearchVoice() {
 		return searchVoice;
@@ -191,6 +205,14 @@ public class JuHeConfig {
 
 	public void setSearchTel(String searchTel) {
 		this.searchTel = searchTel;
+	}
+	
+	public String getSearchTelYeta() {
+		return searchTelYeta;
+	}
+
+	public void setSearchTelYeta(String searchTelYeta) {
+		this.searchTelYeta = searchTelYeta;
 	}
 
 	public String getUploadExcelDataExcel() {

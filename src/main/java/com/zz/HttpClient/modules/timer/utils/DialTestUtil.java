@@ -14,8 +14,8 @@ import com.zz.HttpClient.common.utils.ObjectUtils;
 import com.zz.HttpClient.common.utils.StringUtils;
 import com.zz.HttpClient.common.utils.exception.MyException;
 import com.zz.HttpClient.modules.timer.entity.DialTestTimer;
-import com.zz.HttpClient.modules.timer.entity.collectionRobot.CollectionTel;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.Customer;
+import com.zz.HttpClient.modules.timer.entity.collectionRobot.ExplicitNum;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.TaskConfig;
 import com.zz.HttpClient.modules.timer.service.SendDialTestService;
 
@@ -66,7 +66,7 @@ public class DialTestUtil {
 				String taskId = JSONObject.fromObject(httpClientResult.getContent()).getJSONObject("result")
 						.getJSONArray("rows").getJSONObject(0).getString("taskId");
 				sendDialTestService.insertInfo(taskId, "17037", sendBeanch, customers, dialTestTimer);
-				Logs.info("任务：" + sendBeanch + "创建成功");
+//				Logs.info("任务：" + sendBeanch + "创建成功");
 			} else {
 				// 任务创建失败
 				throw new MyException("【裕隆汽车金融】 定时任务【" + dialTestTimer.getJobName() + "】【" + 
@@ -115,12 +115,12 @@ public class DialTestUtil {
 	 */
 	private String getSendBanch() {
 		try {
-			CollectionTel collectionTel = JuHeHttpUtil.searchTelOne(juHeConfig.getTelNumThird());
+			ExplicitNum explicitNum = JuHeHttpUtil.searchTelOneYeta(juHeConfig.getTelNumThird());
 			
-			if (ObjectUtils.isEmpty(collectionTel)) {
+			if (ObjectUtils.isEmpty(explicitNum)) {
 				throw new MyException("查无此外显号：【" + juHeConfig.getTelNumThird() + "】");
 			}
-			if (collectionTel.getUsed() == 1) {
+			if (explicitNum.getUsed() == 1) {
 				// 此外显已被占用
 				return null;
 			}
