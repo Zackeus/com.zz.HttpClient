@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zz.HttpClient.modules.demo.dao.TestDao">
+
+	<select id="getFileType" resultType="java.lang.String">
+		SELECT FILE_TYPE FROM (
+		       SELECT 
+		          DISTINCT 
+		          SUBSTR(J.BIZ_TYPE, INSTR(J.BIZ_TYPE,'_',-1) + 1) AS FILE_TYPE
+		        FROM js_sys_file_upload J
+		        INNER JOIN ucl_loan_file_code U ON SUBSTR(J.BIZ_TYPE, INSTR(J.BIZ_TYPE,'_',-1) + 1) = U.FILE_CODE
+		        WHERE FILE_ID = #{fileId} 
+		        order by FILE_TYPE
+		) WHERE ROWNUM = 1
+	</select>
+	
+</mapper>  

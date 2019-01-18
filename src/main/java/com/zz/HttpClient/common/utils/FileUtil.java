@@ -395,6 +395,23 @@ public class FileUtil {
 			return fileName.substring(point + 1);
 		}
 	}
+	
+	/**
+	 * 
+	 * @Title：getNamePart
+	 * @Description: TODO(得到文件的名字部分。 去除扩展)
+	 * @see：
+	 * @param file
+	 * @return
+	 */
+	public static String getNamePart(File file) {
+		String fileName = getNamePart(file.getName());
+		int point = fileName.lastIndexOf('.');
+		if ((point >-1) && (point < (fileName.length()))) { 
+            return fileName.substring(0, point); 
+        }
+		return StringUtils.EMPTY;
+	}
 
 	/**
 	 * 得到文件名中的父路径部分。 对两种路径分隔符都有效。 不存在时返回""。
@@ -648,6 +665,9 @@ public class FileUtil {
 	// 拷贝文件
 	public static final boolean CopyFile(File in, File out) throws Exception {
 		try {
+			// 创建路径
+			pathValidate(getPathPart(out.getPath()));
+			
 			FileInputStream fis = new FileInputStream(in);
 			FileOutputStream fos = new FileOutputStream(out);
 			byte[] buf = new byte[1024];
@@ -674,6 +694,35 @@ public class FileUtil {
 			ie.printStackTrace();
 			return false;
 		}
-
+	}
+	
+	/**
+	 * 
+	 * @Title：main
+	 * @Description: TODO(测试)
+	 * @see：
+	 * @param args
+	 */
+	public static void main(String[] args) {
+//		List<String> type = Arrays.asList("jpg", "jpeg", "JPG", "JPEG");
+//		
+//		File[] files = listAll(new File("D:/AIData/train"), new FileFilter() {
+//							@Override
+//							public String getDescription() {
+//								return null;
+//							}
+//							
+//							@Override
+//							public boolean accept(File f) {
+//								if (type.contains(getFileType(f))) {
+//									return Boolean.TRUE;
+//								}
+//								return Boolean.FALSE;
+//							}
+//						});
+//		for(File file : files) {
+//			System.out.println(getNamePart(file));
+//		}
+//		System.out.println("共有：" + files.length);
 	}
 }
