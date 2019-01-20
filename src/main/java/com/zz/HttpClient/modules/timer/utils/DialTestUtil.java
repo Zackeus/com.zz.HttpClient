@@ -43,6 +43,7 @@ public class DialTestUtil {
 		String sendBeanch = getSendBanch();
 		if (StringUtils.isBlank(sendBeanch)) {
 			// 外显被占用   结束任务
+//			Logs.info("外显被占用************");
 			return;
 		}
 		

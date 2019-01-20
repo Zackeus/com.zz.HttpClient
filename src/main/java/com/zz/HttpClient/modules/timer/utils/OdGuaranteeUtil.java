@@ -20,7 +20,7 @@ import com.zz.HttpClient.common.utils.ListUtil;
 import com.zz.HttpClient.common.utils.ObjectUtils;
 import com.zz.HttpClient.common.utils.SendMsgUtil;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.CollectionRobotTimer;
-import com.zz.HttpClient.modules.timer.entity.collectionRobot.CollectionTel;
+import com.zz.HttpClient.modules.timer.entity.collectionRobot.ExplicitNum;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.Guarantee;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.ReplaySet;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.TaskConfig;
@@ -71,24 +71,26 @@ public class OdGuaranteeUtil {
 	 */
 	public static String judgeSendBatch(CollectionRobotTimer collectionRobotTimer) throws Exception {
 		ReplaySet replaySet = odGuaranteeUtil.sendOdCuaranteeService.getReplaySet(collectionRobotTimer);
-		CollectionTel collectionTel = OdCustomerUtil.getCollectionTel(odGuaranteeUtil.juHeConfig.getTelGuaranteeNum());
+//		CollectionTel collectionTel = OdCustomerUtil.getCollectionTel(odGuaranteeUtil.juHeConfig.getTelGuaranteeNum());
+		// 用 yeta 接口判断
+		ExplicitNum explicitNum = JuHeHttpUtil.searchTelOneYeta(odGuaranteeUtil.juHeConfig.getTelGuaranteeNum());
 
-		if ((replaySet == null || replaySet.getFirstTaskId() == null) && collectionTel.getUsed() == 0) {
+		if ((replaySet == null || replaySet.getFirstTaskId() == null) && explicitNum.getUsed() == 0) {
 			// 为 G-1
 			return GlobalConfig.firstGime;
 		}
 
-		if (replaySet.getSecondTaskId() == null && collectionTel.getUsed() == 0) {
+		if (replaySet.getSecondTaskId() == null && explicitNum.getUsed() == 0) {
 			// 为 G-2
 			return GlobalConfig.secondGime;
 		}
 
-		if (replaySet.getThirdTaskId() == null && collectionTel.getUsed() == 0) {
+		if (replaySet.getThirdTaskId() == null && explicitNum.getUsed() == 0) {
 			// 为 G-3
 			return GlobalConfig.thirdGime;
 		}
 
-		if (replaySet.getFourthTaskId() == null && collectionTel.getUsed() == 0) {
+		if (replaySet.getFourthTaskId() == null && explicitNum.getUsed() == 0) {
 			// 为 G-4
 			return GlobalConfig.fouthGime;
 		}

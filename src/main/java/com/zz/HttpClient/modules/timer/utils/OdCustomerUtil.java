@@ -26,6 +26,7 @@ import com.zz.HttpClient.modules.timer.entity.collectionRobot.CollectionRobotTim
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.CollectionTel;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.Customer;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.CustomerRepeat;
+import com.zz.HttpClient.modules.timer.entity.collectionRobot.ExplicitNum;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.ReplaySet;
 import com.zz.HttpClient.modules.timer.entity.collectionRobot.TaskConfig;
 import com.zz.HttpClient.modules.timer.service.SendOdCustomerService;
@@ -69,24 +70,26 @@ public class OdCustomerUtil {
 	 */
 	public static String judgeSendBatch(CollectionRobotTimer collectionRobotTimer) throws Exception {
 		ReplaySet replaySet = odCustomerUtil.sendOdCustomerService.getReplaySet(collectionRobotTimer);
-		CollectionTel collectionTel = getCollectionTel(odCustomerUtil.juHeConfig.getTelNum());
+//		CollectionTel collectionTel = getCollectionTel(odCustomerUtil.juHeConfig.getTelNum());
+		// 用 yeta 接口判断
+		ExplicitNum explicitNum = JuHeHttpUtil.searchTelOneYeta(odCustomerUtil.juHeConfig.getTelNum());
 
-		if ((replaySet == null || replaySet.getFirstTaskId() == null) && collectionTel.getUsed() == 0) {
+		if ((replaySet == null || replaySet.getFirstTaskId() == null) && explicitNum.getUsed() == 0) {
 			// 为 T-1
 			return GlobalConfig.firstTime;
 		}
 
-		if (replaySet.getSecondTaskId() == null && collectionTel.getUsed() == 0) {
+		if (replaySet.getSecondTaskId() == null && explicitNum.getUsed() == 0) {
 			// 为 T-2
 			return GlobalConfig.secondTime;
 		}
 
-		if (replaySet.getThirdTaskId() == null && collectionTel.getUsed() == 0) {
+		if (replaySet.getThirdTaskId() == null && explicitNum.getUsed() == 0) {
 			// 为 T-3
 			return GlobalConfig.thirdTime;
 		}
 
-		if (replaySet.getFourthTaskId() == null && collectionTel.getUsed() == 0) {
+		if (replaySet.getFourthTaskId() == null && explicitNum.getUsed() == 0) {
 			// 为 T-4
 			return GlobalConfig.fouthTime;
 		}
@@ -104,24 +107,26 @@ public class OdCustomerUtil {
 	 */
 	public static String judgeStopTaskId(CollectionRobotTimer collectionRobotTimer) throws Exception {
 		ReplaySet replaySet = odCustomerUtil.sendOdCustomerService.getReplaySet(collectionRobotTimer);
-		CollectionTel collectionTel = getCollectionTel(odCustomerUtil.juHeConfig.getTelNum());
+//		CollectionTel collectionTel = getCollectionTel(odCustomerUtil.juHeConfig.getTelNum());
+		// 用 yeta 接口判断
+		ExplicitNum explicitNum = JuHeHttpUtil.searchTelOneYeta(odCustomerUtil.juHeConfig.getTelNum());
 		
-		if (replaySet != null && replaySet.getFourthTaskId() != null && collectionTel.getUsed() == 1) {
+		if (replaySet != null && replaySet.getFourthTaskId() != null && explicitNum.getUsed() == 1) {
 			// 为 T-4
 			return replaySet.getFourthTaskId();
 		}
 		
-		if (replaySet.getThirdTaskId() != null && collectionTel.getUsed() == 1) {
+		if (replaySet.getThirdTaskId() != null && explicitNum.getUsed() == 1) {
 			// 为 T-3
 			return replaySet.getThirdTaskId();
 		}
 		
-		if (replaySet.getSecondTaskId() != null && collectionTel.getUsed() == 1) {
+		if (replaySet.getSecondTaskId() != null && explicitNum.getUsed() == 1) {
 			// 为 T-2
 			return replaySet.getSecondTaskId();
 		}
 
-		if (replaySet.getFirstTaskId() != null && collectionTel.getUsed() == 1) {
+		if (replaySet.getFirstTaskId() != null && explicitNum.getUsed() == 1) {
 			// 为 T-1
 			return replaySet.getFirstTaskId();
 		}
